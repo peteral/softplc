@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE softplc SYSTEM "softplc.dtd">
 <softplc>
-	<cpu slot="1">
+	<cpu slot="1" connections="64">
 		<memory>
 			<area name="DB100" size="2000" />
 			<area name="DB101" size="1000" />

@@ -2,7 +2,8 @@
 
 <!ELEMENT cpu (memory, program)*>
 <!ATTLIST cpu
-	slot	CDATA	#REQUIRED
+	slot		CDATA	#REQUIRED
+	connections	CDATA	"32"
 >
 
 <!ELEMENT memory (area)*>
