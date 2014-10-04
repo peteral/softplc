@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE softplc SYSTEM "softplc.dtd">
+<softplc>
+	<cpu slot="1">
+		<memory>
+			<area name="DB100" size="2000" />
+			<area name="DB101" size="1000" />
+		</memory>
+
+		<program cycleTime="50" file="./program/main.js" />
+	</cpu>
+
+	<cpu slot="2">
+		<memory>
+			<area name="M" size="8000"/>
+			<area name="DB100" size="2000" />
+			<area name="DB101" size="1000" />
+		</memory>
+
+		<program cycleTime="50" file="./program/main.js" />
+	</cpu>
+</softplc>
