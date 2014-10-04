@@ -34,4 +34,10 @@ public interface Program extends Runnable {
 	 */
 	void removeObserver(ProgramCycleObserver observer);
 
+	/**
+	 *
+	 * @return target cycle time in [ms]
+	 */
+	long getTargetCycleTime();
+
 }

@@ -31,6 +31,7 @@ public class ProgramImpl implements Program {
 	private ScriptContext context;
 	private CompiledScript compiled;
 	private final Cpu cpu;
+	private final long targetCycleTime;
 
 	/**
 	 * Creates a new instance.
@@ -42,15 +43,18 @@ public class ProgramImpl implements Program {
 	 *            script engine manager instance
 	 * @param precompiler
 	 *            {@link Precompiler} instance
+	 * @param targetCycleTime
+	 *            target cycle time in [ms]
 	 * @param sourceCode
 	 *            java script code with memory access tags
 	 */
 	public ProgramImpl(Cpu cpu, ScriptEngineManager scriptEngineManager,
-			Precompiler precompiler, String sourceCode) {
+			Precompiler precompiler, long targetCycleTime, String sourceCode) {
 
 		this.cpu = cpu;
 		this.scriptEngineManager = scriptEngineManager;
 		this.precompiler = precompiler;
+		this.targetCycleTime = targetCycleTime;
 		this.sourceCode = sourceCode;
 	}
 
@@ -108,6 +112,11 @@ public class ProgramImpl implements Program {
 	@Override
 	public void removeObserver(ProgramCycleObserver observer) {
 		observers.remove(observer);
+	}
+
+	@Override
+	public long getTargetCycleTime() {
+		return targetCycleTime;
 	}
 
 }

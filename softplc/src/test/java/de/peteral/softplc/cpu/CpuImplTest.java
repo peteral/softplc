@@ -25,7 +25,7 @@ import de.peteral.softplc.model.Program;
 @SuppressWarnings("javadoc")
 public class CpuImplTest {
 
-	private static final int TARGET_CYCLE_TIME = 50;
+	private static final long TARGET_CYCLE_TIME = 50;
 	private CpuImpl cpu;
 	@Mock
 	private Program program;
@@ -42,7 +42,9 @@ public class CpuImplTest {
 	public void setup() {
 		MockitoAnnotations.initMocks(this);
 
-		cpu = new CpuImpl(0, TARGET_CYCLE_TIME, errorlog, executor, memory);
+		when(program.getTargetCycleTime()).thenReturn(TARGET_CYCLE_TIME);
+
+		cpu = new CpuImpl(0, errorlog, executor, memory);
 	}
 
 	@Test

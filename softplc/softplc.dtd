@@ -1,0 +1,21 @@
+<!ELEMENT softplc (cpu)*>
+
+<!ELEMENT cpu (memory, program)*>
+<!ATTLIST cpu
+	slot		CDATA	#REQUIRED
+	connections	CDATA	"32"
+>
+
+<!ELEMENT memory (area)*>
+
+<!ELEMENT area EMPTY>
+<!ATTLIST area
+	name	CDATA	#REQUIRED
+	size	CDATA	"65535"
+>
+
+<!ELEMENT program EMPTY>
+<!ATTLIST program
+	cycleTime	CDATA	"20"
+	file		CDATA	#REQUIRED
+>

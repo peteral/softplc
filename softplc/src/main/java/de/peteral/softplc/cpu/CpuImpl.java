@@ -24,7 +24,6 @@ import de.peteral.softplc.model.ProgramCycleObserver;
 public class CpuImpl implements Cpu, ProgramCycleObserver {
 	private CpuStatus status = CpuStatus.STOP;
 	private final ErrorLog errorlog;
-	private final long targetCycleTime;
 	private final ScheduledThreadPoolExecutor executor;
 	private Program program;
 	private final List<CommunicationTask> pendingTasks = new ArrayList<>();
@@ -37,8 +36,6 @@ public class CpuImpl implements Cpu, ProgramCycleObserver {
 	 * @param slot
 	 *            slot number
 	 *
-	 * @param targetCycleTime
-	 *            requested program cycle duration [ms]
 	 * @param errorlog
 	 *            {@link ErrorLog} instance associated with this {@link Cpu}
 	 * @param executor
@@ -46,10 +43,9 @@ public class CpuImpl implements Cpu, ProgramCycleObserver {
 	 * @param memory
 	 *            {@link Memory} instance of this {@link Cpu}
 	 */
-	public CpuImpl(int slot, long targetCycleTime, ErrorLog errorlog,
+	public CpuImpl(int slot, ErrorLog errorlog,
 			ScheduledThreadPoolExecutor executor, Memory memory) {
 		this.slot = slot;
-		this.targetCycleTime = targetCycleTime;
 		this.errorlog = errorlog;
 		this.executor = executor;
 		this.memory = memory;
@@ -103,7 +99,7 @@ public class CpuImpl implements Cpu, ProgramCycleObserver {
 
 	@Override
 	public long getTargetCycleTime() {
-		return targetCycleTime;
+		return program.getTargetCycleTime();
 	}
 
 	@Override

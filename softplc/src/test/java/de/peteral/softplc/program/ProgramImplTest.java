@@ -21,6 +21,7 @@ import de.peteral.softplc.model.ProgramCycleObserver;
 
 @SuppressWarnings("javadoc")
 public class ProgramImplTest {
+	private static final int CYCLE_TIME = 50;
 	/* @formatter:off */
 	private static final String SOURCE =
 			"function main() {\n" +
@@ -45,7 +46,7 @@ public class ProgramImplTest {
 		when(cpu.getLogger()).thenReturn(logger);
 
 		program = new ProgramImpl(cpu, new ScriptEngineManager(),
-				new Precompiler(), SOURCE);
+				new Precompiler(), CYCLE_TIME, SOURCE);
 	}
 
 	@Test
