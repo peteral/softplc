@@ -7,6 +7,9 @@ import de.peteral.softplc.address.ParsedAddress;
  * types to byte arrays and vice versa.
  * <p>
  * Only converts a single value does not handle arrays.
+ * <p>
+ * All number converters work with double as it is the only type used by
+ * javascript.
  *
  * @param <T>
  *

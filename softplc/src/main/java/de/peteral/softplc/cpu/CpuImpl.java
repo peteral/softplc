@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.ScheduledThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
+import java.util.logging.Logger;
 
 import de.peteral.softplc.model.CommunicationTask;
 import de.peteral.softplc.model.Cpu;
@@ -28,9 +29,13 @@ public class CpuImpl implements Cpu, ProgramCycleObserver {
 	private Program program;
 	private final List<CommunicationTask> pendingTasks = new ArrayList<>();
 	private final Memory memory;
+	private final int slot;
 
 	/**
 	 * Creates a new instance.
+	 *
+	 * @param slot
+	 *            slot number
 	 *
 	 * @param targetCycleTime
 	 *            requested program cycle duration [ms]
@@ -41,8 +46,9 @@ public class CpuImpl implements Cpu, ProgramCycleObserver {
 	 * @param memory
 	 *            {@link Memory} instance of this {@link Cpu}
 	 */
-	public CpuImpl(long targetCycleTime, ErrorLog errorlog,
+	public CpuImpl(int slot, long targetCycleTime, ErrorLog errorlog,
 			ScheduledThreadPoolExecutor executor, Memory memory) {
+		this.slot = slot;
 		this.targetCycleTime = targetCycleTime;
 		this.errorlog = errorlog;
 		this.executor = executor;
@@ -127,4 +133,13 @@ public class CpuImpl implements Cpu, ProgramCycleObserver {
 		return true;
 	}
 
+	@Override
+	public Logger getLogger() {
+		return Logger.getLogger(toString());
+	}
+
+	@Override
+	public String toString() {
+		return "cpu." + slot;
+	}
 }

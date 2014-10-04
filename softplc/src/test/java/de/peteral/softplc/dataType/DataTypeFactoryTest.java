@@ -13,8 +13,6 @@ import org.junit.runners.Parameterized.Parameters;
 import org.mockito.MockitoAnnotations;
 
 import de.peteral.softplc.address.ParsedAddress;
-import de.peteral.softplc.dataType.DataTypeException;
-import de.peteral.softplc.dataType.DataTypeFactory;
 
 @SuppressWarnings({ "javadoc", "rawtypes" })
 @RunWith(Parameterized.class)
@@ -26,10 +24,10 @@ public class DataTypeFactoryTest {
 		return Arrays.asList(new Object[][] {//
 				{ new ParsedAddress("DB100,C10:20"), "Hallo", new byte[] { 'H', 'a', 'l', 'l', 'o', 0x00 }, 20, String.class, 1, 0, 1 },
 				{ new ParsedAddress("DB100,C10:10,2"), new String[] { "Hallo", "abcd" }, new byte[] { 'H', 'a', 'l', 'l', 'o', 0x00, 0x00, 0x00, 0x00, 0x00, 'a', 'b', 'c', 'd', 0x00 }, 20, String.class, 1, 0, 2 },
-				{ new ParsedAddress("M100,B20"), (byte) 20, new byte[] { 20 }, 1, Byte.class, 1, 0, 1 },
-				{ new ParsedAddress("M100,B20,2"), new Byte[] { 10, 20 }, new byte[] { 10, 20 }, 2, Byte.class, 1, 0, 2 },
-				{ new ParsedAddress("M100,W20"), 20, new byte[] { 0, 20 }, 2, Integer.class, 2, 0, 1 },
-				{ new ParsedAddress("M100,W20,2"), new Integer[] { 10, 20 }, new byte[] { 0, 10, 0, 20 }, 4, Integer.class, 2, 0, 2 },
+				{ new ParsedAddress("M100,B20"), 20.0, new byte[] { 20 }, 1, Byte.class, 1, 0, 1 },
+				{ new ParsedAddress("M100,B20,2"), new Double[] { 10.0, 20.0 }, new byte[] { 10, 20 }, 2, Byte.class, 1, 0, 2 },
+				{ new ParsedAddress("M100,W20"), 20.0, new byte[] { 0, 20 }, 2, Integer.class, 2, 0, 1 },
+				{ new ParsedAddress("M100,W20,2"), new Double[] { 10.0, 20.0 }, new byte[] { 0, 10, 0, 20 }, 4, Integer.class, 2, 0, 2 },
 		});
 	}
 	/* @formatter:on */

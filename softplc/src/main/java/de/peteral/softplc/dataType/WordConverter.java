@@ -11,24 +11,24 @@ import de.peteral.softplc.model.Converter;
  * @author peteral
  *
  */
-public class WordConverter implements Converter<Integer> {
+public class WordConverter implements Converter<Double> {
 
 	@Override
-	public Integer[] createArray(int count) {
-		return new Integer[count];
+	public Double[] createArray(int count) {
+		return new Double[count];
 	}
 
 	@Override
-	public void toBytes(Integer value, ParsedAddress address, byte[] buffer,
+	public void toBytes(Double value, ParsedAddress address, byte[] buffer,
 			int offset) {
 
-		buffer[offset] = (byte) (value / 0xFF);
-		buffer[offset + 1] = (byte) (value % 0xFF);
+		buffer[offset] = (byte) (value.intValue() / 0xFF);
+		buffer[offset + 1] = (byte) (value.intValue() % 0xFF);
 	}
 
 	@Override
-	public Integer fromBytes(byte[] bytes, ParsedAddress address, int offset) {
-		return (0xFF * bytes[offset]) + bytes[offset + 1];
+	public Double fromBytes(byte[] bytes, ParsedAddress address, int offset) {
+		return (double) (0xFF * bytes[offset]) + bytes[offset + 1];
 	}
 
 }

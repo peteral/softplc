@@ -9,23 +9,23 @@ import de.peteral.softplc.model.Converter;
  * @author peteral
  *
  */
-public class ByteConverter implements Converter<Byte> {
+public class ByteConverter implements Converter<Double> {
 
 	@Override
-	public Byte[] createArray(int count) {
-		return new Byte[count];
+	public Double[] createArray(int count) {
+		return new Double[count];
 	}
 
 	@Override
-	public void toBytes(Byte value, ParsedAddress address, byte[] buffer,
+	public void toBytes(Double value, ParsedAddress address, byte[] buffer,
 			int offset) {
 
-		buffer[offset] = value;
+		buffer[offset] = value.byteValue();
 	}
 
 	@Override
-	public Byte fromBytes(byte[] bytes, ParsedAddress address, int offset) {
-		return bytes[offset];
+	public Double fromBytes(byte[] bytes, ParsedAddress address, int offset) {
+		return Double.valueOf(bytes[offset]);
 	}
 
 }

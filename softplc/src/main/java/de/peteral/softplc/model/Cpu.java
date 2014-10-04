@@ -1,5 +1,7 @@
 package de.peteral.softplc.model;
 
+import java.util.logging.Logger;
+
 /**
  * Represent a Central Processing Unit of a {@link Plc}.
  * <p>
@@ -81,4 +83,10 @@ public interface Cpu {
 	 * @return {@link Memory} instance of this {@link Cpu}
 	 */
 	Memory getMemory();
+
+	/**
+	 *
+	 * @return logger associated with this CPU
+	 */
+	Logger getLogger();
 }

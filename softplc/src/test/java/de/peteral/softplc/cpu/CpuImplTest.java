@@ -16,7 +16,6 @@ import org.junit.Test;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 
-import de.peteral.softplc.cpu.CpuImpl;
 import de.peteral.softplc.model.CommunicationTask;
 import de.peteral.softplc.model.CpuStatus;
 import de.peteral.softplc.model.ErrorLog;
@@ -43,7 +42,7 @@ public class CpuImplTest {
 	public void setup() {
 		MockitoAnnotations.initMocks(this);
 
-		cpu = new CpuImpl(TARGET_CYCLE_TIME, errorlog, executor, memory);
+		cpu = new CpuImpl(0, TARGET_CYCLE_TIME, errorlog, executor, memory);
 	}
 
 	@Test
