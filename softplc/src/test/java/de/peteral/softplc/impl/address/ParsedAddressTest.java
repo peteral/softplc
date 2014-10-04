@@ -11,21 +11,21 @@ import org.junit.runners.Parameterized;
 import org.junit.runners.Parameterized.Parameters;
 import org.mockito.MockitoAnnotations;
 
-import de.peteral.softplc.impl.address.ParsedAddress;
-
 @SuppressWarnings({ "javadoc" })
 @RunWith(Parameterized.class)
 public class ParsedAddressTest {
 
+	/* @formatter:off */
 	@Parameters(name = "{index}: {0}")
 	public static Iterable<Object[]> getParameters() {
-		return Arrays.asList(new Object[][] { //
-				{ "M,W100", "M", 100, 0, "W", 1, 1 }, //
-						{ "M,STRING100:10", "M", 100, 0, "STRING", 1, 10 }, //
-						{ "DB100,C100:20", "DB100", 100, 0, "C", 1, 20 }, //
-						{ "DB100,C100:20,4", "DB100", 100, 0, "C", 4, 20 }, //
-						{ "M,X100.5", "M", 100, 5, "X", 1, 1 } });
+		return Arrays.asList(new Object[][] {
+				{ "M,W100", "M", 100, 0, "W", 1, 1 },
+				{ "M,STRING100:10", "M", 100, 0, "STRING", 1, 10 },
+				{ "DB100,C100:20", "DB100", 100, 0, "C", 1, 20 },
+				{ "DB100,C100:20,4", "DB100", 100, 0, "C", 4, 20 },
+				{ "M,X100.5", "M", 100, 5, "X", 1, 1 } });
 	}
+	/* @formatter:on */
 
 	private ParsedAddress parser;
 	private final String address;
