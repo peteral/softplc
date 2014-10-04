@@ -1,4 +1,5 @@
-package de.peteral.softplc.impl;
+package de.peteral.softplc.impl.address;
+
 
 public class AddressParserFactory {
 

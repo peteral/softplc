@@ -2,7 +2,7 @@ package de.peteral.softplc.impl.converter;
 
 import java.util.Date;
 
-import de.peteral.softplc.impl.ParsedAddress;
+import de.peteral.softplc.impl.address.ParsedAddress;
 import de.peteral.softplc.model.Converter;
 
 public class DateConverter implements Converter<Date> {

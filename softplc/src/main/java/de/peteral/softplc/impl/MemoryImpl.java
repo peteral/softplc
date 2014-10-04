@@ -3,6 +3,8 @@ package de.peteral.softplc.impl;
 import java.util.HashMap;
 import java.util.Map;
 
+import de.peteral.softplc.impl.address.AddressParserFactory;
+import de.peteral.softplc.impl.address.ParsedAddress;
 import de.peteral.softplc.model.Memory;
 import de.peteral.softplc.model.MemoryAccessViolationException;
 import de.peteral.softplc.model.MemoryArea;
@@ -50,6 +52,7 @@ public class MemoryImpl implements Memory {
 
 		MemoryArea memoryArea = getMemoryArea(parser.getAreaCode());
 
+		// TODO: special handling for boolean
 		byte[] bytes = memoryArea.readBytes(parser.getOffset(),
 				parser.getSize());
 
@@ -60,6 +63,7 @@ public class MemoryImpl implements Memory {
 	public void write(String address, Object value) {
 		ParsedAddress parser = addressParserFactory.createParser(address);
 
+		// TODO: special handling for boolean
 		MemoryArea memoryArea = getMemoryArea(parser.getAreaCode());
 
 		memoryArea.writeBytes(parser.getOffset(),

@@ -1,6 +1,6 @@
 package de.peteral.softplc.model;
 
-import de.peteral.softplc.impl.ParsedAddress;
+import de.peteral.softplc.impl.address.ParsedAddress;
 
 /**
  * This interface provides access to the memory of a {@link Cpu}.

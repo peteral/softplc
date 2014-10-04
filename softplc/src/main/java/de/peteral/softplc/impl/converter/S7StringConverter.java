@@ -1,6 +1,6 @@
 package de.peteral.softplc.impl.converter;
 
-import de.peteral.softplc.impl.ParsedAddress;
+import de.peteral.softplc.impl.address.ParsedAddress;
 import de.peteral.softplc.model.Converter;
 
 public class S7StringConverter implements Converter<String> {

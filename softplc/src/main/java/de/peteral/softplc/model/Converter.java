@@ -1,6 +1,6 @@
 package de.peteral.softplc.model;
 
-import de.peteral.softplc.impl.ParsedAddress;
+import de.peteral.softplc.impl.address.ParsedAddress;
 
 /**
  * Classes implementing this interface are responsible for converting of java

@@ -4,7 +4,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
-import de.peteral.softplc.impl.converter.BoolConverter;
+import de.peteral.softplc.impl.address.ParsedAddress;
 import de.peteral.softplc.impl.converter.ByteConverter;
 import de.peteral.softplc.impl.converter.DIntConverter;
 import de.peteral.softplc.impl.converter.DateConverter;
@@ -52,7 +52,6 @@ public class DataTypeFactory {
 		defineType("C", String.class, 1, new StringConverter());
 		defineType("STRING", String.class, 1, 2, new S7StringConverter());
 		defineType("DT", Date.class, 8, new DateConverter());
-		defineType("X", Boolean.class, 1, new BoolConverter());
 	}
 
 	/**

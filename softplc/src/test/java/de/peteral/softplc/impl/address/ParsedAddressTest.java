@@ -1,4 +1,4 @@
-package de.peteral.softplc.impl;
+package de.peteral.softplc.impl.address;
 
 import static org.junit.Assert.assertEquals;
 
@@ -10,6 +10,8 @@ import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;
 import org.junit.runners.Parameterized.Parameters;
 import org.mockito.MockitoAnnotations;
+
+import de.peteral.softplc.impl.address.ParsedAddress;
 
 @SuppressWarnings({ "javadoc" })
 @RunWith(Parameterized.class)
