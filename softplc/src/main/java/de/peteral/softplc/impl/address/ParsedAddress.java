@@ -39,6 +39,13 @@ public class ParsedAddress {
 	private final String typeName;
 	private final String address;
 
+	/**
+	 * Creates a new instance.
+	 * <p>
+	 *
+	 * @param address
+	 *            address to be parsed.
+	 */
 	public ParsedAddress(String address) {
 		this.address = address;
 		try {
@@ -80,18 +87,30 @@ public class ParsedAddress {
 		}
 	}
 
+	/**
+	 * @return {@link MemoryArea} code
+	 */
 	public String getAreaCode() {
 		return areaCode;
 	}
 
+	/**
+	 * @return offset in bytes
+	 */
 	public int getOffset() {
 		return offset;
 	}
 
+	/**
+	 * @return size (optional, used for example for Strings).
+	 */
 	public int getSize() {
 		return size;
 	}
 
+	/**
+	 * @return bit number - optional, used for binary addresses.
+	 */
 	public int getBitNumber() {
 		return bitNumber;
 	}

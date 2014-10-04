@@ -158,6 +158,7 @@ public class DataTypeFactory {
 	 * @param address
 	 * @return byte array representation
 	 */
+	@SuppressWarnings("unchecked")
 	public byte[] toBytes(Object value, ParsedAddress address) {
 		byte[] result = new byte[getByteArraySize(address) * address.getCount()];
 

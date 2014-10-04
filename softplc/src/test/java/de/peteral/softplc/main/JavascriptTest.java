@@ -9,6 +9,7 @@ import javax.script.ScriptEngineManager;
 import javax.script.ScriptException;
 import javax.script.SimpleScriptContext;
 
+@SuppressWarnings("javadoc")
 public class JavascriptTest {
 
 	public static void main(String[] args) throws ScriptException {

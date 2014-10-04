@@ -41,7 +41,7 @@ public class MemoryImplTest {
 
 		when(areaM.getAreaCode()).thenReturn("M");
 		when(areaDb100.getAreaCode()).thenReturn(DB100);
-		when(addressParserFactory.createParser(anyString())).thenReturn(
+		when(addressParserFactory.parse(anyString())).thenReturn(
 				addressParser);
 
 		memory = new MemoryImpl(addressParserFactory, dataTypeFactory, areaM,

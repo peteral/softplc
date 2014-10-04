@@ -9,12 +9,31 @@ import de.peteral.softplc.model.Memory;
 import de.peteral.softplc.model.MemoryAccessViolationException;
 import de.peteral.softplc.model.MemoryArea;
 
+/**
+ * Default {@link Memory} implementation.
+ * <p>
+ * Maintains a set of {@link MemoryArea}.
+ *
+ * @author peteral
+ *
+ */
 public class MemoryImpl implements Memory {
 
 	private final Map<String, MemoryArea> memoryAreas = new HashMap<>();
 	private final AddressParserFactory addressParserFactory;
 	private final DataTypeFactory dataTypeFactory;
 
+	/**
+	 * Creates a new instance.
+	 * <p>
+	 *
+	 * @param addressParserFactory
+	 *            {@link AddressParserFactory} instance.
+	 * @param dataTypeFactory
+	 *            {@link DataTypeFactory} instance.
+	 * @param areas
+	 *            set of {@link MemoryArea} managed within this {@link Memory}
+	 */
 	public MemoryImpl(AddressParserFactory addressParserFactory,
 			DataTypeFactory dataTypeFactory, MemoryArea... areas) {
 		this.addressParserFactory = addressParserFactory;
@@ -48,7 +67,7 @@ public class MemoryImpl implements Memory {
 
 	@Override
 	public Object read(String address) {
-		ParsedAddress parser = addressParserFactory.createParser(address);
+		ParsedAddress parser = addressParserFactory.parse(address);
 
 		MemoryArea memoryArea = getMemoryArea(parser.getAreaCode());
 
@@ -61,7 +80,7 @@ public class MemoryImpl implements Memory {
 
 	@Override
 	public void write(String address, Object value) {
-		ParsedAddress parser = addressParserFactory.createParser(address);
+		ParsedAddress parser = addressParserFactory.parse(address);
 
 		// TODO: special handling for boolean
 		MemoryArea memoryArea = getMemoryArea(parser.getAreaCode());

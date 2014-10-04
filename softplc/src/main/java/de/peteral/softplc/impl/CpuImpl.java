@@ -29,6 +29,18 @@ public class CpuImpl implements Cpu, ProgramCycleObserver {
 	private final List<CommunicationTask> pendingTasks = new ArrayList<>();
 	private final Memory memory;
 
+	/**
+	 * Creates a new instance.
+	 *
+	 * @param targetCycleTime
+	 *            requested program cycle duration [ms]
+	 * @param errorlog
+	 *            {@link ErrorLog} instance associated with this {@link Cpu}
+	 * @param executor
+	 *            executor responsible for this {@link Cpu}
+	 * @param memory
+	 *            {@link Memory} instance of this {@link Cpu}
+	 */
 	public CpuImpl(long targetCycleTime, ErrorLog errorlog,
 			ScheduledThreadPoolExecutor executor, Memory memory) {
 		this.targetCycleTime = targetCycleTime;

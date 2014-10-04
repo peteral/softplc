@@ -16,6 +16,14 @@ public class MemoryAreaImpl implements MemoryArea {
 	private final String areaCode;
 	private final byte[] buffer;
 
+	/**
+	 * Creates a new instance.
+	 *
+	 * @param areaCode
+	 *            identifier of this {@link MemoryArea}
+	 * @param size
+	 *            total size in bytes
+	 */
 	public MemoryAreaImpl(String areaCode, int size) {
 		this.areaCode = areaCode;
 		buffer = new byte[size];
