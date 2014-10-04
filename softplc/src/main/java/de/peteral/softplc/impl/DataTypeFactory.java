@@ -6,8 +6,8 @@ import java.util.Map;
 
 import de.peteral.softplc.impl.converter.BoolConverter;
 import de.peteral.softplc.impl.converter.ByteConverter;
+import de.peteral.softplc.impl.converter.DIntConverter;
 import de.peteral.softplc.impl.converter.DateConverter;
-import de.peteral.softplc.impl.converter.DintConverter;
 import de.peteral.softplc.impl.converter.DwordConverter;
 import de.peteral.softplc.impl.converter.IntConverter;
 import de.peteral.softplc.impl.converter.RealConverter;
@@ -47,7 +47,7 @@ public class DataTypeFactory {
 		defineType("I", Short.class, 2, new IntConverter());
 		defineType("W", Integer.class, 2, new WordConverter());
 		defineType("DW", Long.class, 4, new DwordConverter());
-		defineType("DI", Integer.class, 4, new DintConverter());
+		defineType("DI", Integer.class, 4, new DIntConverter());
 		defineType("REAL", Float.class, 4, new RealConverter());
 		defineType("C", String.class, 1, new StringConverter());
 		defineType("STRING", String.class, 1, 2, new S7StringConverter());
@@ -58,14 +58,14 @@ public class DataTypeFactory {
 	/**
 	 * Returns java class associated with this data type.
 	 *
-	 * @param type
-	 *            PLC data type
+	 * @param address
+	 *
 	 * @return associated java class
 	 */
-	public Class getType(String type) {
-		assertValid(type);
+	public Class getType(ParsedAddress address) {
+		assertValid(address);
 
-		return DATA_TYPES.get(type);
+		return DATA_TYPES.get(address.getTypeName());
 	}
 
 	private static void defineType(String key, Class dataType, int size,
@@ -84,19 +84,20 @@ public class DataTypeFactory {
 	/**
 	 * Returns size of one element of given type in bytes.
 	 *
-	 * @param type
-	 *            requested data type
+	 * @param address
+	 *
 	 * @return size of one element in bytes
 	 */
-	public int getElementSize(String type) {
-		assertValid(type);
+	public int getElementSize(ParsedAddress address) {
+		assertValid(address);
 
-		return ELEMENT_SIZES.get(type);
+		return ELEMENT_SIZES.get(address.getTypeName());
 	}
 
-	private void assertValid(String type) {
-		if (!DATA_TYPES.containsKey(type)) {
-			throw new DataTypeException(type, "unknown data type");
+	private void assertValid(ParsedAddress address) {
+		if (!DATA_TYPES.containsKey(address.getTypeName())) {
+			throw new DataTypeException(address.getTypeName(),
+					"unknown data type");
 		}
 	}
 
@@ -104,12 +105,14 @@ public class DataTypeFactory {
 	 * Some data types have require additional space for management structures
 	 * (example STRING). This function returns the size of such structures.
 	 *
-	 * @param type
-	 *            requested data type name
+	 * @param address
+	 *
 	 * @return size of the header
 	 */
-	public int getHeaderSize(String type) {
-		return ELEMENT_HEADER_SIZE.get(type);
+	public int getHeaderSize(ParsedAddress address) {
+		assertValid(address);
+
+		return ELEMENT_HEADER_SIZE.get(address.getTypeName());
 	}
 
 	/**
@@ -117,38 +120,34 @@ public class DataTypeFactory {
 	 *
 	 * @param bytes
 	 *            byte data
-	 * @param typeName
-	 *            requested type name
+	 * @param address
 	 * @return java class instance or array of java class instances
 	 */
-	public Object fromBytes(byte[] bytes, String typeName, int count) {
-		assertValidBytes(bytes, typeName, count);
+	public Object fromBytes(byte[] bytes, ParsedAddress address) {
+		assertValidBytes(bytes, address);
 
-		int elementSize = getElementSize(typeName);
-		int headerSize = getHeaderSize(typeName);
-
-		Converter<?> converter = CONVERTERS.get(typeName);
-		if (count == 1) {
-			return converter.fromBytes(bytes, 0, count);
+		Converter<?> converter = CONVERTERS.get(address.getTypeName());
+		if (address.getCount() == 1) {
+			return converter.fromBytes(bytes, address, 0);
 		}
 
-		Object[] result = converter.createArray(count);
+		Object[] result = converter.createArray(address.getCount());
 
-		for (int i = 0; i < count; i++) {
-			result[i] = converter.fromBytes(bytes, headerSize
-					+ (i * elementSize), count);
+		for (int i = 0; i < address.getCount(); i++) {
+			result[i] = converter.fromBytes(bytes, address, i
+					* getByteArraySize(address));
 		}
 
 		return result;
 	}
 
-	private void assertValidBytes(byte[] bytes, String typeName, int count) {
-		int elementSize = getElementSize(typeName);
-		int elementHeaderSize = getHeaderSize(typeName);
+	private void assertValidBytes(byte[] bytes, ParsedAddress address) {
+		int elementSize = getElementSize(address);
+		int elementHeaderSize = getHeaderSize(address);
 
-		if (bytes.length < ((count * elementSize) + elementHeaderSize)) {
-			throw new DataTypeException(typeName, "invalid byte array length: "
-					+ bytes.length);
+		if (bytes.length < ((address.getCount() * elementSize) + elementHeaderSize)) {
+			throw new DataTypeException(address.getTypeName(),
+					"invalid byte array length: " + bytes.length);
 		}
 	}
 
@@ -157,28 +156,30 @@ public class DataTypeFactory {
 	 *
 	 * @param value
 	 *            java class or array to be transformed
-	 * @param typeName
-	 *            data type name
+	 * @param address
 	 * @return byte array representation
 	 */
-	public byte[] toBytes(Object value, String typeName, int count) {
-		int headerSize = getHeaderSize(typeName);
-		int elementSize = getElementSize(typeName);
+	public byte[] toBytes(Object value, ParsedAddress address) {
+		byte[] result = new byte[getByteArraySize(address) * address.getCount()];
 
-		byte[] result = new byte[headerSize + (count * elementSize)];
-
-		Converter converter = CONVERTERS.get(typeName);
-		if (count == 1) {
-			converter.toBytes(value, headerSize, count, result);
+		Converter converter = CONVERTERS.get(address.getTypeName());
+		if (address.getCount() == 1) {
+			converter.toBytes(value, address, result, 0);
 		} else {
 			Object[] values = (Object[]) value;
-			for (int i = 0; i < count; i++) {
-				converter.toBytes(values[i], headerSize + (i * elementSize),
-						count, result);
+			for (int i = 0; i < address.getCount(); i++) {
+				converter.toBytes(values[i], address, result, i
+						* getByteArraySize(address));
 			}
 		}
 
 		return result;
 	}
 
+	private int getByteArraySize(ParsedAddress address) {
+		int headerSize = getHeaderSize(address);
+		int elementSize = getElementSize(address);
+
+		return (headerSize + (elementSize * address.getSize()));
+	}
 }

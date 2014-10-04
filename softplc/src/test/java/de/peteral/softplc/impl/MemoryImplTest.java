@@ -29,7 +29,7 @@ public class MemoryImplTest {
 	@Mock
 	private AddressParserFactory addressParserFactory;
 	@Mock
-	private AddressParser addressParser;
+	private ParsedAddress addressParser;
 	@Mock
 	private DataTypeFactory dataTypeFactory;
 
@@ -84,7 +84,8 @@ public class MemoryImplTest {
 		byte[] bytes = {};
 
 		when(areaM.readBytes(100, 2)).thenReturn(bytes);
-		when(dataTypeFactory.fromBytes(bytes, "W", 1)).thenReturn((short) 500);
+		when(dataTypeFactory.fromBytes(bytes, addressParser)).thenReturn(
+				(short) 500);
 
 		assertEquals((short) 500, memory.read(address));
 	}
@@ -101,7 +102,7 @@ public class MemoryImplTest {
 
 		byte[] bytes = {};
 
-		when(dataTypeFactory.toBytes(2, "W", 1)).thenReturn(bytes);
+		when(dataTypeFactory.toBytes(2, addressParser)).thenReturn(bytes);
 
 		memory.write(address, 2);
 

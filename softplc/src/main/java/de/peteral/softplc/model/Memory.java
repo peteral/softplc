@@ -1,6 +1,6 @@
 package de.peteral.softplc.model;
 
-import de.peteral.softplc.impl.AddressParser;
+import de.peteral.softplc.impl.ParsedAddress;
 
 /**
  * This interface provides access to the memory of a {@link Cpu}.
@@ -57,7 +57,7 @@ public interface Memory {
 	 * @param address
 	 *            address string
 	 * @return result according type encoded within address
-	 * @see AddressParser
+	 * @see ParsedAddress
 	 */
 	Object read(String address);
 
@@ -70,7 +70,7 @@ public interface Memory {
 	 *            defines the location to write and the data type
 	 * @param value
 	 *            value to be written
-	 * @see AddressParser
+	 * @see ParsedAddress
 	 */
 	void write(String address, Object value);
 

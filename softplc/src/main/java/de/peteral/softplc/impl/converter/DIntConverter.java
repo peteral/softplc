@@ -3,23 +3,23 @@ package de.peteral.softplc.impl.converter;
 import de.peteral.softplc.impl.ParsedAddress;
 import de.peteral.softplc.model.Converter;
 
-public class RealConverter implements Converter<Float> {
+public class DIntConverter implements Converter<Integer> {
 
 	@Override
-	public Float[] createArray(int count) {
+	public Integer[] createArray(int count) {
 		// TODO Auto-generated method stub
 		return null;
 	}
 
 	@Override
-	public void toBytes(Float value, ParsedAddress address, byte[] buffer,
+	public void toBytes(Integer value, ParsedAddress address, byte[] buffer,
 			int offset) {
 		// TODO Auto-generated method stub
 
 	}
 
 	@Override
-	public Float fromBytes(byte[] bytes, ParsedAddress address, int offset) {
+	public Integer fromBytes(byte[] bytes, ParsedAddress address, int offset) {
 		// TODO Auto-generated method stub
 		return null;
 	}

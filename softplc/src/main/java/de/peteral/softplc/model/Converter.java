@@ -1,8 +1,12 @@
 package de.peteral.softplc.model;
 
+import de.peteral.softplc.impl.ParsedAddress;
+
 /**
  * Classes implementing this interface are responsible for converting of java
  * types to byte arrays and vice versa.
+ * <p>
+ * Only converts a single value does not handle arrays.
  *
  * @param <T>
  *
@@ -14,27 +18,23 @@ public interface Converter<T> {
 	 *
 	 * @param value
 	 *            the java value to be converted
-	 * @param startByte
-	 *            start offset within the byte buffer
-	 * @param size
-	 *            size of the element in bytes
+	 * @param address
 	 * @param buffer
 	 *            byte buffer
+	 * @param offset
 	 */
-	void toBytes(T value, int startByte, int size, byte[] buffer);
+	void toBytes(T value, ParsedAddress address, byte[] buffer, int offset);
 
 	/**
 	 * Converts byte array to java data type.
 	 *
 	 * @param bytes
 	 *            source byte array
-	 * @param startByte
-	 *            start offset within the source byte array
-	 * @param size
-	 *            size of the element in bytes
+	 * @param address
+	 * @param offset
 	 * @return converted java value
 	 */
-	T fromBytes(byte[] bytes, int startByte, int size);
+	T fromBytes(byte[] bytes, ParsedAddress address, int offset);
 
 	/**
 	 * Creates an array of java elements.

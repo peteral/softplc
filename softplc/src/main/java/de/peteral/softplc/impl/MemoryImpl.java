@@ -46,27 +46,24 @@ public class MemoryImpl implements Memory {
 
 	@Override
 	public Object read(String address) {
-		AddressParser parser = addressParserFactory.createParser(address);
+		ParsedAddress parser = addressParserFactory.createParser(address);
 
 		MemoryArea memoryArea = getMemoryArea(parser.getAreaCode());
 
 		byte[] bytes = memoryArea.readBytes(parser.getOffset(),
 				parser.getSize());
 
-		return dataTypeFactory.fromBytes(bytes, parser.getTypeName(),
-				parser.getCount());
+		return dataTypeFactory.fromBytes(bytes, parser);
 	}
 
 	@Override
 	public void write(String address, Object value) {
-		AddressParser parser = addressParserFactory.createParser(address);
+		ParsedAddress parser = addressParserFactory.createParser(address);
 
 		MemoryArea memoryArea = getMemoryArea(parser.getAreaCode());
 
-		memoryArea.writeBytes(
-				parser.getOffset(),
-				dataTypeFactory.toBytes(value, parser.getTypeName(),
-						parser.getCount()));
+		memoryArea.writeBytes(parser.getOffset(),
+				dataTypeFactory.toBytes(value, parser));
 	}
 
 }

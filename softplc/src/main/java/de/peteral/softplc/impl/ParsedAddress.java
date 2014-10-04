@@ -6,12 +6,13 @@ import de.peteral.softplc.model.MemoryArea;
 /**
  * Parses addresses for access to {@link Memory}.
  * <p>
- * Syntax: <b>A,Tnnn[.b][,mm]</b>
+ * Syntax: <b>A,Tnnn[.b][:ss][,mm]</b>
  * <ul>
  * <li><b>A</b> - {@link MemoryArea} code
  * <li><b>T</b> - data type - see {@link DataTypeFactory}
  * <li><b>nnn</b> - byte offset
  * <li><b>b</b> - bit number
+ * <li><b>ss</b> - size (for strings)
  * <li><b>mm</b> - number of elements (arrays used if mm > 1)
  * </ul>
  *
@@ -20,14 +21,14 @@ import de.peteral.softplc.model.MemoryArea;
  * <ul>
  * <li><b>DB100,X100.2</b>
  * <li><b>M,DI55</b>
- * <li><b>DB50,C20,20</b>
+ * <li><b>DB50,C20:20</b>
  * <li><b>I,B0,5</b>
  * </ul>
  *
  * @author peteral
  *
  */
-public class AddressParser {
+public class ParsedAddress {
 
 	private final String areaCode;
 	private int offset;
@@ -35,8 +36,10 @@ public class AddressParser {
 	private final int bitNumber;
 	private final int count;
 	private final String typeName;
+	private final String address;
 
-	public AddressParser(DataTypeFactory dataTypeFactory, String address) {
+	public ParsedAddress(String address) {
+		this.address = address;
 		try {
 			String[] split = address.split(",");
 
@@ -47,8 +50,18 @@ public class AddressParser {
 			areaCode = split[0];
 			count = (split.length == 3) ? Integer.parseInt(split[2]) : 1;
 
-			String typeAndOffset = split[1];
-			int index = typeAndOffset.indexOf('.');
+			String typeOffsetAndSize = split[1];
+			String typeAndOffset = typeOffsetAndSize;
+
+			int index = typeOffsetAndSize.indexOf(':');
+			if (index >= 0) {
+				size = Integer.parseInt(typeOffsetAndSize.substring(index + 1));
+				typeAndOffset = typeOffsetAndSize.substring(0, index);
+			} else {
+				size = 1;
+			}
+
+			index = typeAndOffset.indexOf('.');
 			if (index >= 0) {
 				bitNumber = Integer
 						.parseInt(typeAndOffset.substring(index + 1));
@@ -58,8 +71,6 @@ public class AddressParser {
 			}
 
 			typeName = typeAndOffset.replaceAll("[0-9].*$", "");
-			size = (getCount() * dataTypeFactory.getElementSize(getTypeName()))
-					+ dataTypeFactory.getHeaderSize(getTypeName());
 			offset = Integer.parseInt(typeAndOffset.substring(getTypeName()
 					.length()));
 
@@ -98,4 +109,8 @@ public class AddressParser {
 		return typeName;
 	}
 
+	@Override
+	public String toString() {
+		return address;
+	}
 }
