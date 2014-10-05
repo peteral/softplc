@@ -3,6 +3,19 @@ package de.peteral.softplc.datatype;
 import de.peteral.softplc.address.ParsedAddress;
 import de.peteral.softplc.model.Converter;
 
+/**
+ * Converts S7 string to / from byte arrays.
+ * <p>
+ * Structure:
+ * <ul>
+ * <li><b>+0</b> - total size
+ * <li><b>+1</b> - actual string length
+ * <li><b>+2</b> - start of character data
+ * </ul>
+ *
+ * @author peteral
+ *
+ */
 public class S7StringConverter implements Converter<String> {
 
 	@Override

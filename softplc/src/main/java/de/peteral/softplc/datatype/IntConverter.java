@@ -3,6 +3,12 @@ package de.peteral.softplc.datatype;
 import de.peteral.softplc.address.ParsedAddress;
 import de.peteral.softplc.model.Converter;
 
+/**
+ * Converts signed 16-bit integer.
+ *
+ * @author peteral
+ *
+ */
 public class IntConverter implements Converter<Short> {
 
 	@Override

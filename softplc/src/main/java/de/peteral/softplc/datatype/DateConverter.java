@@ -5,6 +5,12 @@ import java.util.Date;
 import de.peteral.softplc.address.ParsedAddress;
 import de.peteral.softplc.model.Converter;
 
+/**
+ * Converts S7 DATE_AND_TIME from / to byte arrays.
+ *
+ * @author peteral
+ *
+ */
 public class DateConverter implements Converter<Date> {
 
 	@Override

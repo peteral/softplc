@@ -13,10 +13,8 @@ import org.junit.runners.Parameterized.Parameters;
 import org.mockito.MockitoAnnotations;
 
 import de.peteral.softplc.address.ParsedAddress;
-import de.peteral.softplc.datatype.DataTypeException;
-import de.peteral.softplc.datatype.DataTypeFactory;
 
-@SuppressWarnings({ "javadoc", "rawtypes" })
+@SuppressWarnings({ "javadoc" })
 @RunWith(Parameterized.class)
 public class DataTypeFactoryTest {
 
