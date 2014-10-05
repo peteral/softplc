@@ -1,4 +1,4 @@
-package de.peteral.softplc.dataType;
+package de.peteral.softplc.datatype;
 
 /**
  * Exception thrown by {@link DataTypeFactory} when invalid data type is

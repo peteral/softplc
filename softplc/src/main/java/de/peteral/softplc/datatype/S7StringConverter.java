@@ -1,25 +1,25 @@
-package de.peteral.softplc.dataType;
+package de.peteral.softplc.datatype;
 
 import de.peteral.softplc.address.ParsedAddress;
 import de.peteral.softplc.model.Converter;
 
-public class IntConverter implements Converter<Short> {
+public class S7StringConverter implements Converter<String> {
 
 	@Override
-	public Short[] createArray(int count) {
+	public String[] createArray(int count) {
 		// TODO Auto-generated method stub
 		return null;
 	}
 
 	@Override
-	public void toBytes(Short value, ParsedAddress address, byte[] buffer,
+	public void toBytes(String value, ParsedAddress address, byte[] buffer,
 			int offset) {
 		// TODO Auto-generated method stub
 
 	}
 
 	@Override
-	public Short fromBytes(byte[] bytes, ParsedAddress address, int offset) {
+	public String fromBytes(byte[] bytes, ParsedAddress address, int offset) {
 		// TODO Auto-generated method stub
 		return null;
 	}

@@ -1,4 +1,4 @@
-package de.peteral.softplc.dataType;
+package de.peteral.softplc.datatype;
 
 import de.peteral.softplc.address.ParsedAddress;
 import de.peteral.softplc.model.Converter;

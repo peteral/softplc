@@ -13,7 +13,7 @@ import org.mockito.MockitoAnnotations;
 
 import de.peteral.softplc.address.AddressParserFactory;
 import de.peteral.softplc.address.ParsedAddress;
-import de.peteral.softplc.dataType.DataTypeFactory;
+import de.peteral.softplc.datatype.DataTypeFactory;
 import de.peteral.softplc.model.Memory;
 import de.peteral.softplc.model.MemoryAccessViolationException;
 import de.peteral.softplc.model.MemoryArea;

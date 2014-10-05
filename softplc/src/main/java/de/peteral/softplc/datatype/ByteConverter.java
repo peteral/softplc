@@ -1,33 +1,31 @@
-package de.peteral.softplc.dataType;
+package de.peteral.softplc.datatype;
 
 import de.peteral.softplc.address.ParsedAddress;
 import de.peteral.softplc.model.Converter;
 
 /**
- * Converter handling 32 bit signed decimals.
+ * Converter implementation for byte (8 bit unsigned) conversion.
  *
  * @author peteral
  *
  */
-public class DIntConverter implements Converter<Double> {
+public class ByteConverter implements Converter<Double> {
 
 	@Override
 	public Double[] createArray(int count) {
-		// TODO Auto-generated method stub
-		return null;
+		return new Double[count];
 	}
 
 	@Override
 	public void toBytes(Double value, ParsedAddress address, byte[] buffer,
 			int offset) {
-		// TODO Auto-generated method stub
 
+		buffer[offset] = value.byteValue();
 	}
 
 	@Override
 	public Double fromBytes(byte[] bytes, ParsedAddress address, int offset) {
-		// TODO Auto-generated method stub
-		return null;
+		return Double.valueOf(DataTypeUtils.byteToInt(bytes[offset]));
 	}
 
 }

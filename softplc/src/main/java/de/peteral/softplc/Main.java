@@ -9,7 +9,10 @@ import de.peteral.softplc.plc.PlcFactory;
  * @author peteral
  *
  */
-public class Main {
+public final class Main {
+	private Main() {
+
+	}
 
 	/**
 	 * Application entry point.
@@ -25,9 +28,6 @@ public class Main {
 
 		plc.start();
 
-		while (true) {
-
-		}
 	}
 
 	private static boolean checkParameters(String[] args) {

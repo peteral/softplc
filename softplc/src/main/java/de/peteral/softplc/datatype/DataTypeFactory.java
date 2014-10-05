@@ -1,4 +1,4 @@
-package de.peteral.softplc.dataType;
+package de.peteral.softplc.datatype;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -27,20 +27,24 @@ import de.peteral.softplc.model.Converter;
  */
 @SuppressWarnings("rawtypes")
 public class DataTypeFactory {
+	private static final int SIZE_DATE = 8;
+	private static final int SIZE_8_BIT = 1;
+	private static final int SIZE_16_BIT = 2;
+	private static final int SIZE_32_BIT = 4;
 	private static final Map<String, Integer> ELEMENT_SIZES = new HashMap<>();
 	private static final Map<String, Integer> ELEMENT_HEADER_SIZE = new HashMap<>();
 	private static final Map<String, Converter<?>> CONVERTERS = new HashMap<>();
 
 	static {
-		defineType("B", 1, new ByteConverter());
-		defineType("I", 2, new IntConverter());
-		defineType("W", 2, new WordConverter());
-		defineType("DW", 4, new DwordConverter());
-		defineType("DI", 4, new DIntConverter());
-		defineType("REAL", 4, new RealConverter());
-		defineType("C", 1, new StringConverter());
-		defineType("STRING", 1, 2, new S7StringConverter());
-		defineType("DT", 8, new DateConverter());
+		defineType("B", SIZE_8_BIT, new ByteConverter());
+		defineType("I", SIZE_16_BIT, new IntConverter());
+		defineType("W", SIZE_16_BIT, new WordConverter());
+		defineType("DW", SIZE_32_BIT, new DwordConverter());
+		defineType("DI", SIZE_32_BIT, new DIntConverter());
+		defineType("REAL", SIZE_32_BIT, new RealConverter());
+		defineType("C", SIZE_8_BIT, new StringConverter());
+		defineType("STRING", SIZE_8_BIT, 2, new S7StringConverter());
+		defineType("DT", SIZE_DATE, new DateConverter());
 	}
 
 	private static void defineType(String key, int size, int headerSize,

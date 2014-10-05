@@ -1,4 +1,4 @@
-package de.peteral.softplc.dataType;
+package de.peteral.softplc.datatype;
 
 /**
  * @author peteral

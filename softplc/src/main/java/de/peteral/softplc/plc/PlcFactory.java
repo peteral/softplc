@@ -25,7 +25,7 @@ import org.xml.sax.SAXException;
 import de.peteral.softplc.address.AddressParserFactory;
 import de.peteral.softplc.cpu.CpuImpl;
 import de.peteral.softplc.cpu.ErrorLogImpl;
-import de.peteral.softplc.dataType.DataTypeFactory;
+import de.peteral.softplc.datatype.DataTypeFactory;
 import de.peteral.softplc.memory.MemoryAreaImpl;
 import de.peteral.softplc.memory.MemoryImpl;
 import de.peteral.softplc.model.Cpu;

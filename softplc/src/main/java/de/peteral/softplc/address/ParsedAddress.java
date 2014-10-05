@@ -1,6 +1,6 @@
 package de.peteral.softplc.address;
 
-import de.peteral.softplc.dataType.DataTypeFactory;
+import de.peteral.softplc.datatype.DataTypeFactory;
 import de.peteral.softplc.model.Memory;
 import de.peteral.softplc.model.MemoryArea;
 
