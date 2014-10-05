@@ -4,12 +4,15 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertSame;
 import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.anyLong;
+import static org.mockito.Matchers.anyString;
+import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 import java.util.concurrent.ScheduledThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
+import java.util.logging.Level;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -37,6 +40,8 @@ public class CpuImplTest {
 	private CommunicationTask task1;
 	@Mock
 	private Memory memory;
+	@Mock
+	private Throwable exception;
 
 	@Before
 	public void setup() {
@@ -139,5 +144,46 @@ public class CpuImplTest {
 		cpu.afterCycleEnd();
 
 		verify(task1).execute(cpu);
+	}
+
+	@Test
+	public void getErrorLog_None_ReturnsErrorlog() {
+		assertEquals(errorlog, cpu.getErrorLog());
+	}
+
+	@Test
+	public void onError_Mock_LogsToErrorlog() {
+		cpu.loadProgram(program);
+
+		cpu.onError(exception);
+
+		verify(errorlog).log(eq(Level.SEVERE), anyString(), anyString());
+	}
+
+	@Test
+	public void onError_Mock_StatusChangesToError() {
+		cpu.loadProgram(program);
+
+		cpu.onError(exception);
+
+		assertEquals(CpuStatus.ERROR, cpu.getStatus());
+	}
+
+	@Test
+	public void onError_Mock_UnregistersWithProgram() {
+		cpu.loadProgram(program);
+
+		cpu.onError(exception);
+
+		verify(program).removeObserver(cpu);
+	}
+
+	@Test
+	public void onError_Mock_ShutsDownExecutor() {
+		cpu.loadProgram(program);
+
+		cpu.onError(exception);
+
+		verify(executor).shutdown();
 	}
 }
