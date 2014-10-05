@@ -14,7 +14,6 @@ import org.mockito.MockitoAnnotations;
 import de.peteral.softplc.address.AddressParserFactory;
 import de.peteral.softplc.address.ParsedAddress;
 import de.peteral.softplc.dataType.DataTypeFactory;
-import de.peteral.softplc.memory.MemoryImpl;
 import de.peteral.softplc.model.Memory;
 import de.peteral.softplc.model.MemoryAccessViolationException;
 import de.peteral.softplc.model.MemoryArea;
@@ -43,8 +42,7 @@ public class MemoryImplTest {
 
 		when(areaM.getAreaCode()).thenReturn("M");
 		when(areaDb100.getAreaCode()).thenReturn(DB100);
-		when(addressParserFactory.parse(anyString())).thenReturn(
-				addressParser);
+		when(addressParserFactory.parse(anyString())).thenReturn(addressParser);
 
 		memory = new MemoryImpl(addressParserFactory, dataTypeFactory, areaM,
 				areaDb100);
@@ -88,10 +86,10 @@ public class MemoryImplTest {
 		byte[] bytes = {};
 
 		when(areaM.readBytes(100, 2)).thenReturn(bytes);
-		when(dataTypeFactory.fromBytes(bytes, addressParser)).thenReturn(
-				(short) 500);
+		when(dataTypeFactory.fromBytes(bytes, addressParser)).thenReturn(500.0);
+		when(dataTypeFactory.getTotalSize(addressParser)).thenReturn(2);
 
-		assertEquals((short) 500, memory.read(address));
+		assertEquals(500.0, memory.read(address));
 	}
 
 	@Test

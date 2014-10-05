@@ -28,7 +28,8 @@ public class WordConverter implements Converter<Double> {
 
 	@Override
 	public Double fromBytes(byte[] bytes, ParsedAddress address, int offset) {
-		return (double) (0xFF * bytes[offset]) + bytes[offset + 1];
+		return (double) (0xFF * DataTypeUtils.byteToInt(bytes[offset]))
+				+ DataTypeUtils.byteToInt(bytes[offset + 1]);
 	}
 
 }

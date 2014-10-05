@@ -25,7 +25,7 @@ public class ByteConverter implements Converter<Double> {
 
 	@Override
 	public Double fromBytes(byte[] bytes, ParsedAddress address, int offset) {
-		return Double.valueOf(bytes[offset]);
+		return Double.valueOf(DataTypeUtils.byteToInt(bytes[offset]));
 	}
 
 }

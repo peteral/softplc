@@ -1,6 +1,5 @@
 package de.peteral.softplc.dataType;
 
-import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -28,47 +27,31 @@ import de.peteral.softplc.model.Converter;
  */
 @SuppressWarnings("rawtypes")
 public class DataTypeFactory {
-	private static final Map<String, Class> DATA_TYPES = new HashMap<>();
 	private static final Map<String, Integer> ELEMENT_SIZES = new HashMap<>();
 	private static final Map<String, Integer> ELEMENT_HEADER_SIZE = new HashMap<>();
 	private static final Map<String, Converter<?>> CONVERTERS = new HashMap<>();
 
 	static {
-		defineType("B", Byte.class, 1, new ByteConverter());
-		defineType("I", Short.class, 2, new IntConverter());
-		defineType("W", Integer.class, 2, new WordConverter());
-		defineType("DW", Long.class, 4, new DwordConverter());
-		defineType("DI", Integer.class, 4, new DIntConverter());
-		defineType("REAL", Float.class, 4, new RealConverter());
-		defineType("C", String.class, 1, new StringConverter());
-		defineType("STRING", String.class, 1, 2, new S7StringConverter());
-		defineType("DT", Date.class, 8, new DateConverter());
+		defineType("B", 1, new ByteConverter());
+		defineType("I", 2, new IntConverter());
+		defineType("W", 2, new WordConverter());
+		defineType("DW", 4, new DwordConverter());
+		defineType("DI", 4, new DIntConverter());
+		defineType("REAL", 4, new RealConverter());
+		defineType("C", 1, new StringConverter());
+		defineType("STRING", 1, 2, new S7StringConverter());
+		defineType("DT", 8, new DateConverter());
 	}
 
-	/**
-	 * Returns java class associated with this data type.
-	 *
-	 * @param address
-	 *
-	 * @return associated java class
-	 */
-	public Class getType(ParsedAddress address) {
-		assertValid(address);
-
-		return DATA_TYPES.get(address.getTypeName());
-	}
-
-	private static void defineType(String key, Class dataType, int size,
-			int headerSize, Converter<?> converter) {
-		DATA_TYPES.put(key, dataType);
+	private static void defineType(String key, int size, int headerSize,
+			Converter<?> converter) {
 		ELEMENT_SIZES.put(key, size);
 		ELEMENT_HEADER_SIZE.put(key, headerSize);
 		CONVERTERS.put(key, converter);
 	}
 
-	private static void defineType(String key, Class dataType, int size,
-			Converter<?> converter) {
-		defineType(key, dataType, size, 0, converter);
+	private static void defineType(String key, int size, Converter<?> converter) {
+		defineType(key, size, 0, converter);
 	}
 
 	/**
@@ -85,7 +68,7 @@ public class DataTypeFactory {
 	}
 
 	private void assertValid(ParsedAddress address) {
-		if (!DATA_TYPES.containsKey(address.getTypeName())) {
+		if (!CONVERTERS.containsKey(address.getTypeName())) {
 			throw new DataTypeException(address.getTypeName(),
 					"unknown data type");
 		}
@@ -176,7 +159,7 @@ public class DataTypeFactory {
 
 	/**
 	 * Calculates total size in bytes addressed by this address.
-	 * 
+	 *
 	 * @param address
 	 * @return total size in bytes
 	 */

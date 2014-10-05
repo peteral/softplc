@@ -22,31 +22,31 @@ public class DataTypeFactoryTest {
 	@Parameters(name = "{index}: {0} = {1}")
 	public static Iterable<Object[]> getParameters() {
 		return Arrays.asList(new Object[][] {//
-				{ new ParsedAddress("DB100,C10:20"), "Hallo", new byte[] { 'H', 'a', 'l', 'l', 'o', 0x00 }, 20, String.class, 1, 0, 1 },
-				{ new ParsedAddress("DB100,C10:10,2"), new String[] { "Hallo", "abcd" }, new byte[] { 'H', 'a', 'l', 'l', 'o', 0x00, 0x00, 0x00, 0x00, 0x00, 'a', 'b', 'c', 'd', 0x00 }, 20, String.class, 1, 0, 2 },
-				{ new ParsedAddress("M100,B20"), 20.0, new byte[] { 20 }, 1, Byte.class, 1, 0, 1 },
-				{ new ParsedAddress("M100,B20,2"), new Double[] { 10.0, 20.0 }, new byte[] { 10, 20 }, 2, Byte.class, 1, 0, 2 },
-				{ new ParsedAddress("M100,W20"), 20.0, new byte[] { 0, 20 }, 2, Integer.class, 2, 0, 1 },
-				{ new ParsedAddress("M100,W20,2"), new Double[] { 10.0, 20.0 }, new byte[] { 0, 10, 0, 20 }, 4, Integer.class, 2, 0, 2 },
+				{ new ParsedAddress("DB100,C10:20"), "Hallo", new byte[] { 'H', 'a', 'l', 'l', 'o', 0x00 }, 20, 1, 0, 1 },
+				{ new ParsedAddress("DB100,C10:10,2"), new String[] { "Hallo", "abcd" }, new byte[] { 'H', 'a', 'l', 'l', 'o', 0x00, 0x00, 0x00, 0x00, 0x00, 'a', 'b', 'c', 'd', 0x00 }, 20, 1, 0, 2 },
+				{ new ParsedAddress("M100,B20"), 20.0, new byte[] { 20 }, 1, 1, 0, 1 },
+				{ new ParsedAddress("M100,B20"), 250.0, new byte[] { (byte) 250 }, 1, 1, 0, 1 },
+				{ new ParsedAddress("M100,B20,2"), new Double[] { 10.0, 20.0 }, new byte[] { 10, 20 }, 2, 1, 0, 2 },
+				{ new ParsedAddress("M100,W20"), 20.0, new byte[] { 0, 20 }, 2, 2, 0, 1 },
+				{ new ParsedAddress("M100,W20"), 40000.0, new byte[] { (byte) 156, (byte) 220 }, 2, 2, 0, 1 },
+				{ new ParsedAddress("M100,W20,2"), new Double[] { 10.0, 20.0 }, new byte[] { 0, 10, 0, 20 }, 4, 2, 0, 2 },
 		});
 	}
 	/* @formatter:on */
 
 	public DataTypeFactoryTest(ParsedAddress address, Object value,
-			byte[] bytes, int byteArraySize, Class type, int elementSize,
-			int headerSize, int count) {
+			byte[] bytes, int byteArraySize, int elementSize, int headerSize,
+			int count) {
 		this.address = address;
 		this.value = value;
 		this.bytes = bytes;
 		this.byteArraySize = byteArraySize;
-		this.type = type;
 		this.elementSize = elementSize;
 		this.headerSize = headerSize;
 		this.count = count;
 	}
 
 	private final int byteArraySize;
-	private final Class type;
 	private final int elementSize;
 	private final int headerSize;
 	private final int count;
@@ -61,11 +61,6 @@ public class DataTypeFactoryTest {
 		MockitoAnnotations.initMocks(this);
 
 		factory = new DataTypeFactory();
-	}
-
-	@Test
-	public void getType_None_Parameterized() {
-		assertEquals(type, factory.getType(address));
 	}
 
 	@Test
