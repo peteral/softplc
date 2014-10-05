@@ -173,4 +173,15 @@ public class DataTypeFactory {
 
 		return (headerSize + (elementSize * address.getSize()));
 	}
+
+	/**
+	 * Calculates total size in bytes addressed by this address.
+	 * 
+	 * @param address
+	 * @return total size in bytes
+	 */
+	public int getTotalSize(ParsedAddress address) {
+		return address.getCount()
+				* (getHeaderSize(address) + (address.getSize() * getElementSize(address)));
+	}
 }

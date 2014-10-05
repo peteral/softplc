@@ -68,15 +68,15 @@ public class MemoryImpl implements Memory {
 
 	@Override
 	public Object read(String address) {
-		ParsedAddress parser = addressParserFactory.parse(address);
+		ParsedAddress parsedAddress = addressParserFactory.parse(address);
 
-		MemoryArea memoryArea = getMemoryArea(parser.getAreaCode());
+		MemoryArea memoryArea = getMemoryArea(parsedAddress.getAreaCode());
 
 		// TODO: special handling for boolean
-		byte[] bytes = memoryArea.readBytes(parser.getOffset(),
-				parser.getSize());
+		byte[] bytes = memoryArea.readBytes(parsedAddress.getOffset(),
+				dataTypeFactory.getTotalSize(parsedAddress));
 
-		return dataTypeFactory.fromBytes(bytes, parser);
+		return dataTypeFactory.fromBytes(bytes, parsedAddress);
 	}
 
 	@Override

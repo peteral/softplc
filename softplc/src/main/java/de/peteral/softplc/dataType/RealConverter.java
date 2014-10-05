@@ -3,23 +3,29 @@ package de.peteral.softplc.dataType;
 import de.peteral.softplc.address.ParsedAddress;
 import de.peteral.softplc.model.Converter;
 
-public class RealConverter implements Converter<Float> {
+/**
+ * Converter handling 32 bit float.
+ *
+ * @author peteral
+ *
+ */
+public class RealConverter implements Converter<Double> {
 
 	@Override
-	public Float[] createArray(int count) {
+	public Double[] createArray(int count) {
 		// TODO Auto-generated method stub
 		return null;
 	}
 
 	@Override
-	public void toBytes(Float value, ParsedAddress address, byte[] buffer,
+	public void toBytes(Double value, ParsedAddress address, byte[] buffer,
 			int offset) {
 		// TODO Auto-generated method stub
 
 	}
 
 	@Override
-	public Float fromBytes(byte[] bytes, ParsedAddress address, int offset) {
+	public Double fromBytes(byte[] bytes, ParsedAddress address, int offset) {
 		// TODO Auto-generated method stub
 		return null;
 	}

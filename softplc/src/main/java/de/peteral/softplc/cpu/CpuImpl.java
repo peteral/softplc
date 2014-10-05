@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.ScheduledThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
+import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import de.peteral.softplc.model.CommunicationTask;
@@ -62,12 +63,17 @@ public class CpuImpl implements Cpu, ProgramCycleObserver {
 			return;
 		}
 
-		status = CpuStatus.RUN;
+		setStatus(CpuStatus.RUN);
 
 		program.addObserver(this);
 
 		executor.scheduleAtFixedRate(program, 0, getTargetCycleTime(),
 				TimeUnit.MILLISECONDS);
+	}
+
+	private void setStatus(CpuStatus status) {
+		this.status = status;
+		errorlog.log(Level.INFO, this.toString(), "Status changed: " + status);
 	}
 
 	@Override
@@ -76,7 +82,7 @@ public class CpuImpl implements Cpu, ProgramCycleObserver {
 			return;
 		}
 
-		status = CpuStatus.STOP;
+		setStatus(CpuStatus.STOP);
 
 		executor.shutdown();
 
@@ -86,7 +92,7 @@ public class CpuImpl implements Cpu, ProgramCycleObserver {
 	@Override
 	public void loadProgram(Program program) {
 		if (!program.compile()) {
-			status = CpuStatus.ERROR;
+			setStatus(CpuStatus.ERROR);
 		}
 
 		this.program = program;
@@ -125,7 +131,14 @@ public class CpuImpl implements Cpu, ProgramCycleObserver {
 
 	@Override
 	public boolean onError(Throwable e) {
-		// TODO Auto-generated method stub
+		errorlog.log(Level.SEVERE, this.toString(), "Exception caught: " + e);
+		setStatus(CpuStatus.ERROR);
+
+		executor.shutdown();
+
+		program.removeObserver(this);
+
+		// TODO possibility to set CPU to "ignore error" mode
 		return true;
 	}
 

@@ -1,6 +1,7 @@
 package de.peteral.softplc.cpu;
 
 import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import de.peteral.softplc.model.ErrorLog;
 
@@ -14,8 +15,9 @@ public class ErrorLogImpl implements ErrorLog {
 
 	@Override
 	public void log(Level level, String module, String message) {
-		// TODO Auto-generated method stub
+		// TODO implement error log properly
 
+		Logger.getLogger("module").log(level, module + ": " + message);
 	}
 
 }
