@@ -22,4 +22,14 @@ public class PlcFactoryException extends RuntimeException {
 	public PlcFactoryException(String path, Throwable reason) {
 		super("Failed parsing configuration [" + path + "]: ", reason);
 	}
+
+	/**
+	 * Creates instance with additional information.
+	 *
+	 * @param path
+	 * @param reason
+	 */
+	public PlcFactoryException(String path, String reason) {
+		super("Failed parsing configuration [" + path + "]: " + reason);
+	}
 }

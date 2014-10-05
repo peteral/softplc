@@ -68,4 +68,9 @@ public class MemoryAreaImpl implements MemoryArea {
 			buffer[offset] = (byte) (buffer[offset] & (0xFF - (1 << bitNumber)));
 		}
 	}
+
+	@Override
+	public int getSize() {
+		return buffer.length;
+	}
 }

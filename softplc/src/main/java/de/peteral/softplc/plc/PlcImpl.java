@@ -31,12 +31,13 @@ public class PlcImpl implements Plc {
 
 	@Override
 	public Cpu getCpu(int slot) {
-		if (slot >= cpus.length) {
-			throw new ArrayIndexOutOfBoundsException("Invalid CPU slot: "
-					+ slot);
+		for (Cpu cpu : cpus) {
+			if (cpu.getSlot() == slot) {
+				return cpu;
+			}
 		}
 
-		return cpus[slot];
+		throw new ArrayIndexOutOfBoundsException("Invalid CPU slot: " + slot);
 	}
 
 	@Override

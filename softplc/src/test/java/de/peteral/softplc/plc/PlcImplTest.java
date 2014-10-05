@@ -3,6 +3,7 @@ package de.peteral.softplc.plc;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertSame;
 import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -30,6 +31,7 @@ public class PlcImplTest {
 	public void setup() {
 		MockitoAnnotations.initMocks(this);
 
+		when(cpu2.getSlot()).thenReturn(1);
 		Cpu[] cpus = { cpu1, cpu2 };
 
 		plc = new PlcImpl(server, cpus);

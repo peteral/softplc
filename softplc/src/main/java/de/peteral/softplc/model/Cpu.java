@@ -89,4 +89,16 @@ public interface Cpu {
 	 * @return logger associated with this CPU
 	 */
 	Logger getLogger();
+
+	/**
+	 *
+	 * @return this CPUs slot
+	 */
+	int getSlot();
+
+	/**
+	 *
+	 * @return actually loaded program
+	 */
+	Program getProgram();
 }

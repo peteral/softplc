@@ -63,4 +63,10 @@ public interface MemoryArea {
 	 *             for invalid parameters
 	 */
 	void setBit(int offset, int bitNumber, boolean value);
+
+	/**
+	 *
+	 * @return total size of this memory area in bytes
+	 */
+	int getSize();
 }
