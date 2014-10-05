@@ -12,8 +12,11 @@ package de.peteral.softplc.model;
 public interface PutGetServer {
 	/**
 	 * Starts listening and processing PUT/GET requests on defined port.
+	 *
+	 * @param plc
+	 *            handles this plc during execution
 	 */
-	void start();
+	void start(Plc plc);
 
 	/**
 	 * Stops listening on configured port.

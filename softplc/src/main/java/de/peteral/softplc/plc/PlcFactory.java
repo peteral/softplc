@@ -23,6 +23,7 @@ import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
 
 import de.peteral.softplc.address.AddressParserFactory;
+import de.peteral.softplc.comm.PutGetServerImpl;
 import de.peteral.softplc.cpu.CpuImpl;
 import de.peteral.softplc.cpu.ErrorLogImpl;
 import de.peteral.softplc.datatype.DataTypeFactory;
@@ -35,7 +36,6 @@ import de.peteral.softplc.model.Plc;
 import de.peteral.softplc.model.Program;
 import de.peteral.softplc.program.Precompiler;
 import de.peteral.softplc.program.ProgramImpl;
-import de.peteral.softplc.server.PutGetServerImpl;
 
 /**
  * Creates a {@link Plc} instance from configuration file.

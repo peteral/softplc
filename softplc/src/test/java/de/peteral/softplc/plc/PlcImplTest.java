@@ -13,7 +13,6 @@ import org.mockito.MockitoAnnotations;
 import de.peteral.softplc.model.Cpu;
 import de.peteral.softplc.model.Plc;
 import de.peteral.softplc.model.PutGetServer;
-import de.peteral.softplc.plc.PlcImpl;
 
 @SuppressWarnings("javadoc")
 public class PlcImplTest {
@@ -64,7 +63,7 @@ public class PlcImplTest {
 	public void start_None_StartsPutGetServer() {
 		plc.start();
 
-		verify(server).start();
+		verify(server).start(plc);
 	}
 
 	@Test

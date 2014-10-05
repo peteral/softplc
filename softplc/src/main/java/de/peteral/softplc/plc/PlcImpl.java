@@ -51,7 +51,7 @@ public class PlcImpl implements Plc {
 			cpu.start();
 		}
 
-		server.start();
+		server.start(this);
 	}
 
 	@Override
