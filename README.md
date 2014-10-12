@@ -7,16 +7,20 @@ Target functionality:
 - multiple configurable CPUs per PLC
 - each CPU executes a JavaScript program
 - serves PUT/GET protocol over RFC1006 ISO on TCP
--- connect
--- read bytes
--- write bytes
--- set bit
 - network communication monitoring
 - manual access to memory via "variable tables"
 - save / load memory snapshots
 - GUI
--- display actual status
--- start / stop
--- monitor communication
--- manage variable tables
--- manage memory snapshots
+
+Supported PUT / GET commands:
+- connect
+- read bytes 
+- write bytes 
+- set bit
+ 
+GUI features:
+- display actual status
+- start / stop
+- monitor communication
+- manage variable tables
+- manage memory snapshots
