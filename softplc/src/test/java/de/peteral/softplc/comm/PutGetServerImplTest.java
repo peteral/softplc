@@ -3,6 +3,8 @@ package de.peteral.softplc.comm;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
 
+import java.nio.channels.spi.SelectorProvider;
+
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mock;
@@ -25,12 +27,17 @@ public class PutGetServerImplTest {
 	private PutGetServerEvent event;
 	@Mock
 	private RequestWorker worker;
+	@Mock
+	private SelectorProvider selectorProvider;
+	@Mock
+	private ServerSocketChannelFactory serverSocketFactory;
 
 	@Before
 	public void setup() {
 		MockitoAnnotations.initMocks(this);
 
-		server = new PutGetServerImpl(PORT, worker);
+		server = new PutGetServerImpl(PORT, worker, selectorProvider,
+				serverSocketFactory);
 	}
 
 	@Test

@@ -24,7 +24,6 @@ import org.xml.sax.SAXException;
 
 import de.peteral.softplc.address.AddressParserFactory;
 import de.peteral.softplc.comm.PutGetServerImpl;
-import de.peteral.softplc.comm.RequestWorker;
 import de.peteral.softplc.cpu.CpuImpl;
 import de.peteral.softplc.cpu.ErrorLogImpl;
 import de.peteral.softplc.datatype.DataTypeFactory;
@@ -84,7 +83,7 @@ public class PlcFactory {
 			cpus.add(createCpu(cpuElement, path));
 		}
 
-		return new PlcImpl(new PutGetServerImpl(PORT, new RequestWorker()),
+		return new PlcImpl(new PutGetServerImpl(PORT),
 				cpus.toArray(new Cpu[cpus.size()]));
 	}
 

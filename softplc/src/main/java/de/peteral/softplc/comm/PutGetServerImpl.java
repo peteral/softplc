@@ -56,23 +56,45 @@ public class PutGetServerImpl implements PutGetServer, Runnable {
 
 	private boolean running;
 
+	private final SelectorProvider selectorProvider;
+
+	private final ServerSocketChannelFactory socketChannelFactory;
+
 	/**
 	 * Creates a new instance.
 	 *
 	 * @param port
-	 * @param worker
 	 */
-	public PutGetServerImpl(int port, RequestWorker worker) {
+	public PutGetServerImpl(int port) {
+		this(port, new RequestWorker(), SelectorProvider.provider(),
+				new ServerSocketChannelFactory());
+	}
+
+	/**
+	 * Creates a new instance.
+	 * <p>
+	 * For unit testing purpose.
+	 *
+	 * @param port
+	 * @param worker
+	 * @param selectorProvider
+	 */
+	PutGetServerImpl(int port, RequestWorker worker,
+			SelectorProvider selectorProvider,
+			ServerSocketChannelFactory socketChannelFactory) {
 		this.port = port;
 		this.worker = worker;
+		this.selectorProvider = selectorProvider;
+		this.socketChannelFactory = socketChannelFactory;
+
 	}
 
 	private Selector initSelector() throws IOException {
 		// Create a new selector
-		Selector socketSelector = SelectorProvider.provider().openSelector();
+		Selector socketSelector = selectorProvider.openSelector();
 
 		// Create a new non-blocking server socket channel
-		this.serverChannel = ServerSocketChannel.open();
+		this.serverChannel = socketChannelFactory.open();
 		serverChannel.configureBlocking(false);
 
 		// Bind the server socket to the specified address and port
@@ -119,11 +141,11 @@ public class PutGetServerImpl implements PutGetServer, Runnable {
 							.iterator();
 					while (changes.hasNext()) {
 						ChangeRequest change = changes.next();
-						switch (change.type) {
+						switch (change.getType()) {
 						case ChangeRequest.CHANGEOPS:
-							SelectionKey key = change.socket
-							.keyFor(this.selector);
-							key.interestOps(change.ops);
+							SelectionKey key = change.getSocket().keyFor(
+									this.selector);
+							key.interestOps(change.getOps());
 						}
 					}
 					this.pendingChanges.clear();
