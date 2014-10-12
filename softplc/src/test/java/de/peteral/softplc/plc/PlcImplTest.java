@@ -5,6 +5,8 @@ import static org.junit.Assert.assertSame;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
+import java.io.IOException;
+
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mock;
@@ -60,14 +62,14 @@ public class PlcImplTest {
 	}
 
 	@Test
-	public void start_None_StartsPutGetServer() {
+	public void start_None_StartsPutGetServer() throws IOException {
 		plc.start();
 
 		verify(server).start(plc);
 	}
 
 	@Test
-	public void stop_None_StopsPutGetServer() {
+	public void stop_None_StopsPutGetServer() throws IOException {
 		plc.stop();
 
 		verify(server).stop();
