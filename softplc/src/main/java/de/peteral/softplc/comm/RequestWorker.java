@@ -1,12 +1,10 @@
 package de.peteral.softplc.comm;
 
-import java.nio.channels.SocketChannel;
 import java.util.LinkedList;
 import java.util.List;
 
 import de.peteral.softplc.model.CommunicationTask;
 import de.peteral.softplc.model.Plc;
-import de.peteral.softplc.model.PutGetServer;
 import de.peteral.softplc.model.PutGetServerEvent;
 
 /**
@@ -18,25 +16,34 @@ import de.peteral.softplc.model.PutGetServerEvent;
 public class RequestWorker implements Runnable {
 	private final List<ServerDataEvent> queue = new LinkedList<>();
 	private boolean running;
-	private CommunicationTaskFactory communicationTaskFactory;
-	private Plc plc;
+	private final CommunicationTaskFactory communicationTaskFactory;
+	private final Plc plc;
+
+	/**
+	 * Creates a new instance.
+	 *
+	 * @param plc
+	 *            plc to work on
+	 * @param communicationTaskFactory
+	 *            communication task factory instance
+	 */
+	public RequestWorker(Plc plc,
+			CommunicationTaskFactory communicationTaskFactory) {
+		this.plc = plc;
+		this.communicationTaskFactory = communicationTaskFactory;
+
+	}
 
 	/**
 	 * Adds a new {@link ServerDataEvent} to the internal queue.
 	 * <p>
 	 * It will be processed asynchronously by the worker thread.
 	 *
-	 * @param server
-	 * @param socket
-	 * @param data
-	 * @param count
+	 * @param event
 	 */
-	public void processData(PutGetServer server, SocketChannel socket,
-			byte[] data, int count) {
-		byte[] dataCopy = new byte[count];
-		System.arraycopy(data, 0, dataCopy, 0, count);
+	public void processData(ServerDataEvent event) {
 		synchronized (queue) {
-			queue.add(new ServerDataEvent(server, socket, dataCopy));
+			queue.add(event);
 			queue.notify();
 		}
 	}

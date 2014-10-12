@@ -27,8 +27,6 @@ public class PutGetServerImplTest {
 	@Mock
 	private PutGetServerEvent event;
 	@Mock
-	private RequestWorker worker;
-	@Mock
 	private SelectorProvider selectorProvider;
 
 	@Before
@@ -37,7 +35,7 @@ public class PutGetServerImplTest {
 
 		// TODO - problem - final methods in NIO implementation cannot be mocked
 
-		server = new PutGetServerImpl(PORT, worker, selectorProvider);
+		server = new PutGetServerImpl(PORT, selectorProvider);
 	}
 
 	@Test

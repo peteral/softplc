@@ -42,7 +42,7 @@ public class PutGetServerImpl implements PutGetServer, Runnable {
 	// The buffer into which we'll read data when it's available
 	private final ByteBuffer readBuffer = ByteBuffer.allocate(8192);
 
-	private final RequestWorker worker;
+	private RequestWorker worker;
 
 	// A list of PendingChange instances
 	private final List<ChangeRequest> pendingChanges = new LinkedList<>();
@@ -64,7 +64,7 @@ public class PutGetServerImpl implements PutGetServer, Runnable {
 	 * @param port
 	 */
 	public PutGetServerImpl(int port) {
-		this(port, new RequestWorker(), SelectorProvider.provider());
+		this(port, SelectorProvider.provider());
 	}
 
 	/**
@@ -76,10 +76,8 @@ public class PutGetServerImpl implements PutGetServer, Runnable {
 	 * @param worker
 	 * @param selectorProvider
 	 */
-	PutGetServerImpl(int port, RequestWorker worker,
-			SelectorProvider selectorProvider) {
+	PutGetServerImpl(int port, SelectorProvider selectorProvider) {
 		this.port = port;
-		this.worker = worker;
 		this.selectorProvider = selectorProvider;
 
 	}
@@ -106,7 +104,8 @@ public class PutGetServerImpl implements PutGetServer, Runnable {
 	@Override
 	public void start(Plc plc) throws IOException {
 		selector = initSelector();
-		RequestWorker worker = new RequestWorker();
+		RequestWorker worker = new RequestWorker(plc,
+				new CommunicationTaskFactory());
 
 		workerThread = new Thread(worker);
 		workerThread.start();
@@ -217,8 +216,10 @@ public class PutGetServerImpl implements PutGetServer, Runnable {
 		}
 
 		// Hand the data off to our worker thread
-		this.worker.processData(this, socketChannel, this.readBuffer.array(),
-				numRead);
+
+		byte[] dataCopy = new byte[numRead];
+		System.arraycopy(this.readBuffer.array(), 0, dataCopy, 0, numRead);
+		worker.processData(new ServerDataEvent(this, socketChannel, dataCopy));
 	}
 
 	private void write(SelectionKey key) throws IOException {
