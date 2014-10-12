@@ -4,6 +4,11 @@ import de.peteral.softplc.model.CommunicationTask;
 
 /**
  * Translates RF1006 byte arrays from / to communication tasks.
+ * <p>
+ * Protocol structure (<a href=
+ * 'http://tools.ietf.org/html/rfc1006'>http://tools.ietf.org/html/rfc1006</a>):
+ * <table>
+ * </table>
  *
  * @author peteral
  *
