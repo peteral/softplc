@@ -1,6 +1,7 @@
 package de.peteral.softplc.model;
 
 import java.io.IOException;
+import java.nio.channels.SocketChannel;
 
 /**
  * Provides PUT/GET protocol interface for accessing the memory of this
@@ -23,7 +24,7 @@ public interface PutGetServer {
 
 	/**
 	 * Stops listening on configured port.
-	 * 
+	 *
 	 * @throws IOException
 	 */
 	void stop() throws IOException;
@@ -43,4 +44,21 @@ public interface PutGetServer {
 	 *            observer instance.
 	 */
 	void removeObserver(PutGetServerObserver o);
+
+	/**
+	 * Notifies all registered observers about the corresponding event.
+	 *
+	 * @param event
+	 */
+	void notifyObservers(PutGetServerEvent event);
+
+	/**
+	 * Sends data to a connected client socket.
+	 * 
+	 * @param socket
+	 *            client socket
+	 * @param data
+	 *            data to be sent.
+	 */
+	void send(SocketChannel socket, byte[] data);
 }

@@ -58,16 +58,13 @@ public class PutGetServerImpl implements PutGetServer, Runnable {
 
 	private final SelectorProvider selectorProvider;
 
-	private final ServerSocketChannelFactory socketChannelFactory;
-
 	/**
 	 * Creates a new instance.
 	 *
 	 * @param port
 	 */
 	public PutGetServerImpl(int port) {
-		this(port, new RequestWorker(), SelectorProvider.provider(),
-				new ServerSocketChannelFactory());
+		this(port, new RequestWorker(), SelectorProvider.provider());
 	}
 
 	/**
@@ -80,12 +77,10 @@ public class PutGetServerImpl implements PutGetServer, Runnable {
 	 * @param selectorProvider
 	 */
 	PutGetServerImpl(int port, RequestWorker worker,
-			SelectorProvider selectorProvider,
-			ServerSocketChannelFactory socketChannelFactory) {
+			SelectorProvider selectorProvider) {
 		this.port = port;
 		this.worker = worker;
 		this.selectorProvider = selectorProvider;
-		this.socketChannelFactory = socketChannelFactory;
 
 	}
 
@@ -94,7 +89,7 @@ public class PutGetServerImpl implements PutGetServer, Runnable {
 		Selector socketSelector = selectorProvider.openSelector();
 
 		// Create a new non-blocking server socket channel
-		this.serverChannel = socketChannelFactory.open();
+		this.serverChannel = selectorProvider.openServerSocketChannel();
 		serverChannel.configureBlocking(false);
 
 		// Bind the server socket to the specified address and port
@@ -259,6 +254,7 @@ public class PutGetServerImpl implements PutGetServer, Runnable {
 	 * @param socket
 	 * @param data
 	 */
+	@Override
 	public void send(SocketChannel socket, byte[] data) {
 		synchronized (this.pendingChanges) {
 			// Indicate we want the interest ops set changed
@@ -293,7 +289,8 @@ public class PutGetServerImpl implements PutGetServer, Runnable {
 		observers.remove(o);
 	}
 
-	void notifyObservers(PutGetServerEvent event) {
+	@Override
+	public void notifyObservers(PutGetServerEvent event) {
 		for (PutGetServerObserver observer : observers) {
 			observer.onTelegram(event);
 		}

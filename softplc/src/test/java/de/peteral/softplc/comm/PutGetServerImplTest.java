@@ -3,6 +3,7 @@ package de.peteral.softplc.comm;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
 
+import java.io.IOException;
 import java.nio.channels.spi.SelectorProvider;
 
 import org.junit.Before;
@@ -29,15 +30,14 @@ public class PutGetServerImplTest {
 	private RequestWorker worker;
 	@Mock
 	private SelectorProvider selectorProvider;
-	@Mock
-	private ServerSocketChannelFactory serverSocketFactory;
 
 	@Before
-	public void setup() {
+	public void setup() throws IOException {
 		MockitoAnnotations.initMocks(this);
 
-		server = new PutGetServerImpl(PORT, worker, selectorProvider,
-				serverSocketFactory);
+		// TODO - problem - final methods in NIO implementation cannot be mocked
+
+		server = new PutGetServerImpl(PORT, worker, selectorProvider);
 	}
 
 	@Test

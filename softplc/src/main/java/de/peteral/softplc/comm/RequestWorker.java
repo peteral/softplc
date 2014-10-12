@@ -4,6 +4,9 @@ import java.nio.channels.SocketChannel;
 import java.util.LinkedList;
 import java.util.List;
 
+import de.peteral.softplc.model.CommunicationTask;
+import de.peteral.softplc.model.Plc;
+import de.peteral.softplc.model.PutGetServer;
 import de.peteral.softplc.model.PutGetServerEvent;
 
 /**
@@ -15,6 +18,8 @@ import de.peteral.softplc.model.PutGetServerEvent;
 public class RequestWorker implements Runnable {
 	private final List<ServerDataEvent> queue = new LinkedList<>();
 	private boolean running;
+	private CommunicationTaskFactory communicationTaskFactory;
+	private Plc plc;
 
 	/**
 	 * Adds a new {@link ServerDataEvent} to the internal queue.
@@ -26,7 +31,7 @@ public class RequestWorker implements Runnable {
 	 * @param data
 	 * @param count
 	 */
-	public void processData(PutGetServerImpl server, SocketChannel socket,
+	public void processData(PutGetServer server, SocketChannel socket,
 			byte[] data, int count) {
 		byte[] dataCopy = new byte[count];
 		System.arraycopy(data, 0, dataCopy, 0, count);
@@ -53,15 +58,12 @@ public class RequestWorker implements Runnable {
 				dataEvent = queue.remove(0);
 			}
 
-			// TODO implementation goes here
-			// create communication task and send it to proper CPU instance
-			// Return to sender
+			CommunicationTask task = communicationTaskFactory
+					.createTask(dataEvent);
 
-			// this should be invoked within the communication task
-			dataEvent.server.send(dataEvent.socket, dataEvent.data);
+			plc.getCpu(task.getCpuSlot()).addCommunicationTask(task);
 
-			// TODO provide data to PGSE
-			dataEvent.server.notifyObservers(new PutGetServerEvent());
+			dataEvent.getServer().notifyObservers(new PutGetServerEvent());
 		}
 	}
 
