@@ -1,36 +1,41 @@
 package de.peteral.softplc.comm.telegram;
 
+import de.peteral.softplc.model.CommunicationTask;
+import de.peteral.softplc.model.ResponseFactory;
+
 /**
- * Response to Connect Command.
+ * Connect confirmation message.
  * <p>
- * The only variable data is PDU size.
+ * RFC header + 1 byte result
  * <p>
- * The max number of bytes transferred within one read / write command is
- * pduSize-20
+ * Server answers with this message in order to confirm ISO connection
+ * established.
  *
  * @author peteral
  *
  */
-public class IsoConnectResult {
-	private final int pduSize;
-
+// TODO handling for invalid CPU number
+public class IsoConnectResult implements ResponseFactory {
 	/**
-	 * Creates a new instance.
+	 * byte array
+	 * <p>
+	 * client checks for size > 5 and data[5] & 0xF0 == 0xD00
 	 *
-	 * @param maxDataSize
-	 *            maximal supported data data block size per telegram
-	 */
-	public IsoConnectResult(int maxDataSize) {
-		pduSize = maxDataSize + 20;
-	}
-
-	/**
-	 *
-	 * @return byte stream representation
+	 * @return byte representation of this message.
 	 */
 	public byte[] getData() {
-		return new byte[] { 0x32, 0x01, 0x00, 0x00, 0x00, 0x00, 0x00, 0x08,
-				0x00, 0x00, 0x00, 0x00, (byte) 0xF0, 0x00, 0x00, 0x00, 0x00,
-				0x00, (byte) (pduSize / 256), (byte) (pduSize % 256) };
-	};
+		return new byte[] { 0x03, 0x00, 0x00, 0x01, (byte) 0xD0 };
+	}
+
+	@Override
+	public boolean canHandle(CommunicationTask task) {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
+	@Override
+	public byte[] createResponse(CommunicationTask task) {
+		// TODO Auto-generated method stub
+		return null;
+	}
 }

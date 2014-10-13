@@ -68,7 +68,11 @@ public class RequestWorker implements Runnable {
 			CommunicationTask task = communicationTaskFactory
 					.createTask(dataEvent);
 
-			plc.getCpu(task.getCpuSlot()).addCommunicationTask(task);
+			if (task != null) {
+				plc.getCpu(task.getCpuSlot()).addCommunicationTask(task);
+			} else {
+				// TODO warning - unknown incoming telegram
+			}
 
 			dataEvent.getServer().notifyObservers(new PutGetServerEvent());
 		}
