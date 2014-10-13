@@ -108,8 +108,7 @@ public class PutGetServerImpl implements PutGetServer, Runnable {
 	@Override
 	public void start(Plc plc) throws IOException {
 		selector = initSelector();
-		RequestWorker worker = new RequestWorker(plc,
-				new CommunicationTaskFactory());
+		worker = new RequestWorker(plc, new CommunicationTaskFactory());
 
 		workerThread = new Thread(worker);
 		workerThread.start();
