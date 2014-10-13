@@ -1,4 +1,4 @@
-package de.peteral.softplc.comm.telegram;
+package de.peteral.softplc.comm.common;
 
 import java.nio.channels.SocketChannel;
 import java.util.HashMap;

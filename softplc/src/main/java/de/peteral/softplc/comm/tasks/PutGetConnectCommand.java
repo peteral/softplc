@@ -1,12 +1,10 @@
-package de.peteral.softplc.comm.telegram;
+package de.peteral.softplc.comm.tasks;
 
 import java.util.Arrays;
 
-import de.peteral.softplc.comm.CommunicationTaskFactory;
-import de.peteral.softplc.comm.ServerDataEvent;
-import de.peteral.softplc.comm.tasks.PutGetConnectTask;
+import de.peteral.softplc.comm.common.ClientChannelCache;
+import de.peteral.softplc.comm.common.ServerDataEvent;
 import de.peteral.softplc.model.CommunicationTask;
-import de.peteral.softplc.model.TaskFactory;
 
 /**
  * This is a connect command on PUT/GET protocol level.

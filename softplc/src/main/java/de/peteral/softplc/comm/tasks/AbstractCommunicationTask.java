@@ -1,4 +1,4 @@
-package de.peteral.softplc.comm;
+package de.peteral.softplc.comm.tasks;
 
 import java.nio.channels.SocketChannel;
 

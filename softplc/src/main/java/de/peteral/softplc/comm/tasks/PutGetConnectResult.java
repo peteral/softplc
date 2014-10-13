@@ -1,6 +1,5 @@
-package de.peteral.softplc.comm.telegram;
+package de.peteral.softplc.comm.tasks;
 
-import de.peteral.softplc.comm.tasks.PutGetConnectTask;
 import de.peteral.softplc.model.CommunicationTask;
 import de.peteral.softplc.model.ResponseFactory;
 

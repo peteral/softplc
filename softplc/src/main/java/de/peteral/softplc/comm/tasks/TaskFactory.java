@@ -1,7 +1,7 @@
-package de.peteral.softplc.model;
+package de.peteral.softplc.comm.tasks;
 
-import de.peteral.softplc.comm.CommunicationTaskFactory;
-import de.peteral.softplc.comm.ServerDataEvent;
+import de.peteral.softplc.comm.common.ServerDataEvent;
+import de.peteral.softplc.model.CommunicationTask;
 
 /**
  * TaskFactory implementations create {@link CommunicationTask} from

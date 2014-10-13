@@ -3,6 +3,8 @@ package de.peteral.softplc.comm;
 import org.junit.Before;
 import org.mockito.MockitoAnnotations;
 
+import de.peteral.softplc.comm.tasks.CommunicationTaskFactory;
+
 @SuppressWarnings("javadoc")
 public class CommunicationTaskFactoryTest {
 

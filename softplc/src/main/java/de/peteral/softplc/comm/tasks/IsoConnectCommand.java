@@ -1,11 +1,9 @@
-package de.peteral.softplc.comm.telegram;
+package de.peteral.softplc.comm.tasks;
 
-import de.peteral.softplc.comm.CommunicationTaskFactory;
-import de.peteral.softplc.comm.ServerDataEvent;
-import de.peteral.softplc.comm.tasks.IsoConnectTask;
+import de.peteral.softplc.comm.common.ClientChannelCache;
+import de.peteral.softplc.comm.common.ServerDataEvent;
 import de.peteral.softplc.datatype.DataTypeUtils;
 import de.peteral.softplc.model.CommunicationTask;
-import de.peteral.softplc.model.TaskFactory;
 
 /**
  * This telegram is sent by the client in order to create ISO connection.

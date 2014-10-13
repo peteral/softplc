@@ -1,12 +1,8 @@
-package de.peteral.softplc.comm;
+package de.peteral.softplc.comm.tasks;
 
-import de.peteral.softplc.comm.telegram.IsoConnectCommand;
-import de.peteral.softplc.comm.telegram.IsoConnectResult;
-import de.peteral.softplc.comm.telegram.PutGetConnectCommand;
-import de.peteral.softplc.comm.telegram.PutGetConnectResult;
+import de.peteral.softplc.comm.common.ServerDataEvent;
 import de.peteral.softplc.model.CommunicationTask;
 import de.peteral.softplc.model.ResponseFactory;
-import de.peteral.softplc.model.TaskFactory;
 
 /**
  * Translates RF1006 byte arrays from / to communication tasks.

@@ -3,6 +3,8 @@ package de.peteral.softplc.comm;
 import java.util.LinkedList;
 import java.util.List;
 
+import de.peteral.softplc.comm.common.ServerDataEvent;
+import de.peteral.softplc.comm.tasks.CommunicationTaskFactory;
 import de.peteral.softplc.model.CommunicationTask;
 import de.peteral.softplc.model.Plc;
 import de.peteral.softplc.model.PutGetServerEvent;

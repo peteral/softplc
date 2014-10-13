@@ -10,6 +10,8 @@ import org.junit.Test;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 
+import de.peteral.softplc.comm.common.ServerDataEvent;
+import de.peteral.softplc.comm.tasks.CommunicationTaskFactory;
 import de.peteral.softplc.model.CommunicationTask;
 import de.peteral.softplc.model.Cpu;
 import de.peteral.softplc.model.Plc;

@@ -1,6 +1,8 @@
-package de.peteral.softplc.comm;
+package de.peteral.softplc.comm.common;
 
 import java.nio.channels.SocketChannel;
+
+import de.peteral.softplc.comm.PutGetServerImpl;
 
 /**
  * Change request for the {@link SocketChannel} of {@link PutGetServerImpl}.

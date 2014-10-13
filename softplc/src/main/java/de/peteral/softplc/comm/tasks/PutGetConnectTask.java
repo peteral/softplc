@@ -2,8 +2,6 @@ package de.peteral.softplc.comm.tasks;
 
 import java.nio.channels.SocketChannel;
 
-import de.peteral.softplc.comm.AbstractCommunicationTask;
-import de.peteral.softplc.comm.CommunicationTaskFactory;
 import de.peteral.softplc.model.Cpu;
 import de.peteral.softplc.model.PutGetServer;
 
