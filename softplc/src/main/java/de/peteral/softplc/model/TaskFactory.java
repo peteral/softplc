@@ -1,5 +1,6 @@
 package de.peteral.softplc.model;
 
+import de.peteral.softplc.comm.CommunicationTaskFactory;
 import de.peteral.softplc.comm.ServerDataEvent;
 
 /**
@@ -26,8 +27,10 @@ public interface TaskFactory {
 	 *
 	 * @param dataEvent
 	 *            server data event
+	 * @param factory
 	 * @return concrete {@link CommunicationTask} instance
 	 */
-	CommunicationTask createTask(ServerDataEvent dataEvent);
+	CommunicationTask createTask(ServerDataEvent dataEvent,
+			CommunicationTaskFactory factory);
 
 }

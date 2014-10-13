@@ -1,5 +1,6 @@
 package de.peteral.softplc.comm.telegram;
 
+import de.peteral.softplc.comm.tasks.PutGetConnectTask;
 import de.peteral.softplc.model.CommunicationTask;
 import de.peteral.softplc.model.ResponseFactory;
 
@@ -15,23 +16,7 @@ import de.peteral.softplc.model.ResponseFactory;
  *
  */
 public class PutGetConnectResult implements ResponseFactory {
-	private int pduSize;
-
-	/**
-	 * Creates a new instance.
-	 *
-	 * @param maxDataSize
-	 *            maximal supported data data block size per telegram
-	 */
-	public PutGetConnectResult() {
-		// pduSize = maxDataSize + 20;
-	}
-
-	/**
-	 *
-	 * @return byte stream representation
-	 */
-	public byte[] getData() {
+	private byte[] getResult(int pduSize) {
 		return new byte[] { 0x32, 0x01, 0x00, 0x00, 0x00, 0x00, 0x00, 0x08,
 				0x00, 0x00, 0x00, 0x00, (byte) 0xF0, 0x00, 0x00, 0x00, 0x00,
 				0x00, (byte) (pduSize / 256), (byte) (pduSize % 256) };
@@ -39,13 +24,12 @@ public class PutGetConnectResult implements ResponseFactory {
 
 	@Override
 	public boolean canHandle(CommunicationTask task) {
-		// TODO Auto-generated method stub
-		return false;
+		return task instanceof PutGetConnectTask;
 	}
 
 	@Override
 	public byte[] createResponse(CommunicationTask task) {
-		// TODO Auto-generated method stub
-		return null;
+		PutGetConnectTask connectTask = (PutGetConnectTask) task;
+		return getResult(connectTask.getMaxDataSize() + 20);
 	};
 }

@@ -1,6 +1,9 @@
 package de.peteral.softplc.comm.telegram;
 
+import de.peteral.softplc.comm.CommunicationTaskFactory;
 import de.peteral.softplc.comm.ServerDataEvent;
+import de.peteral.softplc.comm.tasks.IsoConnectTask;
+import de.peteral.softplc.datatype.DataTypeUtils;
 import de.peteral.softplc.model.CommunicationTask;
 import de.peteral.softplc.model.TaskFactory;
 
@@ -12,6 +15,7 @@ import de.peteral.softplc.model.TaskFactory;
  */
 // TODO - network byte order = big endian, intel - little endian
 public class IsoConnectCommand implements TaskFactory {
+	private static final int OFFSET_RACK_AND_SLOT = 18;
 	// +0:4 - RFC header
 	// ++0:1 - RFC protocol version
 	private final byte version = 0x03;
@@ -68,9 +72,19 @@ public class IsoConnectCommand implements TaskFactory {
 	}
 
 	@Override
-	public CommunicationTask createTask(ServerDataEvent dataEvent) {
-		// TODO Auto-generated method stub
-		return null;
+	public CommunicationTask createTask(ServerDataEvent dataEvent,
+			CommunicationTaskFactory factory) {
+		int rackAndSlot = DataTypeUtils
+				.byteToInt(dataEvent.getData()[OFFSET_RACK_AND_SLOT]);
+
+		int rack = rackAndSlot & (0xE0 >> 5);
+		int slot = rackAndSlot & 0x1F;
+
+		ClientChannelCache.getInstance()
+				.addChannel(dataEvent.getSocket(), slot);
+
+		return new IsoConnectTask(dataEvent.getServer(), dataEvent.getSocket(),
+				rack, slot, factory);
 	}
 
 }

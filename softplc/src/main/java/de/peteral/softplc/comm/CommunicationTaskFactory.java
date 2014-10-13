@@ -21,10 +21,10 @@ import de.peteral.softplc.model.TaskFactory;
  */
 public class CommunicationTaskFactory {
 	private static final TaskFactory TASK_FACTORIES[] = {
-		new IsoConnectCommand(), new PutGetConnectCommand() };
+			new IsoConnectCommand(), new PutGetConnectCommand() };
 
 	private static final ResponseFactory RESPONSE_FACTORIES[] = {
-			new IsoConnectResult(), new PutGetConnectResult() };
+		new IsoConnectResult(), new PutGetConnectResult() };
 
 	/**
 	 * Creates a {@link CommunicationTask} from FRC1006 request.
@@ -36,7 +36,7 @@ public class CommunicationTaskFactory {
 	public CommunicationTask createTask(ServerDataEvent dataEvent) {
 		for (TaskFactory factory : TASK_FACTORIES) {
 			if (factory.canHandle(dataEvent)) {
-				return factory.createTask(dataEvent);
+				return factory.createTask(dataEvent, this);
 			}
 		}
 		return null;

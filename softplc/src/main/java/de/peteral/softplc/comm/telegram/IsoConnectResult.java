@@ -1,5 +1,6 @@
 package de.peteral.softplc.comm.telegram;
 
+import de.peteral.softplc.comm.tasks.IsoConnectTask;
 import de.peteral.softplc.model.CommunicationTask;
 import de.peteral.softplc.model.ResponseFactory;
 
@@ -14,28 +15,22 @@ import de.peteral.softplc.model.ResponseFactory;
  * @author peteral
  *
  */
-// TODO handling for invalid CPU number
 public class IsoConnectResult implements ResponseFactory {
-	/**
-	 * byte array
-	 * <p>
-	 * client checks for size > 5 and data[5] & 0xF0 == 0xD00
-	 *
-	 * @return byte representation of this message.
-	 */
-	public byte[] getData() {
-		return new byte[] { 0x03, 0x00, 0x00, 0x01, (byte) 0xD0 };
-	}
+	private static final byte[] GOOD_RESPONSE = { 0x03, 0x00, 0x00, 0x01,
+			(byte) 0xD0 };
+	// TODO check bad response byte stream
+	private static final byte[] BAD_RESPONSE = { 0x03, 0x00, 0x00, 0x01,
+			(byte) 0x00 };
 
 	@Override
 	public boolean canHandle(CommunicationTask task) {
-		// TODO Auto-generated method stub
-		return false;
+		return task instanceof IsoConnectTask;
 	}
 
 	@Override
 	public byte[] createResponse(CommunicationTask task) {
-		// TODO Auto-generated method stub
-		return null;
+		IsoConnectTask connectTask = (IsoConnectTask) task;
+
+		return (connectTask.isOk()) ? GOOD_RESPONSE : BAD_RESPONSE;
 	}
 }
