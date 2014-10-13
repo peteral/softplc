@@ -26,6 +26,7 @@ import de.peteral.softplc.model.PutGetServerObserver;
  * @author peteral
  *
  */
+// TODO remove channel from ClientChannelCache when client disconnects
 public class PutGetServerImpl implements PutGetServer, Runnable {
 
 	private final List<PutGetServerObserver> observers = new ArrayList<>();

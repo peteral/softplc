@@ -1,25 +1,66 @@
 package de.peteral.softplc.comm.telegram;
 
 import java.nio.channels.SocketChannel;
+import java.util.HashMap;
+import java.util.Map;
 
+/**
+ * Maps client channels to cpu numbers so incoming telegrams can be dispatched
+ * to proper CPU based on the client channel.
+ *
+ * @author peteral
+ *
+ */
 public class ClientChannelCache {
+	private static ClientChannelCache instance = null;
 
+	private final Map<SocketChannel, Integer> cache = new HashMap<>();
+
+	private ClientChannelCache() {
+
+	}
+
+	/**
+	 * @return provides access to the singleton instance
+	 */
 	public static ClientChannelCache getInstance() {
-		// TODO Auto-generated method stub
-		return null;
+		if (instance == null) {
+			instance = new ClientChannelCache();
+		}
+
+		return instance;
 	}
 
-	public int getSlot(SocketChannel socket) {
-		// TODO Auto-generated method stub
-		return 0;
+	/**
+	 * Looks up the CPU slot number this socket is assigned to.
+	 *
+	 * @param socket
+	 * @return cpu slot number assigned to this socket
+	 */
+	public Integer getSlot(SocketChannel socket) {
+		return cache.get(socket);
 	}
 
+	/**
+	 * Registers a new client channel to a cpu slot number.
+	 *
+	 * @param socket
+	 * @param slot
+	 */
 	public void addChannel(SocketChannel socket, int slot) {
-		// TODO Auto-generated method stub
-
+		cache.put(socket, slot);
 	}
 
-	public void removeSocket(SocketChannel socket) {
-		// TODO this must be invoked when a client socket channel is closed
+	/**
+	 * Unregisters a client channel after it has been closed.
+	 *
+	 * @param socket
+	 */
+	public void removeChannel(SocketChannel socket) {
+		cache.remove(socket);
+	}
+
+	void clear() {
+		cache.clear();
 	}
 }
