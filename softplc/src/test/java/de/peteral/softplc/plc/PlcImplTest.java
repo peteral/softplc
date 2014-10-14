@@ -1,7 +1,9 @@
 package de.peteral.softplc.plc;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertSame;
+import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
@@ -41,6 +43,16 @@ public class PlcImplTest {
 	@Test(expected = ArrayIndexOutOfBoundsException.class)
 	public void getCpu_InvalidSlot_ThrowsException() {
 		plc.getCpu(2);
+	}
+
+	@Test
+	public void hasCpu_ValidSlot_ReturnsTrue() {
+		assertTrue(plc.hasCpu(1));
+	}
+
+	@Test
+	public void hasCpu_InvalidSlot_ReturnsFalse() {
+		assertFalse(plc.hasCpu(2));
 	}
 
 	@Test

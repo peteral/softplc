@@ -5,6 +5,7 @@ import java.util.List;
 
 import de.peteral.softplc.comm.common.ServerDataEvent;
 import de.peteral.softplc.comm.tasks.CommunicationTaskFactory;
+import de.peteral.softplc.comm.tasks.IsoConnectTask;
 import de.peteral.softplc.model.CommunicationTask;
 import de.peteral.softplc.model.Plc;
 import de.peteral.softplc.model.PutGetServerEvent;
@@ -71,7 +72,18 @@ public class RequestWorker implements Runnable {
 					.createTask(dataEvent);
 
 			if (task != null) {
-				plc.getCpu(task.getCpuSlot()).addCommunicationTask(task);
+				if (plc.hasCpu(task.getCpuSlot())) {
+					plc.getCpu(task.getCpuSlot()).addCommunicationTask(task);
+				} else {
+					// handling for invalid CPU / rack during ISO connect
+					if (task instanceof IsoConnectTask) {
+						((IsoConnectTask) task).sendResponse();
+					} else {
+						// TODO this should never happen - a task created for
+						// wrong CPU slot outside of ISO connect
+					}
+				}
+
 			} else {
 				// TODO warning - unknown incoming telegram
 			}

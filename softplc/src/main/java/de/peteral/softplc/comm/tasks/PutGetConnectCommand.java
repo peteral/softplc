@@ -1,7 +1,5 @@
 package de.peteral.softplc.comm.tasks;
 
-import java.util.Arrays;
-
 import de.peteral.softplc.comm.common.ClientChannelCache;
 import de.peteral.softplc.comm.common.ServerDataEvent;
 import de.peteral.softplc.model.CommunicationTask;
@@ -21,7 +19,16 @@ public class PutGetConnectCommand implements TaskFactory {
 
 	@Override
 	public boolean canHandle(ServerDataEvent dataEvent) {
-		return Arrays.equals(COMMAND, dataEvent.getData());
+		if (dataEvent.getData().length < COMMAND.length) {
+			return false;
+		}
+
+		for (int i = 0; i < COMMAND.length; i++) {
+			if (COMMAND[i] != dataEvent.getData()[i]) {
+				return false;
+			}
+		}
+		return true;
 	}
 
 	@Override

@@ -75,4 +75,15 @@ public class PlcImpl implements Plc {
 		}
 	}
 
+	@Override
+	public boolean hasCpu(int slot) {
+		for (Cpu cpu : cpus) {
+			if (cpu.getSlot() == slot) {
+				return true;
+			}
+		}
+
+		return false;
+	}
+
 }

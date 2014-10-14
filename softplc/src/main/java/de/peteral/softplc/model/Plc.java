@@ -37,4 +37,13 @@ public interface Plc {
 	 * Stops the PLC and all managed services.
 	 */
 	void stop();
+
+	/**
+	 * Checks whether the CPU with given slot is available.
+	 *
+	 * @param slot
+	 *            slot number
+	 * @return true - CPU available
+	 */
+	boolean hasCpu(int slot);
 }

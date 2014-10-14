@@ -45,6 +45,7 @@ public class RequestWorkerTest {
 		when(plc.getCpu(CPU_SLOT)).thenReturn(cpu);
 		when(communicationTaskFactory.createTask(event)).thenReturn(task);
 		when(event.getServer()).thenReturn(server);
+		when(plc.hasCpu(CPU_SLOT)).thenReturn(true);
 
 		worker = new RequestWorker(plc, communicationTaskFactory);
 	}
