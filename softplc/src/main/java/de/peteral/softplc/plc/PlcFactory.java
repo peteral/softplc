@@ -91,9 +91,11 @@ public class PlcFactory {
 		int slot = Integer.parseInt(cpuElement.getAttribute("slot"));
 
 		Memory memory = createMemory(cpuElement);
+		int maxBlockSize = Integer.parseInt(cpuElement
+				.getAttribute("maxBlockSize"));
 
 		Cpu cpu = new CpuImpl(slot, new ErrorLogImpl(),
-				new ScheduledThreadPoolExecutor(1), memory);
+				new ScheduledThreadPoolExecutor(1), memory, maxBlockSize);
 
 		Program program = createProgram(cpuElement, cpu, path);
 

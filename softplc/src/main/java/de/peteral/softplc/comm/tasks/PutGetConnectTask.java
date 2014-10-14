@@ -5,18 +5,31 @@ import java.nio.channels.SocketChannel;
 import de.peteral.softplc.model.Cpu;
 import de.peteral.softplc.model.PutGetServer;
 
+/**
+ * This task only gets the maximum data block size from the CPU.
+ *
+ * @author peteral
+ */
 public class PutGetConnectTask extends AbstractCommunicationTask {
 
+	private int maxDataSize;
+
+	/**
+	 * Initialize a new instance.
+	 *
+	 * @param server
+	 * @param socket
+	 * @param slot
+	 * @param factory
+	 */
 	public PutGetConnectTask(PutGetServer server, SocketChannel socket,
 			int slot, CommunicationTaskFactory factory) {
 		super(server, socket, slot, factory);
-		// TODO Auto-generated constructor stub
 	}
 
 	@Override
 	protected void doExecute(Cpu cpu) {
-		// TODO Auto-generated method stub
-
+		maxDataSize = cpu.getMaxDataSize();
 	}
 
 	/**
@@ -24,8 +37,7 @@ public class PutGetConnectTask extends AbstractCommunicationTask {
 	 * @return maximum block size supported by the CPU
 	 */
 	public int getMaxDataSize() {
-		// TODO Auto-generated method stub
-		return 0;
+		return maxDataSize;
 	}
 
 }

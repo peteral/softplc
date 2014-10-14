@@ -101,4 +101,9 @@ public interface Cpu {
 	 * @return actually loaded program
 	 */
 	Program getProgram();
+
+	/**
+	 * @return maximum block size for one put/get request supported by this PLC.
+	 */
+	int getMaxDataSize();
 }
