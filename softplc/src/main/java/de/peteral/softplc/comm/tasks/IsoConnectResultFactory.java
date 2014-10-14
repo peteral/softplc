@@ -14,12 +14,10 @@ import de.peteral.softplc.model.ResponseFactory;
  * @author peteral
  *
  */
-public class IsoConnectResult implements ResponseFactory {
-	private static final byte[] GOOD_RESPONSE = { 0x03, 0x00, 0x00, 0x01,
-			(byte) 0xD0 };
+public class IsoConnectResultFactory implements ResponseFactory {
+	static final byte[] GOOD_RESPONSE = { 0x03, 0x00, 0x00, 0x01, (byte) 0xD0 };
 	// TODO check bad response byte stream
-	private static final byte[] BAD_RESPONSE = { 0x03, 0x00, 0x00, 0x01,
-			(byte) 0x00 };
+	static final byte[] BAD_RESPONSE = { 0x03, 0x00, 0x00, 0x01, (byte) 0x00 };
 
 	@Override
 	public boolean canHandle(CommunicationTask task) {

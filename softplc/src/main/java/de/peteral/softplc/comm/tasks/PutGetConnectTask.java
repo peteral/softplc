@@ -11,7 +11,6 @@ import de.peteral.softplc.model.PutGetServer;
  * @author peteral
  */
 public class PutGetConnectTask extends AbstractCommunicationTask {
-
 	private int maxDataSize;
 
 	/**

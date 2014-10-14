@@ -11,7 +11,7 @@ import de.peteral.softplc.model.CommunicationTask;
  * @author peteral
  *
  */
-public class IsoConnectCommand implements TaskFactory {
+public class IsoConnectTaskFactory implements TaskFactory {
 	private static final int OFFSET_RACK_AND_SLOT = 18;
 
 	private static final byte WILDCARD = (byte) 0xFF;

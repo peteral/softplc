@@ -2,7 +2,6 @@ package de.peteral.softplc.comm.tasks;
 
 import java.nio.channels.SocketChannel;
 
-import de.peteral.softplc.comm.RequestWorker;
 import de.peteral.softplc.model.Cpu;
 import de.peteral.softplc.model.PutGetServer;
 import de.peteral.softplc.model.ResponseFactory;
@@ -15,6 +14,8 @@ import de.peteral.softplc.model.ResponseFactory;
  *
  */
 public class IsoConnectTask extends AbstractCommunicationTask {
+	private boolean socketValid;
+
 	/**
 	 * Initializes a new instance.
 	 *
@@ -26,6 +27,15 @@ public class IsoConnectTask extends AbstractCommunicationTask {
 	public IsoConnectTask(PutGetServer server, SocketChannel socket, int slot,
 			CommunicationTaskFactory factory) {
 		super(server, socket, slot, factory);
+		this.socketValid = true;
+	}
+
+	/**
+	 *
+	 * invalidates this task when CPU is not found.
+	 */
+	public void invalidate() {
+		socketValid = false;
 	}
 
 	@Override
@@ -34,15 +44,10 @@ public class IsoConnectTask extends AbstractCommunicationTask {
 	}
 
 	/**
-	 * This task is always OK if it was scheduled to a CPU.
-	 * <p>
-	 * {@link RequestWorker} has special handling for the case the CPU does not
-	 * exist.
-	 *
-	 * @return always true
+	 * @return always true - the CPU is valid
 	 */
 	public boolean isOk() {
-		return true;
+		return socketValid;
 	}
 
 }

@@ -77,7 +77,9 @@ public class RequestWorker implements Runnable {
 				} else {
 					// handling for invalid CPU / rack during ISO connect
 					if (task instanceof IsoConnectTask) {
-						((IsoConnectTask) task).sendResponse();
+						IsoConnectTask isoConnectTask = (IsoConnectTask) task;
+						isoConnectTask.invalidate();
+						isoConnectTask.sendResponse();
 					} else {
 						// TODO this should never happen - a task created for
 						// wrong CPU slot outside of ISO connect

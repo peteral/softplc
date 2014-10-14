@@ -63,4 +63,16 @@ public class ClientChannelCache {
 	void clear() {
 		cache.clear();
 	}
+
+	/**
+	 * Installs a mocked instance as singleton.
+	 * <p>
+	 * For unit testing.
+	 *
+	 * @param mock
+	 *            mock to be installed or null to uninstall the mock
+	 */
+	public static void installMock(ClientChannelCache mock) {
+		instance = mock;
+	}
 }

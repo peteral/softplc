@@ -14,7 +14,7 @@ import de.peteral.softplc.model.ResponseFactory;
  * @author peteral
  *
  */
-public class PutGetConnectResult implements ResponseFactory {
+public class PutGetConnectResultFactory implements ResponseFactory {
 	private byte[] getResult(int pduSize) {
 		return new byte[] { 0x32, 0x01, 0x00, 0x00, 0x00, 0x00, 0x00, 0x08,
 				0x00, 0x00, 0x00, 0x00, (byte) 0xF0, 0x00, 0x00, 0x00, 0x00,
