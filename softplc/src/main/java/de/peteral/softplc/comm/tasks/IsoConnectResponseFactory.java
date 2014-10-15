@@ -14,7 +14,7 @@ import de.peteral.softplc.model.ResponseFactory;
  * @author peteral
  *
  */
-public class IsoConnectResultFactory implements ResponseFactory {
+public class IsoConnectResponseFactory implements ResponseFactory {
 	static final byte[] GOOD_RESPONSE = { 0x03, 0x00, 0x00, 0x01, (byte) 0xD0 };
 	// TODO check bad response byte stream
 	static final byte[] BAD_RESPONSE = { 0x03, 0x00, 0x00, 0x01, (byte) 0x00 };

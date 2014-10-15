@@ -13,17 +13,17 @@ import org.mockito.MockitoAnnotations;
 import de.peteral.softplc.model.CommunicationTask;
 
 @SuppressWarnings("javadoc")
-public class PutGetConnectResultFactoryTest {
+public class PutGetConnectResponseFactoryTest {
 	private static final byte[] TEST_RESULT = { 0x32, 0x01, 0x00, 0x00, 0x00,
 			0x00, 0x00, 0x08, 0x00, 0x00, 0x00, 0x00, (byte) 0xF0, 0x00, 0x00,
 			0x00, 0x00, 0x00, (byte) 0x03, (byte) 0xFC };
 
-	private PutGetConnectResultFactory factory;
+	private PutGetConnectResponseFactory factory;
 
 	@Before
 	public void setup() {
 		MockitoAnnotations.initMocks(this);
-		factory = new PutGetConnectResultFactory();
+		factory = new PutGetConnectResponseFactory();
 	}
 
 	@Test

@@ -17,10 +17,14 @@ import de.peteral.softplc.model.ResponseFactory;
  */
 public class CommunicationTaskFactory {
 	private static final TaskFactory TASK_FACTORIES[] = {
-			new IsoConnectTaskFactory(), new PutGetConnectTaskFactory() };
+			new IsoConnectTaskFactory(), new PutGetConnectTaskFactory(),
+		new ReadBytesTaskFactory(), new WriteBytesTaskFactory(),
+		new SetBitTaskFactory() };
 
 	private static final ResponseFactory RESPONSE_FACTORIES[] = {
-		new IsoConnectResultFactory(), new PutGetConnectResultFactory() };
+		new IsoConnectResponseFactory(),
+			new PutGetConnectResponseFactory(), new ReadBytesResponseFactory(),
+			new WriteBytesResponseFactory(), new SetBitResponseFactory() };
 
 	/**
 	 * Creates a {@link CommunicationTask} from FRC1006 request.

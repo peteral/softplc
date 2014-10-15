@@ -14,8 +14,8 @@ import org.mockito.MockitoAnnotations;
 import de.peteral.softplc.model.CommunicationTask;
 
 @SuppressWarnings("javadoc")
-public class IsoConnectResultFactoryTest {
-	private IsoConnectResultFactory factory;
+public class IsoConnectResponseFactoryTest {
+	private IsoConnectResponseFactory factory;
 	@Mock
 	private IsoConnectTask task;
 
@@ -23,7 +23,7 @@ public class IsoConnectResultFactoryTest {
 	public void setup() {
 		MockitoAnnotations.initMocks(this);
 
-		factory = new IsoConnectResultFactory();
+		factory = new IsoConnectResponseFactory();
 	}
 
 	@Test
@@ -40,14 +40,14 @@ public class IsoConnectResultFactoryTest {
 	@Test
 	public void createResponse_TaskIsOk_ReturnsGoodResponse() {
 		when(task.isOk()).thenReturn(true);
-		assertArrayEquals(IsoConnectResultFactory.GOOD_RESPONSE,
+		assertArrayEquals(IsoConnectResponseFactory.GOOD_RESPONSE,
 				factory.createResponse(task));
 	}
 
 	@Test
 	public void createResponse_TaskIsNotOk_ReturnsBadResponse() {
 		when(task.isOk()).thenReturn(false);
-		assertArrayEquals(IsoConnectResultFactory.BAD_RESPONSE,
+		assertArrayEquals(IsoConnectResponseFactory.BAD_RESPONSE,
 				factory.createResponse(task));
 	}
 }
