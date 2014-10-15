@@ -24,3 +24,5 @@ GUI features:
 - monitor communication
 - manage variable tables
 - manage memory snapshots
+
+Licence: http://opensource.org/licenses/MIT
