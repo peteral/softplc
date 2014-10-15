@@ -13,18 +13,18 @@ import de.peteral.softplc.model.CommunicationTask;
  *
  */
 public class PutGetConnectTaskFactory implements TaskFactory {
-	private static final byte[] COMMAND = { 0x32, 0x01, 0x00, 0x00, 0x00, 0x00,
-		0x00, 0x08, 0x00, 0x00, (byte) 0xf0, 0x00, 0x00, 0x01, 0x00, 0x01,
-		0x01, (byte) 0xe0 };
+	static final byte[] DATA = { 0x32, 0x01, 0x00, 0x00, 0x00, 0x00, 0x00,
+			0x08, 0x00, 0x00, (byte) 0xf0, 0x00, 0x00, 0x01, 0x00, 0x01, 0x01,
+			(byte) 0xe0 };
 
 	@Override
 	public boolean canHandle(ServerDataEvent dataEvent) {
-		if (dataEvent.getData().length < COMMAND.length) {
+		if (dataEvent.getData().length < DATA.length) {
 			return false;
 		}
 
-		for (int i = 0; i < COMMAND.length; i++) {
-			if (COMMAND[i] != dataEvent.getData()[i]) {
+		for (int i = 0; i < DATA.length; i++) {
+			if (DATA[i] != dataEvent.getData()[i]) {
 				return false;
 			}
 		}
@@ -37,6 +37,6 @@ public class PutGetConnectTaskFactory implements TaskFactory {
 
 		return new PutGetConnectTask(dataEvent.getServer(),
 				dataEvent.getSocket(), ClientChannelCache.getInstance()
-						.getSlot(dataEvent.getSocket()), factory);
+				.getSlot(dataEvent.getSocket()), factory);
 	}
 }
