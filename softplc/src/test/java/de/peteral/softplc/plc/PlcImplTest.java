@@ -1,9 +1,13 @@
 package de.peteral.softplc.plc;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertSame;
+import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
+
+import java.io.IOException;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -42,6 +46,16 @@ public class PlcImplTest {
 	}
 
 	@Test
+	public void hasCpu_ValidSlot_ReturnsTrue() {
+		assertTrue(plc.hasCpu(1));
+	}
+
+	@Test
+	public void hasCpu_InvalidSlot_ReturnsFalse() {
+		assertFalse(plc.hasCpu(2));
+	}
+
+	@Test
 	public void getCpu_ValidSlot_ReturnsCorrectInstance() {
 		assertSame(cpu2, plc.getCpu(1));
 	}
@@ -60,14 +74,14 @@ public class PlcImplTest {
 	}
 
 	@Test
-	public void start_None_StartsPutGetServer() {
+	public void start_None_StartsPutGetServer() throws IOException {
 		plc.start();
 
 		verify(server).start(plc);
 	}
 
 	@Test
-	public void stop_None_StopsPutGetServer() {
+	public void stop_None_StopsPutGetServer() throws IOException {
 		plc.stop();
 
 		verify(server).stop();

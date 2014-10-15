@@ -30,6 +30,7 @@ public class CpuImpl implements Cpu, ProgramCycleObserver {
 	private final List<CommunicationTask> pendingTasks = new ArrayList<>();
 	private final Memory memory;
 	private final int slot;
+	private final int maxBlockSize;
 
 	/**
 	 * Creates a new instance.
@@ -43,13 +44,17 @@ public class CpuImpl implements Cpu, ProgramCycleObserver {
 	 *            executor responsible for this {@link Cpu}
 	 * @param memory
 	 *            {@link Memory} instance of this {@link Cpu}
+	 * @param maxBlockSize
+	 *            maximum data block size transferable via one PUT/GET telegram
 	 */
 	public CpuImpl(int slot, ErrorLog errorlog,
-			ScheduledThreadPoolExecutor executor, Memory memory) {
+			ScheduledThreadPoolExecutor executor, Memory memory,
+			int maxBlockSize) {
 		this.slot = slot;
 		this.errorlog = errorlog;
 		this.executor = executor;
 		this.memory = memory;
+		this.maxBlockSize = maxBlockSize;
 	}
 
 	@Override
@@ -160,5 +165,10 @@ public class CpuImpl implements Cpu, ProgramCycleObserver {
 	@Override
 	public Program getProgram() {
 		return program;
+	}
+
+	@Override
+	public int getMaxDataSize() {
+		return maxBlockSize;
 	}
 }

@@ -1,5 +1,7 @@
 package de.peteral.softplc.plc;
 
+import java.io.IOException;
+
 import de.peteral.softplc.model.Cpu;
 import de.peteral.softplc.model.Plc;
 import de.peteral.softplc.model.PutGetServer;
@@ -51,16 +53,37 @@ public class PlcImpl implements Plc {
 			cpu.start();
 		}
 
-		server.start(this);
+		try {
+			server.start(this);
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 
 	@Override
 	public void stop() {
-		server.stop();
+		try {
+			server.stop();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 
 		for (Cpu cpu : cpus) {
 			cpu.stop();
 		}
+	}
+
+	@Override
+	public boolean hasCpu(int slot) {
+		for (Cpu cpu : cpus) {
+			if (cpu.getSlot() == slot) {
+				return true;
+			}
+		}
+
+		return false;
 	}
 
 }

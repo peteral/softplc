@@ -28,6 +28,7 @@ import de.peteral.softplc.model.Program;
 @SuppressWarnings("javadoc")
 public class CpuImplTest {
 
+	private static final int MAX_BLOCK_SIZE = 123;
 	private static final long TARGET_CYCLE_TIME = 50;
 	private CpuImpl cpu;
 	@Mock
@@ -49,7 +50,7 @@ public class CpuImplTest {
 
 		when(program.getTargetCycleTime()).thenReturn(TARGET_CYCLE_TIME);
 
-		cpu = new CpuImpl(0, errorlog, executor, memory);
+		cpu = new CpuImpl(0, errorlog, executor, memory, MAX_BLOCK_SIZE);
 	}
 
 	@Test

@@ -44,6 +44,7 @@ import de.peteral.softplc.program.ProgramImpl;
  *
  */
 public class PlcFactory {
+	private static final int PORT = 102;
 	private static final Map<String, Integer> DEFAULT_MEMORY_AREAS = new HashMap<>();
 	static {
 		DEFAULT_MEMORY_AREAS.put("M", 65535);
@@ -82,17 +83,19 @@ public class PlcFactory {
 			cpus.add(createCpu(cpuElement, path));
 		}
 
-		return new PlcImpl(new PutGetServerImpl(), cpus.toArray(new Cpu[cpus
-		                                                                .size()]));
+		return new PlcImpl(new PutGetServerImpl(PORT),
+				cpus.toArray(new Cpu[cpus.size()]));
 	}
 
 	private Cpu createCpu(Element cpuElement, String path) throws IOException {
 		int slot = Integer.parseInt(cpuElement.getAttribute("slot"));
 
 		Memory memory = createMemory(cpuElement);
+		int maxBlockSize = Integer.parseInt(cpuElement
+				.getAttribute("maxBlockSize"));
 
 		Cpu cpu = new CpuImpl(slot, new ErrorLogImpl(),
-				new ScheduledThreadPoolExecutor(1), memory);
+				new ScheduledThreadPoolExecutor(1), memory, maxBlockSize);
 
 		Program program = createProgram(cpuElement, cpu, path);
 

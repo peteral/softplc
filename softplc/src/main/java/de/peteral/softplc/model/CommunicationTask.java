@@ -17,5 +17,4 @@ public interface CommunicationTask {
 	 *            interaction)
 	 */
 	void execute(Cpu cpu);
-
 }
