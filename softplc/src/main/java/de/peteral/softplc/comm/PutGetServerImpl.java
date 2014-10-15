@@ -30,6 +30,8 @@ import de.peteral.softplc.model.PutGetServerObserver;
  *
  */
 // TODO remove channel from ClientChannelCache when client disconnects
+// TODO Java NIO uses final methods which makes mocking impossible, loopback
+// connection necessary
 public class PutGetServerImpl implements PutGetServer, Runnable {
 
 	private final List<PutGetServerObserver> observers = new ArrayList<>();
