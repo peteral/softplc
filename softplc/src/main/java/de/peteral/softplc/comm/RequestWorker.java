@@ -3,6 +3,7 @@ package de.peteral.softplc.comm;
 import java.util.LinkedList;
 import java.util.List;
 
+import de.peteral.softplc.comm.common.ClientChannelCache;
 import de.peteral.softplc.comm.common.ServerDataEvent;
 import de.peteral.softplc.comm.tasks.CommunicationTaskFactory;
 import de.peteral.softplc.comm.tasks.IsoConnectTask;
@@ -71,9 +72,12 @@ public class RequestWorker implements Runnable {
 			CommunicationTask task = communicationTaskFactory
 					.createTask(dataEvent);
 
-			if (task != null) {
-				if (plc.hasCpu(task.getCpuSlot())) {
-					plc.getCpu(task.getCpuSlot()).addCommunicationTask(task);
+			Integer slot = ClientChannelCache.getInstance().getSlot(
+					dataEvent.getSocket());
+
+			if ((task != null) && (slot != null)) {
+				if (plc.hasCpu(slot)) {
+					plc.getCpu(slot).addCommunicationTask(task);
 				} else {
 					// handling for invalid CPU / rack during ISO connect
 					if (task instanceof IsoConnectTask) {
@@ -87,7 +91,8 @@ public class RequestWorker implements Runnable {
 				}
 
 			} else {
-				// TODO warning - unknown incoming telegram
+				// TODO warning - unknown incoming telegram / slot not
+				// registered
 			}
 
 			dataEvent.getServer().notifyObservers(new PutGetServerEvent());

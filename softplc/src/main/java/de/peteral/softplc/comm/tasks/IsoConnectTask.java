@@ -14,20 +14,19 @@ import de.peteral.softplc.model.ResponseFactory;
  *
  */
 public class IsoConnectTask extends AbstractCommunicationTask {
-	private boolean socketValid;
+	private boolean slotValid;
 
 	/**
 	 * Initializes a new instance.
 	 *
 	 * @param server
 	 * @param socket
-	 * @param slot
 	 * @param factory
 	 */
-	public IsoConnectTask(PutGetServer server, SocketChannel socket, int slot,
+	public IsoConnectTask(PutGetServer server, SocketChannel socket,
 			CommunicationTaskFactory factory) {
-		super(server, socket, slot, factory);
-		this.socketValid = true;
+		super(server, socket, factory);
+		this.slotValid = true;
 	}
 
 	/**
@@ -35,7 +34,7 @@ public class IsoConnectTask extends AbstractCommunicationTask {
 	 * invalidates this task when CPU is not found.
 	 */
 	public void invalidate() {
-		socketValid = false;
+		slotValid = false;
 	}
 
 	@Override
@@ -47,7 +46,7 @@ public class IsoConnectTask extends AbstractCommunicationTask {
 	 * @return always true - the CPU is valid
 	 */
 	public boolean isOk() {
-		return socketValid;
+		return slotValid;
 	}
 
 }

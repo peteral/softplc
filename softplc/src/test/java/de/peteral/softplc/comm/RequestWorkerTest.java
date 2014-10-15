@@ -5,11 +5,13 @@ import static org.mockito.Mockito.when;
 
 import java.nio.channels.SocketChannel;
 
+import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 
+import de.peteral.softplc.comm.common.ClientChannelCache;
 import de.peteral.softplc.comm.common.ServerDataEvent;
 import de.peteral.softplc.comm.tasks.CommunicationTaskFactory;
 import de.peteral.softplc.model.CommunicationTask;
@@ -36,18 +38,28 @@ public class RequestWorkerTest {
 	private CommunicationTask task;
 	@Mock
 	private Cpu cpu;
+	@Mock
+	private ClientChannelCache cache;
 
 	@Before
 	public void setup() {
 		MockitoAnnotations.initMocks(this);
 
-		when(task.getCpuSlot()).thenReturn(CPU_SLOT);
+		ClientChannelCache.installMock(cache);
+		when(cache.getSlot(socket)).thenReturn(CPU_SLOT);
+
+		when(event.getSocket()).thenReturn(socket);
 		when(plc.getCpu(CPU_SLOT)).thenReturn(cpu);
 		when(communicationTaskFactory.createTask(event)).thenReturn(task);
 		when(event.getServer()).thenReturn(server);
 		when(plc.hasCpu(CPU_SLOT)).thenReturn(true);
 
 		worker = new RequestWorker(plc, communicationTaskFactory);
+	}
+
+	@After
+	public void teardown() {
+		ClientChannelCache.installMock(null);
 	}
 
 	@Test(timeout = 2000)

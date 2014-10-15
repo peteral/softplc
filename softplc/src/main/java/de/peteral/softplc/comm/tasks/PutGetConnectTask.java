@@ -18,12 +18,11 @@ public class PutGetConnectTask extends AbstractCommunicationTask {
 	 *
 	 * @param server
 	 * @param socket
-	 * @param slot
 	 * @param factory
 	 */
 	public PutGetConnectTask(PutGetServer server, SocketChannel socket,
-			int slot, CommunicationTaskFactory factory) {
-		super(server, socket, slot, factory);
+			CommunicationTaskFactory factory) {
+		super(server, socket, factory);
 	}
 
 	@Override

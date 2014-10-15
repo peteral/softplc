@@ -1,6 +1,5 @@
 package de.peteral.softplc.comm.tasks;
 
-import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.verify;
@@ -82,15 +81,6 @@ public class IsoConnectTaskFactoryTest {
 		when(event.getData()).thenReturn(new byte[]{});
 
 		assertFalse(factory.canHandle(event));
-	}
-
-	@Test
-	public void createTask_ValidEvent_ReturnsCorrectTask() {
-		when(event.getData()).thenReturn(VALID_DATA);
-
-		IsoConnectTask task = (IsoConnectTask) factory.createTask(event, communicationTaskFactory);
-
-		assertEquals(SLOT, task.getCpuSlot());
 	}
 
 	@Test

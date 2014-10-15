@@ -17,11 +17,4 @@ public interface CommunicationTask {
 	 *            interaction)
 	 */
 	void execute(Cpu cpu);
-
-	/**
-	 *
-	 * @return slot number of the handling cpu
-	 */
-	int getCpuSlot();
-
 }

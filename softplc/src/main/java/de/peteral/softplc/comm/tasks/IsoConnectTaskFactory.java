@@ -55,10 +55,10 @@ public class IsoConnectTaskFactory implements TaskFactory {
 		int slot = rackAndSlot & 0x1F;
 
 		ClientChannelCache.getInstance()
-		.addChannel(dataEvent.getSocket(), slot);
+				.addChannel(dataEvent.getSocket(), slot);
 
 		return new IsoConnectTask(dataEvent.getServer(), dataEvent.getSocket(),
-				slot, factory);
+				factory);
 	}
 
 }

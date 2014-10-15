@@ -30,7 +30,7 @@ public class PutGetConnectTaskTest {
 	public void setup() {
 		MockitoAnnotations.initMocks(this);
 
-		task = new PutGetConnectTask(server, socket, 12, factory);
+		task = new PutGetConnectTask(server, socket, factory);
 	}
 
 	@Test

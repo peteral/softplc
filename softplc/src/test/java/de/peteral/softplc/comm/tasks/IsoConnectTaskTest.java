@@ -14,7 +14,6 @@ import de.peteral.softplc.model.PutGetServer;
 
 @SuppressWarnings("javadoc")
 public class IsoConnectTaskTest {
-	private static final int SLOT = 4;
 	@Mock
 	private PutGetServer server;
 	@Mock
@@ -26,7 +25,7 @@ public class IsoConnectTaskTest {
 	@Before
 	public void setup() {
 		MockitoAnnotations.initMocks(this);
-		task = new IsoConnectTask(server, socket, SLOT, factory);
+		task = new IsoConnectTask(server, socket, factory);
 	}
 
 	@Test

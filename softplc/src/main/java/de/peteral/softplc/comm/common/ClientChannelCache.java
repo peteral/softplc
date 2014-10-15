@@ -11,6 +11,7 @@ import java.util.Map;
  * @author peteral
  *
  */
+// TODO need thread-safety here
 public class ClientChannelCache {
 	private static ClientChannelCache instance = null;
 
