@@ -3,6 +3,7 @@ package de.peteral.softplc.comm.common;
 import java.nio.channels.SocketChannel;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.concurrent.locks.ReentrantReadWriteLock;
 
 /**
  * Maps client channels to cpu numbers so incoming telegrams can be dispatched
@@ -11,11 +12,12 @@ import java.util.Map;
  * @author peteral
  *
  */
-// TODO need thread-safety here
 public class ClientChannelCache {
 	private static ClientChannelCache instance = null;
 
 	private final Map<SocketChannel, Integer> cache = new HashMap<>();
+
+	private final ReentrantReadWriteLock lock = new ReentrantReadWriteLock();
 
 	private ClientChannelCache() {
 
@@ -39,7 +41,12 @@ public class ClientChannelCache {
 	 * @return cpu slot number assigned to this socket
 	 */
 	public Integer getSlot(SocketChannel socket) {
-		return cache.get(socket);
+		lock.readLock().lock();
+		try {
+			return cache.get(socket);
+		} finally {
+			lock.readLock().unlock();
+		}
 	}
 
 	/**
@@ -49,7 +56,12 @@ public class ClientChannelCache {
 	 * @param slot
 	 */
 	public void addChannel(SocketChannel socket, int slot) {
-		cache.put(socket, slot);
+		lock.writeLock().lock();
+		try {
+			cache.put(socket, slot);
+		} finally {
+			lock.writeLock().unlock();
+		}
 	}
 
 	/**
@@ -58,11 +70,21 @@ public class ClientChannelCache {
 	 * @param socket
 	 */
 	public void removeChannel(SocketChannel socket) {
-		cache.remove(socket);
+		lock.writeLock().lock();
+		try {
+			cache.remove(socket);
+		} finally {
+			lock.writeLock().unlock();
+		}
 	}
 
 	void clear() {
-		cache.clear();
+		lock.writeLock().lock();
+		try {
+			cache.clear();
+		} finally {
+			lock.writeLock().unlock();
+		}
 	}
 
 	/**
