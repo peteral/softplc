@@ -4,6 +4,7 @@ import java.nio.channels.SocketChannel;
 
 import de.peteral.softplc.model.CommunicationTask;
 import de.peteral.softplc.model.Cpu;
+import de.peteral.softplc.model.MemoryAccessViolationException;
 import de.peteral.softplc.model.PutGetServer;
 
 /**
@@ -14,6 +15,11 @@ import de.peteral.softplc.model.PutGetServer;
  */
 public class ReadBytesTask extends AbstractCommunicationTask {
 
+	private final String memoryArea;
+	private final int offset;
+	private byte[] data;
+	private final int length;
+
 	/**
 	 * Initialize new instance.
 	 *
@@ -22,16 +28,32 @@ public class ReadBytesTask extends AbstractCommunicationTask {
 	 * @param socket
 	 *            client socket
 	 * @param factory
+	 * @param offset
+	 * @param memoryArea
+	 * @param length
 	 */
 	public ReadBytesTask(PutGetServer server, SocketChannel socket,
-			CommunicationTaskFactory factory) {
+			CommunicationTaskFactory factory, String memoryArea, int offset,
+			int length) {
 		super(server, socket, factory);
+		this.memoryArea = memoryArea;
+		this.offset = offset;
+		this.length = length;
 	}
 
 	@Override
 	protected void doExecute(Cpu cpu) {
-		// TODO Auto-generated method stub
-
+		try {
+			data = cpu.getMemory().readBytes(memoryArea, offset, length);
+		} catch (MemoryAccessViolationException e) {
+			data = null;
+		}
 	}
 
+	/**
+	 * @return data read from CPU or null when invalid
+	 */
+	public byte[] getData() {
+		return data;
+	}
 }

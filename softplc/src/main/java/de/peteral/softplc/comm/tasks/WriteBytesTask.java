@@ -4,6 +4,7 @@ import java.nio.channels.SocketChannel;
 
 import de.peteral.softplc.model.CommunicationTask;
 import de.peteral.softplc.model.Cpu;
+import de.peteral.softplc.model.MemoryAccessViolationException;
 import de.peteral.softplc.model.PutGetServer;
 
 /**
@@ -13,6 +14,11 @@ import de.peteral.softplc.model.PutGetServer;
  *
  */
 public class WriteBytesTask extends AbstractCommunicationTask {
+	private final String memoryArea;
+	private final int offset;
+	private final byte[] data;
+	private boolean ok;
+
 	/**
 	 * Initialize new instance.
 	 *
@@ -21,16 +27,34 @@ public class WriteBytesTask extends AbstractCommunicationTask {
 	 * @param socket
 	 *            client socket
 	 * @param factory
+	 * @param data
+	 * @param offset
+	 * @param memoryArea
 	 */
 	public WriteBytesTask(PutGetServer server, SocketChannel socket,
-			CommunicationTaskFactory factory) {
+			CommunicationTaskFactory factory, String memoryArea, int offset,
+			byte[] data) {
 		super(server, socket, factory);
+		this.memoryArea = memoryArea;
+		this.offset = offset;
+		this.data = data;
 	}
 
 	@Override
 	protected void doExecute(Cpu cpu) {
-		// TODO Auto-generated method stub
+		try {
+			cpu.getMemory().writeBytes(memoryArea, offset, data);
+			ok = true;
+		} catch (MemoryAccessViolationException e) {
+			ok = false;
+		}
 
 	}
 
+	/**
+	 * @return true - writing memory was successful
+	 */
+	public boolean isOk() {
+		return ok;
+	}
 }
