@@ -16,6 +16,7 @@ import java.util.List;
 import java.util.Map;
 
 import de.peteral.softplc.comm.common.ChangeRequest;
+import de.peteral.softplc.comm.common.ClientChannelCache;
 import de.peteral.softplc.comm.common.ServerDataEvent;
 import de.peteral.softplc.comm.tasks.CommunicationTaskFactory;
 import de.peteral.softplc.model.Plc;
@@ -29,7 +30,6 @@ import de.peteral.softplc.model.PutGetServerObserver;
  * @author peteral
  *
  */
-// TODO remove channel from ClientChannelCache when client disconnects
 // TODO Java NIO uses final methods which makes mocking impossible, loopback
 // connection necessary
 public class PutGetServerImpl implements PutGetServer, Runnable {
@@ -207,6 +207,7 @@ public class PutGetServerImpl implements PutGetServer, Runnable {
 		} catch (IOException e) {
 			// The remote forcibly closed the connection, cancel
 			// the selection key and close the channel.
+			ClientChannelCache.getInstance().removeChannel(socketChannel);
 			key.cancel();
 			socketChannel.close();
 			return;
@@ -215,6 +216,7 @@ public class PutGetServerImpl implements PutGetServer, Runnable {
 		if (numRead == -1) {
 			// Remote entity shut the socket down cleanly. Do the
 			// same from our end and cancel the channel.
+			ClientChannelCache.getInstance().removeChannel(socketChannel);
 			key.channel().close();
 			key.cancel();
 			return;

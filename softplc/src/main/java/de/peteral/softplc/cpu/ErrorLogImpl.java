@@ -17,7 +17,7 @@ public class ErrorLogImpl implements ErrorLog {
 	public void log(Level level, String module, String message) {
 		// TODO implement error log properly
 
-		Logger.getLogger("module").log(level, module + ": " + message);
+		Logger.getLogger(module).log(level, module + ": " + message);
 	}
 
 }
