@@ -1,7 +1,9 @@
 package de.peteral.softplc.comm;
 
+import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.logging.Logger;
 
 import de.peteral.softplc.comm.common.ClientChannelCache;
 import de.peteral.softplc.comm.common.ServerDataEvent;
@@ -22,6 +24,7 @@ public class RequestWorker implements Runnable {
 	private boolean running;
 	private final CommunicationTaskFactory communicationTaskFactory;
 	private final Plc plc;
+	private static final Logger LOGGER = Logger.getLogger("communication");
 
 	/**
 	 * Creates a new instance.
@@ -85,14 +88,14 @@ public class RequestWorker implements Runnable {
 						isoConnectTask.invalidate();
 						isoConnectTask.sendResponse();
 					} else {
-						// TODO this should never happen - a task created for
-						// wrong CPU slot outside of ISO connect
+						LOGGER.warning("Communication task for invalid cpu slot ["
+								+ slot + "]: [" + task + "]");
 					}
 				}
 
 			} else {
-				// TODO warning - unknown incoming telegram / slot not
-				// registered
+				LOGGER.warning("Invalid telegram received slot [" + slot
+						+ "], data " + Arrays.toString(dataEvent.getData()));
 			}
 
 			dataEvent.getServer().notifyObservers(new PutGetServerEvent());

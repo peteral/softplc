@@ -30,8 +30,8 @@ import de.peteral.softplc.model.PutGetServerObserver;
  * @author peteral
  *
  */
-// TODO Java NIO uses final methods which makes mocking impossible, loopback
-// connection necessary
+// TODO Java NIO uses final methods which makes mocking impossible, use loopback
+// socket for testing
 public class PutGetServerImpl implements PutGetServer, Runnable {
 
 	private final List<PutGetServerObserver> observers = new ArrayList<>();
