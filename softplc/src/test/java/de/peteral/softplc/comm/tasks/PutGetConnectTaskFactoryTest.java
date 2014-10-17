@@ -14,12 +14,14 @@ import de.peteral.softplc.comm.common.ServerDataEvent;
 @SuppressWarnings("javadoc")
 public class PutGetConnectTaskFactoryTest {
 	private static final byte[] INVALID_DATA = { 0x32, 0x05, 0x00, 0x00, 0x00,
-			0x00, 0x00, 0x08, 0x00, 0x00, (byte) 0xf0, 0x00, 0x00, 0x01, 0x00,
-			0x01, 0x01, (byte) 0xe0 };
+		0x00, 0x00, 0x08, 0x00, 0x00, (byte) 0xf0, 0x00, 0x00, 0x01, 0x00,
+		0x01, 0x01, (byte) 0xe0 };
 
 	private PutGetConnectTaskFactory factory;
 	@Mock
 	private ServerDataEvent event;
+	@Mock
+	private CommunicationTaskFactory taskFactory;
 
 	@Before
 	public void setup() {
@@ -46,5 +48,10 @@ public class PutGetConnectTaskFactoryTest {
 		when(event.getData()).thenReturn(INVALID_DATA);
 
 		assertFalse(factory.canHandle(event));
+	}
+
+	@Test
+	public void createTask_Any_ReturnsInstanceOfPutGetConnectTask() {
+		assertTrue(factory.createTask(event, taskFactory) instanceof PutGetConnectTask);
 	}
 }

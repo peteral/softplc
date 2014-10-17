@@ -1,6 +1,9 @@
 package de.peteral.softplc.program;
 
 import static org.mockito.Matchers.any;
+import static org.mockito.Matchers.anyObject;
+import static org.mockito.Matchers.anyString;
+import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -16,6 +19,7 @@ import org.mockito.MockitoAnnotations;
 
 import de.peteral.softplc.model.Cpu;
 import de.peteral.softplc.model.Memory;
+import de.peteral.softplc.model.MemoryAccessViolationException;
 import de.peteral.softplc.model.Program;
 import de.peteral.softplc.model.ProgramCycleObserver;
 
@@ -94,5 +98,33 @@ public class ProgramImplTest {
 		program.run();
 
 		verify(observer, never()).afterCycleEnd();
+	}
+
+	@Test
+	public void compile_InvalidScript_RegisteredObserverNotified() {
+		program = new ProgramImpl(cpu, new ScriptEngineManager(),
+				new Precompiler(), CYCLE_TIME, "+ü31ü+13ü");
+
+		program.addObserver(observer);
+
+		program.compile();
+
+		verify(observer).onError(any(Throwable.class));
+	}
+
+	@Test
+	public void run_ProgramThrowsException_RegisteredObserverNotified() {
+		doThrow(new MemoryAccessViolationException("")).when(memory).write(
+				anyString(), anyObject());
+		program = new ProgramImpl(cpu, new ScriptEngineManager(),
+				new Precompiler(), CYCLE_TIME, SOURCE);
+
+		program.addObserver(observer);
+
+		program.compile();
+
+		program.run();
+
+		verify(observer).onError(any(Throwable.class));
 	}
 }
