@@ -26,3 +26,8 @@ GUI features:
 - manage memory snapshots
 
 Licence: http://opensource.org/licenses/MIT
+
+Special thanks to:
+- https://github.com/ 
+- http://sourceforge.net/projects/libnodave/
+- https://www.wireshark.org/ 
