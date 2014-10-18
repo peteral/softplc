@@ -62,7 +62,7 @@ public class ProgramImpl implements Program {
 	public void run() {
 		try {
 			compiled.eval(context);
-		} catch (ScriptException e) {
+		} catch (Exception e) {
 			for (ProgramCycleObserver observer : observers) {
 				observer.onError(e);
 			}

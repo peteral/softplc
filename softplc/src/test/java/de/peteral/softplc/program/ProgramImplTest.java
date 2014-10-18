@@ -61,7 +61,7 @@ public class ProgramImplTest {
 
 		program.run();
 
-		verify(memory).write("M,W100", 10.0);
+		verify(memory).write("M,W100", 10);
 		verify(observer).afterCycleEnd();
 	}
 

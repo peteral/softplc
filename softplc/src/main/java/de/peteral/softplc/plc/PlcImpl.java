@@ -1,6 +1,8 @@
 package de.peteral.softplc.plc;
 
 import java.io.IOException;
+import java.util.Arrays;
+import java.util.List;
 
 import de.peteral.softplc.model.Cpu;
 import de.peteral.softplc.model.Plc;
@@ -14,7 +16,7 @@ import de.peteral.softplc.model.PutGetServer;
  */
 public class PlcImpl implements Plc {
 
-	private final Cpu[] cpus;
+	private final List<Cpu> cpus;
 	private final PutGetServer server;
 
 	/**
@@ -27,7 +29,7 @@ public class PlcImpl implements Plc {
 	 */
 	public PlcImpl(PutGetServer server, Cpu... cpus) {
 		this.server = server;
-		this.cpus = cpus;
+		this.cpus = Arrays.asList(cpus);
 
 	}
 
@@ -44,14 +46,14 @@ public class PlcImpl implements Plc {
 
 	@Override
 	public int getCpuCount() {
-		return cpus.length;
+		return cpus.size();
 	}
 
 	@Override
 	public void start() {
-		for (Cpu cpu : cpus) {
+		cpus.forEach((cpu) -> {
 			cpu.start();
-		}
+		});
 
 		try {
 			server.start(this);
@@ -70,9 +72,9 @@ public class PlcImpl implements Plc {
 			e.printStackTrace();
 		}
 
-		for (Cpu cpu : cpus) {
+		cpus.forEach((cpu) -> {
 			cpu.stop();
-		}
+		});
 	}
 
 	@Override

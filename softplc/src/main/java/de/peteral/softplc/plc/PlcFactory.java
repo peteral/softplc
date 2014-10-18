@@ -8,7 +8,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Map.Entry;
 import java.util.concurrent.ScheduledThreadPoolExecutor;
 
 import javax.script.ScriptEngineManager;
@@ -129,25 +128,28 @@ public class PlcFactory {
 
 		// create memory areas configured in configuration file
 		List<Element> memoryElements = getChildrenByName(cpuElement, "memory");
-		for (Element memoryElement : memoryElements) {
+		memoryElements.forEach((memoryElement) -> {
 			List<Element> areaElements = getChildrenByName(memoryElement,
 					"area");
 
-			for (Element areaElement : areaElements) {
+			areaElements.forEach((areaElement) -> {
 				String name = areaElement.getAttribute("name");
 				int size = Integer.parseInt(areaElement.getAttribute("size"));
 
 				areas.put(name, new MemoryAreaImpl(name, size));
-			}
-		}
+			});
+		});
 
 		// create default memory areas not redefined in configuration file
-		for (Entry<String, Integer> entry : DEFAULT_MEMORY_AREAS.entrySet()) {
-			if (!areas.containsKey(entry.getKey())) {
-				areas.put(entry.getKey(), new MemoryAreaImpl(entry.getKey(),
-						entry.getValue()));
-			}
-		}
+		DEFAULT_MEMORY_AREAS.entrySet().forEach(
+				(entry) -> {
+					if (!areas.containsKey(entry.getKey())) {
+						areas.put(
+								entry.getKey(),
+								new MemoryAreaImpl(entry.getKey(), entry
+										.getValue()));
+					}
+				});
 
 		return new MemoryImpl(new AddressParserFactory(),
 				new DataTypeFactory(), areas.values().toArray(
