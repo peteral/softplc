@@ -116,9 +116,7 @@ public class CpuImpl implements Cpu, ProgramCycleObserver {
 	@Override
 	public void afterCycleEnd() {
 		synchronized (pendingTasks) {
-			for (CommunicationTask task : pendingTasks) {
-				task.execute(this);
-			}
+			pendingTasks.forEach(task -> task.execute(this));
 		}
 	}
 

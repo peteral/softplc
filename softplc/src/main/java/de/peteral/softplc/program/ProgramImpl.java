@@ -63,15 +63,11 @@ public class ProgramImpl implements Program {
 		try {
 			compiled.eval(context);
 		} catch (Exception e) {
-			for (ProgramCycleObserver observer : observers) {
-				observer.onError(e);
-			}
+			observers.forEach(observer -> observer.onError(e));
 		}
 
 		// notify observers
-		for (ProgramCycleObserver observer : observers) {
-			observer.afterCycleEnd();
-		}
+		observers.forEach(observer -> observer.afterCycleEnd());
 	}
 
 	@Override
