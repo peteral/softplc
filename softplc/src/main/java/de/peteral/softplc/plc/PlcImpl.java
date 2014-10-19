@@ -51,7 +51,7 @@ public class PlcImpl implements Plc {
 
 	@Override
 	public void start() {
-		cpus.forEach((cpu) -> cpu.start());
+		cpus.forEach(cpu -> cpu.start());
 
 		try {
 			server.start(this);
@@ -70,7 +70,7 @@ public class PlcImpl implements Plc {
 			e.printStackTrace();
 		}
 
-		cpus.forEach((cpu) -> cpu.stop());
+		cpus.forEach(cpu -> cpu.stop());
 	}
 
 	@Override

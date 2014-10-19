@@ -15,9 +15,9 @@ public class Precompiler {
 	static {
 		/* @formatter:off */
 		// first replace all write accesses (start of line) before assignment
-		OPERATIONS.add((s) -> s.replaceAll("(\\s*)\\$\\{([^}]*)}\\s*\\=\\s*([^;]*);", "$1memory.write(\"$2\", $3);"));
+		OPERATIONS.add(s -> s.replaceAll("(\\s*)\\$\\{([^}]*)}\\s*\\=\\s*([^;]*);", "$1memory.write(\"$2\", $3);"));
 		// what remains are read accesses
-		OPERATIONS.add((s) -> s.replaceAll("\\$\\{([^}]*)}", "memory.read(\"$1\")"));
+		OPERATIONS.add(s -> s.replaceAll("\\$\\{([^}]*)}", "memory.read(\"$1\")"));
 	}
 	/* @formatter:on */
 
@@ -27,7 +27,6 @@ public class Precompiler {
 	 * @param input
 	 * @return translated script.
 	 */
-	/* @formatter:off */
 	public String translate(String input) {
 		String result = input;
 
@@ -36,5 +35,4 @@ public class Precompiler {
 		}
 		return result;
 	}
-	/* @formatter:on */
 }
