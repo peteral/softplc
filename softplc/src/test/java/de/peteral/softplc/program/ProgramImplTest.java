@@ -76,7 +76,7 @@ public class ProgramImplTest
 
         program.run();
 
-        verify(observer, never()).onError(any(Throwable.class));
+        verify(observer, never()).onError(anyString(), any(Throwable.class));
     }
 
     @Test
@@ -119,7 +119,7 @@ public class ProgramImplTest
 
         program.compile();
 
-        verify(observer).onError(any(Throwable.class));
+        verify(observer).onError(anyString(), any(Throwable.class));
     }
 
     @Test
@@ -140,6 +140,6 @@ public class ProgramImplTest
 
         program.run();
 
-        verify(observer).onError(any(Throwable.class));
+        verify(observer).onError(anyString(), any(Throwable.class));
     }
 }

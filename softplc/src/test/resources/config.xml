@@ -7,7 +7,9 @@
 			<area name="DB101" size="1000" />
 		</memory>
 
-		<program cycleTime="50" file="./src/test/resources/program/main.js" />
+		<program cycleTime="50">
+			<file>./src/test/resources/program/main.js</file>
+		</program>
 	</cpu>
 
 	<cpu slot="2" maxBlockSize="400">
@@ -17,6 +19,8 @@
 			<area name="DB101" size="1000" />
 		</memory>
 
-		<program cycleTime="50" file="./src/test/resources/program/main.js" />
+		<program cycleTime="50">
+			<file>./src/test/resources/program/main.js</file>
+		</program>
 	</cpu>
 </softplc>
