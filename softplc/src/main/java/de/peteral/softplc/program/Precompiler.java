@@ -13,9 +13,9 @@ public class Precompiler
 {
     private static final List<Function<String, String>> OPERATIONS =
         new ArrayList<>();
+    /* @formatter:off */
     static
     {
-        /* @formatter:off */
 		// first replace all write accesses (start of line) before assignment
 		OPERATIONS.add(s -> s.replaceAll("(\\s*)\\$\\{([^}]*)}\\s*\\=\\s*([^;]*);", "$1memory.write($2, $3);"));
 		// what remains are read accesses

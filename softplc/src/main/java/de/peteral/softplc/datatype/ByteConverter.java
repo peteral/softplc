@@ -15,7 +15,7 @@ public class ByteConverter
     @Override
     public Number[] createArray(int count)
     {
-        return new Double[count];
+        return new Integer[count];
     }
 
     @Override
@@ -31,7 +31,7 @@ public class ByteConverter
     @Override
     public Number fromBytes(byte[] bytes, ParsedAddress address, int offset)
     {
-        return Double.valueOf(DataTypeUtils.byteToInt(bytes[offset]));
+        return Integer.valueOf(DataTypeUtils.byteToInt(bytes[offset]));
     }
 
 }

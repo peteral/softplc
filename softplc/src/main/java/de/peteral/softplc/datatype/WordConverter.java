@@ -17,7 +17,7 @@ public class WordConverter
     @Override
     public Number[] createArray(int count)
     {
-        return new Double[count];
+        return new Integer[count];
     }
 
     @Override
@@ -34,7 +34,7 @@ public class WordConverter
     @Override
     public Number fromBytes(byte[] bytes, ParsedAddress address, int offset)
     {
-        return (double) (0xFF * DataTypeUtils.byteToInt(bytes[offset]))
+        return (0xFF * DataTypeUtils.byteToInt(bytes[offset]))
             + DataTypeUtils.byteToInt(bytes[offset + 1]);
     }
 
