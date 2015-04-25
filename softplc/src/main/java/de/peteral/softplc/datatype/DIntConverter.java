@@ -7,27 +7,33 @@ import de.peteral.softplc.model.Converter;
  * Converter handling 32 bit signed decimals.
  *
  * @author peteral
- *
  */
-public class DIntConverter implements Converter<Double> {
+public class DIntConverter
+    implements Converter<Number>
+{
 
-	@Override
-	public Double[] createArray(int count) {
-		// TODO Auto-generated method stub
-		return null;
-	}
+    @Override
+    public Number[] createArray(int count)
+    {
+        // TODO Auto-generated method stub
+        return null;
+    }
 
-	@Override
-	public void toBytes(Double value, ParsedAddress address, byte[] buffer,
-			int offset) {
-		// TODO Auto-generated method stub
+    @Override
+    public void toBytes(Number value,
+                        ParsedAddress address,
+                        byte[] buffer,
+                        int offset)
+    {
+        // TODO Auto-generated method stub
 
-	}
+    }
 
-	@Override
-	public Double fromBytes(byte[] bytes, ParsedAddress address, int offset) {
-		// TODO Auto-generated method stub
-		return null;
-	}
+    @Override
+    public Number fromBytes(byte[] bytes, ParsedAddress address, int offset)
+    {
+        // TODO Auto-generated method stub
+        return null;
+    }
 
 }

@@ -9,27 +9,33 @@ import de.peteral.softplc.model.Converter;
  * First byte is MSB.
  *
  * @author peteral
- *
  */
-public class WordConverter implements Converter<Double> {
+public class WordConverter
+    implements Converter<Number>
+{
 
-	@Override
-	public Double[] createArray(int count) {
-		return new Double[count];
-	}
+    @Override
+    public Number[] createArray(int count)
+    {
+        return new Double[count];
+    }
 
-	@Override
-	public void toBytes(Double value, ParsedAddress address, byte[] buffer,
-			int offset) {
+    @Override
+    public void toBytes(Number value,
+                        ParsedAddress address,
+                        byte[] buffer,
+                        int offset)
+    {
 
-		buffer[offset] = (byte) (value.intValue() / 0xFF);
-		buffer[offset + 1] = (byte) (value.intValue() % 0xFF);
-	}
+        buffer[offset] = (byte) (value.intValue() / 0xFF);
+        buffer[offset + 1] = (byte) (value.intValue() % 0xFF);
+    }
 
-	@Override
-	public Double fromBytes(byte[] bytes, ParsedAddress address, int offset) {
-		return (double) (0xFF * DataTypeUtils.byteToInt(bytes[offset]))
-				+ DataTypeUtils.byteToInt(bytes[offset + 1]);
-	}
+    @Override
+    public Number fromBytes(byte[] bytes, ParsedAddress address, int offset)
+    {
+        return (double) (0xFF * DataTypeUtils.byteToInt(bytes[offset]))
+            + DataTypeUtils.byteToInt(bytes[offset + 1]);
+    }
 
 }
