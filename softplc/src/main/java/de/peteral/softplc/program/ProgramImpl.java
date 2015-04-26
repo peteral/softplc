@@ -83,7 +83,6 @@ public class ProgramImpl
     @Override
     public boolean compile()
     {
-        String currentSource = null;
         try
         {
             ScriptEngine engine =
@@ -97,15 +96,10 @@ public class ProgramImpl
 
             for ( String source : sources )
             {
-                currentSource = source;
-
                 String precompiled = precompiler.translate(source);
-
                 CompiledScript compiledScript = compiler.compile(precompiled);
                 compiledScript.eval(context);
             }
-
-            currentSource = MAIN;
             compiled = compiler.compile(MAIN);
 
             return true;
@@ -114,7 +108,7 @@ public class ProgramImpl
         {
             for ( ProgramCycleObserver observer : observers )
             {
-                observer.onError("Compiling source: " + currentSource, e);
+                observer.onError("Compilation error: ", e);
             }
             return false;
         }

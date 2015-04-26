@@ -8,7 +8,7 @@
 		</memory>
 
 		<program cycleTime="50">
-			<file>./src/test/resources/program/main.js</file>
+			<file>./program/main.js</file>
 		</program>
 	</cpu>
 
@@ -20,7 +20,7 @@
 		</memory>
 
 		<program cycleTime="50">
-			<file>./src/test/resources/program/main.js</file>
+			<file>./program/main.js</file>
 		</program>
 	</cpu>
 </softplc>

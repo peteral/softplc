@@ -1,7 +1,9 @@
 package de.peteral.softplc.plc;
 
 import java.io.ByteArrayInputStream;
+import java.io.File;
 import java.io.IOException;
+import java.net.URI;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.ArrayList;
@@ -135,7 +137,7 @@ public class PlcFactory
         long targetCycleTime =
             Integer.parseInt(programElement.getAttribute("cycleTime"));
 
-        String sourceFiles[] = getSourceFiles(programElement);
+        String sourceFiles[] = getSourceFiles(programElement, path);
 
         return new ProgramImpl(cpu,
                                new ScriptEngineManager(),
@@ -144,7 +146,7 @@ public class PlcFactory
                                sourceFiles);
     }
 
-    private String[] getSourceFiles(Element programElement)
+    private String[] getSourceFiles(Element programElement, String path)
         throws DOMException,
             IOException
     {
@@ -153,7 +155,11 @@ public class PlcFactory
             getChildrenByName(programElement, "file");
         for ( Element e : sourceElements )
         {
-            byte[] bytes = Files.readAllBytes(Paths.get(e.getTextContent()));
+            URI file =
+                new File(path).getParentFile()
+                    .toURI()
+                    .resolve(e.getTextContent());
+            byte[] bytes = Files.readAllBytes(Paths.get(file));
             result.add(new String(bytes));
         }
 
