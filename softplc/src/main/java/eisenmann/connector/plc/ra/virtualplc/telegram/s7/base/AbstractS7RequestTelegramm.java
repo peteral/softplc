@@ -26,11 +26,12 @@ public abstract class AbstractS7RequestTelegramm
      */
     public AbstractS7RequestTelegramm(byte[] data)
     {
+        s7Header = new HeaderS7Request();
         rfcHeader.setValues(data, 0, rfcHeader.getTelegramLen());
         s7Header.setValues(data,
                            rfcHeader.getTelegramLen(),
                            s7Header.getTelegramLen());
-        int offset = rfcHeader.getTelegramLen() + rfcHeader.getTelegramLen();
+        int offset = rfcHeader.getTelegramLen() + s7Header.getTelegramLen();
         s7data.setValues(data, offset, data.length - offset);
     }
 
@@ -39,6 +40,7 @@ public abstract class AbstractS7RequestTelegramm
                                       int offset,
                                       byte[] byteData)
     {
+        s7Header = new HeaderS7Request();
     }
 
     public AbstractS7RequestTelegramm()
@@ -48,6 +50,7 @@ public abstract class AbstractS7RequestTelegramm
 
     public void setConnectRequest(int slot)
     {
+        s7Header = new HeaderS7Request();
         s7data.setConnectRequest(slot);
     }
 

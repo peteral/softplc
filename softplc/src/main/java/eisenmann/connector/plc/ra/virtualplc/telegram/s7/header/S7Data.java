@@ -116,8 +116,7 @@ public class S7Data
 
     public byte[] getWriteData()
     {
-        return Arrays.copyOfRange(bytes, POS_DATA_WRITE, bytes.length
-            - POS_DATA_WRITE);
+        return Arrays.copyOfRange(bytes, POS_DATA_WRITE, bytes.length);
     }
 
     public void setWriteResponse()

@@ -15,7 +15,7 @@ public abstract class HeaderS7
         {
             return false;
         }
-        return getBytes()[POS_RR] == S7.TEL_REQUEST;
+        return getBytes()[POS_RR] == S7.TEL_REQUEST ;//|| getBytes()[POS_RR+1] == S7.TEL_REQUEST;
     }
 
     public boolean isResponse()

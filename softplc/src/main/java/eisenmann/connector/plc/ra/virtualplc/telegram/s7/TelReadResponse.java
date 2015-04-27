@@ -39,6 +39,51 @@ public class TelReadResponse
         S7Bytes.setReadId(data);
     }
 
+    public void setTelegramData(byte[] orgData)
+    {
+        rfcHeader.setValues(orgData, 0, rfcHeader.getTelegramLen());
+        s7Header.setValues(orgData,
+                           rfcHeader.getTelegramLen(),
+                           s7Header.getTelegramLen());
+        int offset = rfcHeader.getTelegramLen() + s7Header.getTelegramLen();
+        data = new byte[orgData.length-offset];
+        System.arraycopy(orgData, offset, data, 0, data.length);
+    }
+
+    //TODO aufteilen in basis und hier
+
+    //TODO aufteilen in basis und hier
+    @Override
+    public int getTelegramLen()
+    {
+        return rfcHeader.getTelegramLen() + s7Header.getTelegramLen()
+            + data.length;
+    }
+
+
+    //TODO aufteilen in basis und hier
+    @Override
+   public byte[] getBytes()
+    {
+        byte[] bytes = new byte[getTelegramLen()];
+        System.arraycopy(rfcHeader.getBytes(),
+                         0,
+                         bytes,
+                         0,
+                         rfcHeader.getTelegramLen());
+        System.arraycopy(s7Header.getBytes(),
+                         0,
+                         bytes,
+                         rfcHeader.getTelegramLen(),
+                         s7Header.getTelegramLen());
+        System.arraycopy(data,
+                         0,
+                         bytes,
+                         rfcHeader.getTelegramLen() + s7Header.getTelegramLen(),
+                         data.length);
+        return bytes;
+    }
+
     public TelReadResponse(byte[] data)
     {
         super(data);

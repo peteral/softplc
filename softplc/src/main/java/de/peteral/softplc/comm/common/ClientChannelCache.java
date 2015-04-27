@@ -1,5 +1,6 @@
 package de.peteral.softplc.comm.common;
 
+import java.io.IOException;
 import java.nio.channels.SocketChannel;
 import java.util.HashMap;
 import java.util.Map;
@@ -15,7 +16,7 @@ import java.util.concurrent.locks.ReentrantReadWriteLock;
 public class ClientChannelCache {
 	private static ClientChannelCache instance = null;
 
-	private final Map<SocketChannel, Integer> cache = new HashMap<>();
+	private final Map<String, Integer> cache = new HashMap<>();
 
 	private final ReentrantReadWriteLock lock = new ReentrantReadWriteLock();
 
@@ -43,9 +44,19 @@ public class ClientChannelCache {
 	public Integer getSlot(SocketChannel socket) {
 		lock.readLock().lock();
 		try {
-			return cache.get(socket);
+			return cache.get(getSocketAddress(socket));
 		} finally {
 			lock.readLock().unlock();
+		}
+	}
+	
+	private String getSocketAddress(SocketChannel socket) {
+		try {
+		String remAdr = socket.getRemoteAddress().toString();
+			return remAdr;
+		} catch (IOException e) {
+			e.printStackTrace();
+			return null;
 		}
 	}
 
@@ -58,7 +69,7 @@ public class ClientChannelCache {
 	public void addChannel(SocketChannel socket, int slot) {
 		lock.writeLock().lock();
 		try {
-			cache.put(socket, slot);
+			cache.put(getSocketAddress(socket), slot);
 		} finally {
 			lock.writeLock().unlock();
 		}
@@ -72,7 +83,7 @@ public class ClientChannelCache {
 	public void removeChannel(SocketChannel socket) {
 		lock.writeLock().lock();
 		try {
-			cache.remove(socket);
+			cache.remove(getSocketAddress(socket));
 		} finally {
 			lock.writeLock().unlock();
 		}

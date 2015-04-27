@@ -21,7 +21,8 @@ public class ReadBytesResponseFactory implements ResponseFactory {
 
 	@Override
 	public byte[] createResponse(CommunicationTask task) {
-		LOGGER.info("Read createResponse data=" + ((ReadBytesTask)task).getData());
-		return ((ReadBytesTask)task).getData();
+		byte[] data = ((ReadBytesTask)task).getData();
+		LOGGER.info("Read createResponse data=" + data);
+		return data;
 	}
 }

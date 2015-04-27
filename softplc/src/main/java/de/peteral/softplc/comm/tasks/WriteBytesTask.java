@@ -18,7 +18,7 @@ import eisenmann.connector.plc.ra.virtualplc.telegram.s7.TelWriteResponse;
  *
  */
 public class WriteBytesTask extends AbstractCommunicationTask {
-	private static final Logger LOGGER = Logger.getLogger("communication");
+	private final Logger LOGGER = Logger.getLogger("communication");
 	private final String memoryArea;
 	private final int offset;
 	private final byte[] data;

@@ -9,7 +9,7 @@ import de.peteral.softplc.model.Cpu;
 import de.peteral.softplc.model.MemoryAccessViolationException;
 import de.peteral.softplc.model.PutGetServer;
 import eisenmann.connector.plc.ra.virtualplc.telegram.s7.S7TelegrammFactory;
-import eisenmann.connector.plc.ra.virtualplc.telegram.s7.TelWriteResponse;
+import eisenmann.connector.plc.ra.virtualplc.telegram.s7.TelReadResponse;
 
 /**
  * {@link CommunicationTask} which handles the read multiple bytes telegram.
@@ -48,7 +48,7 @@ public class ReadBytesTask extends AbstractCommunicationTask {
 
 	@Override
 	protected void doExecute(Cpu cpu) {
-		LOGGER.info("Execute read: mem=" + memoryArea + ", off="+ offset + ", len=" +length);
+		LOGGER.warning("Execute read: mem=" + memoryArea + ", off="+ offset + ", len=" +length + ", CPU-Slot="+ cpu.getSlot());
 		try {
 			data = cpu.getMemory().readBytes(memoryArea, offset, length);
 		} catch (MemoryAccessViolationException e) {
@@ -60,9 +60,10 @@ public class ReadBytesTask extends AbstractCommunicationTask {
 	 * @return data read from CPU or null when invalid
 	 */
 	public byte[] getData() {
-		TelWriteResponse response = S7TelegrammFactory.get().newWriteResponse();
-		LOGGER.warning("Execute read getData: mem=" + memoryArea + ", off="+ offset + ", data=" + Arrays.toString(response.getBytes()));
-		return response.getBytes();
+		TelReadResponse response = S7TelegrammFactory.get().newReadResponse(length, memoryArea, offset, data);
+		byte[] bytes = response.getBytes();
+		LOGGER.warning("Execute read getData: mem=" + memoryArea + ", off="+ offset + ", data=" + Arrays.toString(bytes));
+		return bytes;
 	}
 
 //	public S7Telegram getTelegram() {

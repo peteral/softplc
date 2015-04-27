@@ -45,7 +45,8 @@ public abstract class AbstractCommunicationTask implements CommunicationTask {
 	 * Sends response to the client.
 	 */
 	public void sendResponse() {
-		server.send(socket, factory.createResponse(this));
+		byte[] response = factory.createResponse(this);
+		server.send(socket, response);
 	}
 
 	protected abstract void doExecute(Cpu cpu);

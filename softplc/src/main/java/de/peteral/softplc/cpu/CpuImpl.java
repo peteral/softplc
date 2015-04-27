@@ -132,7 +132,14 @@ public class CpuImpl
     {
         synchronized ( pendingTasks )
         {
-            pendingTasks.forEach(task -> task.execute(this));
+        	try {
+        		pendingTasks.forEach(task -> task.execute(this));
+        	}
+        	catch (Exception e) {
+        		e.printStackTrace();
+        	}
+            
+            pendingTasks.clear();
         }
     }
 

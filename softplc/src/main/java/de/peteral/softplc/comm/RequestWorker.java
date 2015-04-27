@@ -1,5 +1,6 @@
 package de.peteral.softplc.comm;
 
+import java.io.IOException;
 import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
@@ -24,7 +25,7 @@ public class RequestWorker implements Runnable {
 	private boolean running;
 	private final CommunicationTaskFactory communicationTaskFactory;
 	private final Plc plc;
-	private static final Logger LOGGER = Logger.getLogger("communication");
+	private final Logger LOGGER = Logger.getLogger("communication");
 
 	/**
 	 * Creates a new instance.
@@ -87,8 +88,8 @@ public class RequestWorker implements Runnable {
 						IsoConnectTask isoConnectTask = (IsoConnectTask) task;
 						isoConnectTask.invalidate();
 						isoConnectTask.sendResponse();
-						LOGGER.warning("Got telegram received slot [" + slot
-								+ "], data " + Arrays.toString(dataEvent.getData()));
+//						LOGGER.warning("Got2 telegram received slot [" + slot
+//								+ "], data " + Arrays.toString(dataEvent.getData()));
 					} else {
 						LOGGER.warning("Communication task for invalid cpu slot ["
 								+ slot + "]: [" + task + "]");
@@ -96,8 +97,13 @@ public class RequestWorker implements Runnable {
 				}
 
 			} else {
-				LOGGER.warning("Invalid telegram received slot [" + slot
-						+ "], data " + Arrays.toString(dataEvent.getData()));
+				try {
+					LOGGER.warning("Invalid telegram received slot [" + slot
+							+ "] " + dataEvent.getSocket().getRemoteAddress().toString() +" , data " + Arrays.toString(dataEvent.getData()));
+				} catch (IOException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
 			}
 
 			dataEvent.getServer().notifyObservers(new PutGetServerEvent());

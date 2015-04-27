@@ -20,7 +20,7 @@ public abstract class AbstractS7ResponseTelegramm
         s7Header.setValues(data,
                            rfcHeader.getTelegramLen(),
                            s7Header.getTelegramLen());
-        int offset = rfcHeader.getTelegramLen() + rfcHeader.getTelegramLen();
+        int offset = rfcHeader.getTelegramLen() + s7Header.getTelegramLen();
         s7data.setValues(data, offset, data.length + offset);
     }
 

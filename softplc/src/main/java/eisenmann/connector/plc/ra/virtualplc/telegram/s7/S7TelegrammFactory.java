@@ -27,7 +27,8 @@ public class S7TelegrammFactory
         }
         if ( S7.TEL_RESPONSE == bytes[S7.POS_TYPE_RR] )
         {
-            if ( S7.CMD_CON == bytes[S7.POS_TYPE_REQEST_RW] )
+            if ( S7.CMD_CON == bytes[S7.POS_TYPE_REQEST_RW] 
+            		)//|| S7.CMD_CON2== bytes[S7.POS_TYPE_REQEST_RW] )
             {
                 //return new TelConnectResponse(bytes);
             }
@@ -44,7 +45,8 @@ public class S7TelegrammFactory
         }
         else if ( S7.TEL_REQUEST == bytes[S7.POS_TYPE_RR] )
         {
-            if ( S7.CMD_CON == bytes[S7.POS_TYPE_REQEST_RW] )
+            if ( S7.CMD_CON == bytes[S7.POS_TYPE_REQEST_RW] 
+            		)//|| S7.CMD_CON2== bytes[S7.POS_TYPE_REQEST_RW] )
             {
                 return new TelConnectRequest(bytes);
             }

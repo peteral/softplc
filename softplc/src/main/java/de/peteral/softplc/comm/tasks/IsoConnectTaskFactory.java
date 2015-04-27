@@ -1,5 +1,8 @@
 package de.peteral.softplc.comm.tasks;
 
+import java.io.IOException;
+import java.util.logging.Logger;
+
 import de.peteral.softplc.comm.common.ClientChannelCache;
 import de.peteral.softplc.comm.common.ServerDataEvent;
 import de.peteral.softplc.model.CommunicationTask;
@@ -12,6 +15,7 @@ import eisenmann.connector.plc.ra.virtualplc.telegram.s7.TelConnectRequest;
  *
  */
 public class IsoConnectTaskFactory implements TaskFactory {
+	private final Logger LOGGER = Logger.getLogger("communication");
 	private static final int OFFSET_RACK_AND_SLOT = 18;
 
 	private static final byte WILDCARD = (byte) 0xFF;
@@ -45,6 +49,8 @@ public class IsoConnectTaskFactory implements TaskFactory {
 //		return true;
 		TelConnectRequest request = new TelConnectRequest(dataEvent.getData());
 		//return request.isRequest() && (!request.isRead()) && (!request.isWrite());// request.isConnect();
+		boolean gug =   request.isConnect();
+		gug =  request.isRequest();
 		return request.isRequest() && request.isConnect();
 	}
 
@@ -62,8 +68,17 @@ public class IsoConnectTaskFactory implements TaskFactory {
 //
 //		return new IsoConnectTask(dataEvent.getServer(), dataEvent.getSocket(),
 //				factory);
+		byte[] tmp = dataEvent.getData();
 			TelConnectRequest request = new TelConnectRequest(dataEvent.getData());
 			int slot = request.getSlot();
+			try {
+				LOGGER.warning("IsoConnect received slot [" + slot
+				+ "] RemoteAdr:" + dataEvent.getSocket().getRemoteAddress());
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+
 			ClientChannelCache.getInstance()
 					.addChannel(dataEvent.getSocket(), slot);
 
