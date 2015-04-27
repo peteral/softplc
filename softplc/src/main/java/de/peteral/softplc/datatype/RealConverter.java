@@ -25,7 +25,7 @@ public class RealConverter
                         byte[] buffer,
                         int offset)
     {
-        dwordConverter.toBytes(Float.floatToIntBits((float) value),
+        dwordConverter.toBytes(Float.floatToIntBits(value.floatValue()),
                                address,
                                buffer,
                                offset);
