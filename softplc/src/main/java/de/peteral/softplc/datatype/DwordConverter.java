@@ -15,8 +15,7 @@ public class DwordConverter
     @Override
     public Number[] createArray(int count)
     {
-        // TODO Auto-generated method stub
-        return null;
+        return new Integer[count];
     }
 
     @Override
@@ -25,15 +24,19 @@ public class DwordConverter
                         byte[] buffer,
                         int offset)
     {
-        // TODO Auto-generated method stub
-
+        buffer[offset + 3] = (byte) (value.longValue() & 0xFF);
+        buffer[offset + 2] = (byte) ((value.longValue() & 0xFF00) >> 8);
+        buffer[offset + 1] = (byte) ((value.longValue() & 0xFF0000) >> 16);
+        buffer[offset] = (byte) ((value.longValue() & 0xFF000000) >> 24);
     }
 
     @Override
     public Number fromBytes(byte[] bytes, ParsedAddress address, int offset)
     {
-        // TODO Auto-generated method stub
-        return null;
+        return (long) (DataTypeUtils.byteToInt(bytes[offset]) << 24)
+            + (long) (DataTypeUtils.byteToInt(bytes[offset + 1]) << 16)
+            + (DataTypeUtils.byteToInt(bytes[offset + 2]) << 8)
+            + DataTypeUtils.byteToInt(bytes[offset + 3]);
     }
 
 }

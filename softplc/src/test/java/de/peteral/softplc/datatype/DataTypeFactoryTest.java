@@ -28,8 +28,8 @@ public class DataTypeFactoryTest
 				{ new ParsedAddress("M100,B20"), 250, new byte[] { (byte) 250 }, 1, 1, 0, 1 },
 				{ new ParsedAddress("M100,B20,2"), new Integer[] { 10, 20 }, new byte[] { 10, 20 }, 2, 1, 0, 2 },
 				{ new ParsedAddress("M100,W20"), 20, new byte[] { 0, 20 }, 2, 2, 0, 1 },
-				{ new ParsedAddress("M100,W20"), 40000, new byte[] { (byte) 156, (byte) 220 }, 2, 2, 0, 1 },
 				{ new ParsedAddress("M100,W20,2"), new Integer[] { 10, 20 }, new byte[] { 0, 10, 0, 20 }, 4, 2, 0, 2 },
+				{ new ParsedAddress("M100,B20,4"), new Integer[] { 0x42, 0xf6, 0xe9, 0x79 }, new byte[] { 0x42, (byte) 0xf6, (byte) 0xe9, 0x79 }, 4, 1, 0, 4 },
 		});
 	}
 	/* @formatter:on */

@@ -11,12 +11,12 @@ import de.peteral.softplc.model.Converter;
 public class DIntConverter
     implements Converter<Number>
 {
+    private DwordConverter dwordConverter = new DwordConverter();
 
     @Override
     public Number[] createArray(int count)
     {
-        // TODO Auto-generated method stub
-        return null;
+        return new Integer[count];
     }
 
     @Override
@@ -25,15 +25,15 @@ public class DIntConverter
                         byte[] buffer,
                         int offset)
     {
-        // TODO Auto-generated method stub
-
+        dwordConverter.toBytes(value, address, buffer, offset);
     }
 
     @Override
     public Number fromBytes(byte[] bytes, ParsedAddress address, int offset)
     {
-        // TODO Auto-generated method stub
-        return null;
+        long longValue =
+            (long) dwordConverter.fromBytes(bytes, address, offset);
+        return (int) longValue;
     }
 
 }
