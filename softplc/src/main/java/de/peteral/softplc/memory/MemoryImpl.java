@@ -134,9 +134,18 @@ public class MemoryImpl
 
         int byteValue =
             DataTypeUtils.byteToInt(memoryArea.readBytes(parser.getOffset(), 1)[0]);
-        int mask = 1 << parser.getBitNumber();
-        byteValue = byteValue | mask;
 
+        if ( value )
+        {
+            int mask = 1 << parser.getBitNumber();
+            byteValue = byteValue | mask;
+        }
+        else
+        {
+            int mask = 1 << parser.getBitNumber();
+            mask = ~mask;
+            byteValue = byteValue & mask;
+        }
         memoryArea.writeBytes(parser.getOffset(),
                               new byte[] { (byte) byteValue });
     }

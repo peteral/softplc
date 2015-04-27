@@ -108,4 +108,14 @@ public class MemoryIntegrationTest
         assertArrayEquals(INT_VALUE, (Short[]) memory.read(INT_ADDRESS));
         assertEquals(DINT_VALUE, memory.read(DINT_ADDRESS));
     }
+
+    @Test
+    public void write_BitToTrueAndFalse_ReturnsFalse()
+    {
+        memory.write("M,X23.5", true);
+        assertEquals(true, memory.read("M,X23.5"));
+
+        memory.write("M,X23.5", false);
+        assertEquals(false, memory.read("M,X23.5"));
+    }
 }
