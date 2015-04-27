@@ -2,6 +2,7 @@ package de.peteral.softplc.comm.tasks;
 
 import de.peteral.softplc.model.CommunicationTask;
 import de.peteral.softplc.model.ResponseFactory;
+import eisenmann.connector.plc.ra.virtualplc.telegram.s7.TelConnectResponse;
 
 /**
  * Response to Connect Command.
@@ -28,7 +29,10 @@ public class PutGetConnectResponseFactory implements ResponseFactory {
 
 	@Override
 	public byte[] createResponse(CommunicationTask task) {
-		PutGetConnectTask connectTask = (PutGetConnectTask) task;
-		return getResult(connectTask.getMaxDataSize() + 20);
+//		PutGetConnectTask connectTask = (PutGetConnectTask) task;
+//		return getResult(connectTask.getMaxDataSize() + 20);
+		TelConnectResponse response = new TelConnectResponse();
+		response.setConnectResponse();
+		return response.getBytes();
 	};
 }

@@ -2,6 +2,7 @@ package de.peteral.softplc.comm.tasks;
 
 import de.peteral.softplc.comm.common.ServerDataEvent;
 import de.peteral.softplc.model.CommunicationTask;
+import eisenmann.connector.plc.ra.virtualplc.telegram.s7.TelConnectRequest;
 
 /**
  * This is a connect command on PUT/GET protocol level.
@@ -18,16 +19,18 @@ public class PutGetConnectTaskFactory implements TaskFactory {
 
 	@Override
 	public boolean canHandle(ServerDataEvent dataEvent) {
-		if (dataEvent.getData().length < DATA.length) {
-			return false;
-		}
-
-		for (int i = 0; i < DATA.length; i++) {
-			if (DATA[i] != dataEvent.getData()[i]) {
-				return false;
-			}
-		}
-		return true;
+//		if (dataEvent.getData().length < DATA.length) {
+//			return false;
+//		}
+//
+//		for (int i = 0; i < DATA.length; i++) {
+//			if (DATA[i] != dataEvent.getData()[i]) {
+//				return false;
+//			}
+//		}
+//		return true;
+		TelConnectRequest request = new TelConnectRequest(dataEvent.getData());
+		return request.isRequest() && request.isConnect();
 	}
 
 	@Override

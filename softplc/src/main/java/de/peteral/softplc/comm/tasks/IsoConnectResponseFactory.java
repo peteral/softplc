@@ -2,6 +2,7 @@ package de.peteral.softplc.comm.tasks;
 
 import de.peteral.softplc.model.CommunicationTask;
 import de.peteral.softplc.model.ResponseFactory;
+import eisenmann.connector.plc.ra.virtualplc.telegram.s7.TelConnectResponse;
 
 /**
  * Connect confirmation message.
@@ -26,8 +27,11 @@ public class IsoConnectResponseFactory implements ResponseFactory {
 
 	@Override
 	public byte[] createResponse(CommunicationTask task) {
-		IsoConnectTask connectTask = (IsoConnectTask) task;
-
-		return (connectTask.isOk()) ? GOOD_RESPONSE : BAD_RESPONSE;
+//		IsoConnectTask connectTask = (IsoConnectTask) task;
+//
+//		return (connectTask.isOk()) ? GOOD_RESPONSE : BAD_RESPONSE;
+		TelConnectResponse response = new TelConnectResponse();
+		response.setConnectResponse();
+		return response.getBytes();
 	}
 }

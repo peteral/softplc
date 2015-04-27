@@ -2,8 +2,8 @@ package de.peteral.softplc.comm.tasks;
 
 import de.peteral.softplc.comm.common.ClientChannelCache;
 import de.peteral.softplc.comm.common.ServerDataEvent;
-import de.peteral.softplc.datatype.DataTypeUtils;
 import de.peteral.softplc.model.CommunicationTask;
+import eisenmann.connector.plc.ra.virtualplc.telegram.s7.TelConnectRequest;
 
 /**
  * This telegram is sent by the client in order to create ISO connection.
@@ -32,33 +32,43 @@ public class IsoConnectTaskFactory implements TaskFactory {
 
 	@Override
 	public boolean canHandle(ServerDataEvent dataEvent) {
-		if (dataEvent.getData().length < DATA.length) {
-			return false;
-		}
-
-		for (int i = 0; i < DATA.length; i++) {
-			if ((DATA[i] != WILDCARD) && (DATA[i] != dataEvent.getData()[i])) {
-				return false;
-			}
-		}
-
-		return true;
+//		if (dataEvent.getData().length < DATA.length) {
+//			return false;
+//		}
+//
+//		for (int i = 0; i < DATA.length; i++) {
+//			if ((DATA[i] != WILDCARD) && (DATA[i] != dataEvent.getData()[i])) {
+//				return false;
+//			}
+//		}
+//
+//		return true;
+		TelConnectRequest request = new TelConnectRequest(dataEvent.getData());
+		//return request.isRequest() && (!request.isRead()) && (!request.isWrite());// request.isConnect();
+		return request.isRequest() && request.isConnect();
 	}
 
 	@Override
 	public CommunicationTask createTask(ServerDataEvent dataEvent,
 			CommunicationTaskFactory factory) {
-		int rackAndSlot = DataTypeUtils
-				.byteToInt(dataEvent.getData()[OFFSET_RACK_AND_SLOT]);
+//		int rackAndSlot = DataTypeUtils
+//				.byteToInt(dataEvent.getData()[OFFSET_RACK_AND_SLOT]);
+//
+//		// rack is ignored
+//		int slot = rackAndSlot & 0x1F;
+//
+//		ClientChannelCache.getInstance()
+//				.addChannel(dataEvent.getSocket(), slot);
+//
+//		return new IsoConnectTask(dataEvent.getServer(), dataEvent.getSocket(),
+//				factory);
+			TelConnectRequest request = new TelConnectRequest(dataEvent.getData());
+			int slot = request.getSlot();
+			ClientChannelCache.getInstance()
+					.addChannel(dataEvent.getSocket(), slot);
 
-		// rack is ignored
-		int slot = rackAndSlot & 0x1F;
-
-		ClientChannelCache.getInstance()
-				.addChannel(dataEvent.getSocket(), slot);
-
-		return new IsoConnectTask(dataEvent.getServer(), dataEvent.getSocket(),
-				factory);
+			return new IsoConnectTask(dataEvent.getServer(), dataEvent.getSocket(),
+					factory);
 	}
 
 }

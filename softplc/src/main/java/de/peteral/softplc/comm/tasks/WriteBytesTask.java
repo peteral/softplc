@@ -1,11 +1,15 @@
 package de.peteral.softplc.comm.tasks;
 
 import java.nio.channels.SocketChannel;
+import java.util.Arrays;
+import java.util.logging.Logger;
 
 import de.peteral.softplc.model.CommunicationTask;
 import de.peteral.softplc.model.Cpu;
 import de.peteral.softplc.model.MemoryAccessViolationException;
 import de.peteral.softplc.model.PutGetServer;
+import eisenmann.connector.plc.ra.virtualplc.telegram.s7.S7TelegrammFactory;
+import eisenmann.connector.plc.ra.virtualplc.telegram.s7.TelWriteResponse;
 
 /**
  * {@link CommunicationTask} which handles the write bytes telegram.
@@ -14,6 +18,7 @@ import de.peteral.softplc.model.PutGetServer;
  *
  */
 public class WriteBytesTask extends AbstractCommunicationTask {
+	private static final Logger LOGGER = Logger.getLogger("communication");
 	private final String memoryArea;
 	private final int offset;
 	private final byte[] data;
@@ -42,6 +47,7 @@ public class WriteBytesTask extends AbstractCommunicationTask {
 
 	@Override
 	protected void doExecute(Cpu cpu) {
+		LOGGER.info("Execute write: mem=" + memoryArea + ", off="+ offset + ", data=" + Arrays.toString(data));
 		try {
 			cpu.getMemory().writeBytes(memoryArea, offset, data);
 			ok = true;
@@ -57,4 +63,11 @@ public class WriteBytesTask extends AbstractCommunicationTask {
 	public boolean isOk() {
 		return ok;
 	}
+	
+	public byte[] getData() {
+		TelWriteResponse response = S7TelegrammFactory.get().newWriteResponse();
+		LOGGER.warning("Execute write getData: mem=" + memoryArea + ", off="+ offset + ", data=" + Arrays.toString(response.getBytes()));
+		return response.getBytes();
+	}
+
 }

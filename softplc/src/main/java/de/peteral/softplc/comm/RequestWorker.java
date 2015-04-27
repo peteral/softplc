@@ -87,6 +87,8 @@ public class RequestWorker implements Runnable {
 						IsoConnectTask isoConnectTask = (IsoConnectTask) task;
 						isoConnectTask.invalidate();
 						isoConnectTask.sendResponse();
+						LOGGER.warning("Got telegram received slot [" + slot
+								+ "], data " + Arrays.toString(dataEvent.getData()));
 					} else {
 						LOGGER.warning("Communication task for invalid cpu slot ["
 								+ slot + "]: [" + task + "]");

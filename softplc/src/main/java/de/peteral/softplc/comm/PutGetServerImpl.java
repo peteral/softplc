@@ -14,6 +14,8 @@ import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import de.peteral.softplc.comm.common.ChangeRequest;
 import de.peteral.softplc.comm.common.ClientChannelCache;
@@ -34,6 +36,7 @@ import de.peteral.softplc.model.PutGetServerObserver;
 // socket for testing
 public class PutGetServerImpl implements PutGetServer, Runnable {
 
+	private final Logger LOGGER = Logger.getLogger("communication");
 	private final List<PutGetServerObserver> observers = new ArrayList<>();
 
 	// The port to listen on
@@ -98,6 +101,7 @@ public class PutGetServerImpl implements PutGetServer, Runnable {
 
 		// Bind the server socket to the specified address and port
 		InetSocketAddress isa = new InetSocketAddress("localhost", this.port);
+		LOGGER.log(Level.INFO, "Open port " + port);
 		serverChannel.socket().bind(isa);
 
 		// Register the server socket channel, indicating an interest in
@@ -144,7 +148,14 @@ public class PutGetServerImpl implements PutGetServer, Runnable {
 						case ChangeRequest.CHANGEOPS:
 							SelectionKey key = change.getSocket().keyFor(
 									this.selector);
-							key.interestOps(change.getOps());
+							if(key != null)
+							{
+								key.interestOps(change.getOps());
+							}
+							else
+							{
+								LOGGER.log(Level.INFO, "key is null in run of class " + getClass().getName() + ", Selector= " + ((this.selector == null) ? "null" : this.selector.getClass().getName()));
+							}
 						}
 					}
 					this.pendingChanges.clear();
