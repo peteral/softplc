@@ -27,14 +27,14 @@ public class WordConverter
                         int offset)
     {
 
-        buffer[offset] = (byte) (value.intValue() / 0xFF);
-        buffer[offset + 1] = (byte) (value.intValue() % 0xFF);
+        buffer[offset + 1] = (byte) (value.intValue() & 0xFF);
+        buffer[offset + 0] = (byte) ((value.intValue() & 0xFF00) >> 8);
     }
 
     @Override
     public Number fromBytes(byte[] bytes, ParsedAddress address, int offset)
     {
-        return (0xFF * DataTypeUtils.byteToInt(bytes[offset]))
+        return (DataTypeUtils.byteToInt(bytes[offset]) << 8)
             + DataTypeUtils.byteToInt(bytes[offset + 1]);
     }
 

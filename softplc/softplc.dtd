@@ -15,8 +15,9 @@
 	size	CDATA	"65535"
 >
 
-<!ELEMENT program EMPTY>
+<!ELEMENT program (file)*>
 <!ATTLIST program
 	cycleTime	CDATA	"20"
-	file		CDATA	#REQUIRED
 >
+
+<!ELEMENT file (#PCDATA)>
