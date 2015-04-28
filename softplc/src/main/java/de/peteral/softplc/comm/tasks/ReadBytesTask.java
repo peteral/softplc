@@ -2,6 +2,7 @@ package de.peteral.softplc.comm.tasks;
 
 import java.nio.channels.SocketChannel;
 import java.util.Arrays;
+import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import de.peteral.softplc.model.CommunicationTask;
@@ -48,7 +49,7 @@ public class ReadBytesTask extends AbstractCommunicationTask {
 
 	@Override
 	protected void doExecute(Cpu cpu) {
-		LOGGER.warning("Execute read: mem=" + memoryArea + ", off="+ offset + ", len=" +length + ", CPU-Slot="+ cpu.getSlot());
+		//LOGGER.warning("Execute read: mem=" + memoryArea + ", off="+ offset + ", len=" +length + ", CPU-Slot="+ cpu.getSlot());
 		try {
 			data = cpu.getMemory().readBytes(memoryArea, offset, length);
 		} catch (MemoryAccessViolationException e) {
@@ -62,7 +63,14 @@ public class ReadBytesTask extends AbstractCommunicationTask {
 	public byte[] getData() {
 		TelReadResponse response = S7TelegrammFactory.get().newReadResponse(length, memoryArea, offset, data);
 		byte[] bytes = response.getBytes();
-		LOGGER.warning("Execute read getData: mem=" + memoryArea + ", off="+ offset + ", data=" + Arrays.toString(bytes));
+		boolean doLog = false;
+		for (byte b : data) {
+			if(b != 0)
+			{
+				doLog=true;
+			}
+		}
+		LOGGER.log((doLog) ? Level.FINE : Level.FINER, "Execute read getData: mem=" + memoryArea + ", off="+ offset + ", data=" + Arrays.toString(bytes));
 		return bytes;
 	}
 

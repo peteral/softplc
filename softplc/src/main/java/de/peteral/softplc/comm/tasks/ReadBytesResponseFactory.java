@@ -1,7 +1,5 @@
 package de.peteral.softplc.comm.tasks;
 
-import java.util.logging.Logger;
-
 import de.peteral.softplc.model.CommunicationTask;
 import de.peteral.softplc.model.ResponseFactory;
 
@@ -12,7 +10,6 @@ import de.peteral.softplc.model.ResponseFactory;
  *
  */
 public class ReadBytesResponseFactory implements ResponseFactory {
-	private final Logger LOGGER = Logger.getLogger("communication");
 
 	@Override
 	public boolean canHandle(CommunicationTask task) {
@@ -22,7 +19,6 @@ public class ReadBytesResponseFactory implements ResponseFactory {
 	@Override
 	public byte[] createResponse(CommunicationTask task) {
 		byte[] data = ((ReadBytesTask)task).getData();
-		LOGGER.info("Read createResponse data=" + data);
 		return data;
 	}
 }

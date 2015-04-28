@@ -1,5 +1,6 @@
 package de.peteral.softplc.comm.tasks;
 
+import java.util.Arrays;
 import java.util.logging.Logger;
 
 import de.peteral.softplc.model.CommunicationTask;
@@ -21,8 +22,9 @@ public class WriteBytesResponseFactory implements ResponseFactory {
 
 	@Override
 	public byte[] createResponse(CommunicationTask task) {
-		LOGGER.warning("Write createResponse data=" + ((WriteBytesTask)task).getData());
-		return ((WriteBytesTask)task).getData();
+		byte[] data = ((WriteBytesTask)task).getData();
+		LOGGER.fine("Write createResponse data=" + Arrays.toString(data));
+		return data;
 	}
 
 }
