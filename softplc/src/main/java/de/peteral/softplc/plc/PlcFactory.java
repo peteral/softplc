@@ -4,6 +4,7 @@ import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.IOException;
 import java.net.URI;
+import java.net.URISyntaxException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.ArrayList;
@@ -11,6 +12,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ScheduledThreadPoolExecutor;
+import java.util.logging.Logger;
 
 import javax.script.ScriptEngineManager;
 import javax.xml.parsers.DocumentBuilder;
@@ -46,6 +48,8 @@ import de.peteral.softplc.program.ProgramImpl;
  */
 public class PlcFactory
 {
+    private final Logger logger = Logger.getLogger("PlcFactory");
+
     private static final int PORT = 102;
     private static final Map<String, Integer> DEFAULT_MEMORY_AREAS =
         new HashMap<>();
@@ -74,16 +78,45 @@ public class PlcFactory
 
             return createFromDocument(doc, path);
         }
-        catch ( IOException | ParserConfigurationException | SAXException e )
+        catch ( IOException | ParserConfigurationException | SAXException
+                | URISyntaxException e )
         {
             throw new PlcFactoryException(path, e);
         }
     }
 
     private Plc createFromDocument(Document doc, String path)
-        throws IOException
+        throws IOException,
+            ParserConfigurationException,
+            SAXException,
+            URISyntaxException
     {
+        logger.info("Parsing file: " + path);
         List<Cpu> cpus = new ArrayList<>();
+
+        // process includes
+        NodeList includeElements = doc.getElementsByTagName("includes");
+        for ( int i = 0; i < includeElements.getLength(); i++ )
+        {
+            Element includeElement = (Element) includeElements.item(i);
+            URI includeUri =
+                new File(path).getParentFile()
+                    .toURI()
+                    .resolve(includeElement.getAttribute("file"));
+            String includePath = new File(includeUri).getAbsolutePath();
+            byte[] contents = Files.readAllBytes(Paths.get(includePath));
+            DocumentBuilder builder =
+                DocumentBuilderFactory.newInstance().newDocumentBuilder();
+            Document includeDoc =
+                builder.parse(new ByteArrayInputStream(contents));
+
+            Plc plc = createFromDocument(includeDoc, includePath);
+
+            for ( Cpu cpu : plc.getCpus() )
+            {
+                cpus.add(cpu);
+            }
+        }
 
         NodeList cpuElements = doc.getElementsByTagName("cpu");
         for ( int i = 0; i < cpuElements.getLength(); i++ )

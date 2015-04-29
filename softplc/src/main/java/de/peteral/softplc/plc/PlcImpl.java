@@ -12,76 +12,99 @@ import de.peteral.softplc.model.PutGetServer;
  * {@link Plc} implementation.
  *
  * @author peteral
- *
  */
-public class PlcImpl implements Plc {
+public class PlcImpl
+    implements Plc
+{
 
-	private final List<Cpu> cpus;
-	private final PutGetServer server;
+    private final List<Cpu> cpus;
+    private final PutGetServer server;
 
-	/**
-	 * Default constructor.
-	 *
-	 * @param server
-	 *            {@link PutGetServer} implementation instance
-	 * @param cpus
-	 *            list of {@link Cpu} units managed by this PLC.
-	 */
-	public PlcImpl(PutGetServer server, Cpu... cpus) {
-		this.server = server;
-		this.cpus = Arrays.asList(cpus);
+    /**
+     * Default constructor.
+     *
+     * @param server
+     *        {@link PutGetServer} implementation instance
+     * @param cpus
+     *        list of {@link Cpu} units managed by this PLC.
+     */
+    public PlcImpl(PutGetServer server, Cpu... cpus)
+    {
+        this.server = server;
+        this.cpus = Arrays.asList(cpus);
 
-	}
+    }
 
-	@Override
-	public Cpu getCpu(int slot) {
-		for (Cpu cpu : cpus) {
-			if (cpu.getSlot() == slot) {
-				return cpu;
-			}
-		}
+    @Override
+    public Cpu getCpu(int slot)
+    {
+        for ( Cpu cpu : cpus )
+        {
+            if ( cpu.getSlot() == slot )
+            {
+                return cpu;
+            }
+        }
 
-		throw new ArrayIndexOutOfBoundsException("Invalid CPU slot: " + slot);
-	}
+        throw new ArrayIndexOutOfBoundsException("Invalid CPU slot: " + slot);
+    }
 
-	@Override
-	public int getCpuCount() {
-		return cpus.size();
-	}
+    @Override
+    public int getCpuCount()
+    {
+        return cpus.size();
+    }
 
-	@Override
-	public void start() {
-		cpus.forEach(cpu -> cpu.start());
+    @Override
+    public void start()
+    {
+        cpus.forEach(cpu -> cpu.start());
 
-		try {
-			server.start(this);
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-	}
+        try
+        {
+            server.start(this);
+        }
+        catch ( IOException e )
+        {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+    }
 
-	@Override
-	public void stop() {
-		try {
-			server.stop();
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+    @Override
+    public void stop()
+    {
+        try
+        {
+            server.stop();
+        }
+        catch ( IOException e )
+        {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
 
-		cpus.forEach(cpu -> cpu.stop());
-	}
+        cpus.forEach(cpu -> cpu.stop());
+    }
 
-	@Override
-	public boolean hasCpu(int slot) {
-		for (Cpu cpu : cpus) {
-			if (cpu.getSlot() == slot) {
-				return true;
-			}
-		}
+    @Override
+    public boolean hasCpu(int slot)
+    {
+        for ( Cpu cpu : cpus )
+        {
+            if ( cpu.getSlot() == slot )
+            {
+                return true;
+            }
+        }
 
-		return false;
-	}
+        return false;
+    }
+
+    @Override
+    public Cpu[] getCpus()
+    {
+        return cpus.toArray(new Cpu[cpus.size()]);
+    }
 
 }

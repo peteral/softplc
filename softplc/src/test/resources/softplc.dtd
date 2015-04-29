@@ -1,4 +1,9 @@
-<!ELEMENT softplc (cpu)*>
+<!ELEMENT softplc (includes | cpu)*>
+
+<!ELEMENT includes EMPTY>
+<!ATTLIST includes
+	file	CDATA	#REQUIRED
+>
 
 <!ELEMENT cpu (memory, program)*>
 <!ATTLIST cpu
