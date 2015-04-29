@@ -2,6 +2,7 @@ package de.peteral.softplc.memory;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.logging.Level;
 
 import de.peteral.softplc.address.AddressParserFactory;
 import de.peteral.softplc.address.ParsedAddress;
@@ -91,7 +92,14 @@ public class MemoryImpl
             memoryArea.readBytes(parsedAddress.getOffset(),
                                  dataTypeFactory.getTotalSize(parsedAddress));
 
-        return dataTypeFactory.fromBytes(bytes, parsedAddress);
+        Object result = dataTypeFactory.fromBytes(bytes, parsedAddress);
+
+        if ( memoryArea.getLogger().isLoggable(Level.FINER) )
+        {
+            memoryArea.getLogger().finer("Read: " + address + " = " + result);
+        }
+
+        return result;
     }
 
     @Override
@@ -109,6 +117,11 @@ public class MemoryImpl
 
         memoryArea.writeBytes(parser.getOffset(),
                               dataTypeFactory.toBytes(value, parser));
+
+        if ( memoryArea.getLogger().isLoggable(Level.FINE) )
+        {
+            memoryArea.getLogger().fine("Write: " + address + " = " + value);
+        }
     }
 
     @Override
