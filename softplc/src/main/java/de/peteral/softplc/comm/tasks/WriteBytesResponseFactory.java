@@ -23,7 +23,7 @@ public class WriteBytesResponseFactory implements ResponseFactory {
 	@Override
 	public byte[] createResponse(CommunicationTask task) {
 		byte[] data = ((WriteBytesTask)task).getData();
-		LOGGER.fine("Write createResponse data=" + Arrays.toString(data));
+		LOGGER.fine("Write Byte createResponse data=" + Arrays.toString(data));
 		return data;
 	}
 

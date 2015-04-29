@@ -65,10 +65,10 @@ public abstract class AbstractS7RequestTelegramm
 //            + POS_DATA_READ);
 //    }
 
-    public void setWriteRequest(int count, int db, int offset, byte[] byteData)
-    {
-        s7data.setWriteRequest(count, db, offset, byteData);
-    }
+//    public void setWriteRequest(int count, int db, int offset, byte[] byteData)
+//    {
+//        s7data.setWriteRequest(count, db, offset, byteData);
+//    }
 
     public abstract AbstractS7ResponseTelegramm getResponse();
 

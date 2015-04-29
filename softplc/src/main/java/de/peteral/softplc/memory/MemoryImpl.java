@@ -94,7 +94,7 @@ public class MemoryImpl
 
         Object result = dataTypeFactory.fromBytes(bytes, parsedAddress);
 
-        if ( memoryArea.getLogger().isLoggable(Level.FINER) )
+        if ( memoryArea.getLogger() != null && memoryArea.getLogger().isLoggable(Level.FINER) )
         {
             memoryArea.getLogger().finer("Read: " + address + " = " + result);
         }
@@ -118,7 +118,7 @@ public class MemoryImpl
         memoryArea.writeBytes(parser.getOffset(),
                               dataTypeFactory.toBytes(value, parser));
 
-        if ( memoryArea.getLogger().isLoggable(Level.FINE) )
+        if ( memoryArea.getLogger() != null && memoryArea.getLogger().isLoggable(Level.FINE) )
         {
             memoryArea.getLogger().fine("Write: " + address + " = " + value);
         }
@@ -144,6 +144,11 @@ public class MemoryImpl
         ParsedAddress parser = addressParserFactory.parse(address);
 
         MemoryArea memoryArea = getMemoryArea(parser.getAreaCode());
+
+        if ( memoryArea.getLogger() != null &&  memoryArea.getLogger().isLoggable(Level.FINE) )
+        {
+            memoryArea.getLogger().fine("setBit: " + address + " = " + value);
+        }
 
         int byteValue =
             DataTypeUtils.byteToInt(memoryArea.readBytes(parser.getOffset(), 1)[0]);

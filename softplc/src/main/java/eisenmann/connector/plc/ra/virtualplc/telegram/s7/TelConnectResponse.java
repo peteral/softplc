@@ -56,4 +56,17 @@ public class TelConnectResponse
     {
         return true;
     }
+    
+    @Override
+	public boolean isByteType()
+    {
+    	return false;    	 
+    	     }
+    
+    @Override
+	public boolean isBitType()
+    {
+    	return false;    	 
+    }
+
 }

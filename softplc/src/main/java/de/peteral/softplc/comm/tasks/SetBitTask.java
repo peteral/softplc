@@ -1,11 +1,14 @@
 package de.peteral.softplc.comm.tasks;
 
 import java.nio.channels.SocketChannel;
+import java.util.logging.Logger;
 
 import de.peteral.softplc.model.CommunicationTask;
 import de.peteral.softplc.model.Cpu;
 import de.peteral.softplc.model.MemoryAccessViolationException;
 import de.peteral.softplc.model.PutGetServer;
+import eisenmann.connector.plc.ra.virtualplc.telegram.s7.S7TelegrammFactory;
+import eisenmann.connector.plc.ra.virtualplc.telegram.s7.TelWriteResponse;
 
 /**
  * This {@link CommunicationTask} implements the set bit S7 telegram.
@@ -19,6 +22,7 @@ public class SetBitTask extends AbstractCommunicationTask {
 	private final int offset;
 	private final int bitNumber;
 	private final boolean value;
+	private final  Logger logger = Logger.getLogger("communication");
 
 	/**
 	 * Initialize new instance.
@@ -46,16 +50,9 @@ public class SetBitTask extends AbstractCommunicationTask {
 	@Override
 	protected void doExecute(Cpu cpu) {
 		try {
-			byte[] data = cpu.getMemory().readBytes(area, offset, 1);
-
-			if (value) {
-				data[0] = (byte) (data[0] | (1 << bitNumber));
-			} else {
-				data[0] = (byte) (data[0] & (~(1 << bitNumber)));
-			}
-
-			cpu.getMemory().writeBytes(area, offset, data);
-
+			String address = area + ",X" + offset + "." + bitNumber;
+			cpu.getMemory().setBit(address, value);
+			logger.info("SetBit: " + address + " = " + value);
 			ok = true;
 		} catch (MemoryAccessViolationException e) {
 			ok = false;
@@ -69,4 +66,10 @@ public class SetBitTask extends AbstractCommunicationTask {
 	public boolean isOk() {
 		return ok;
 	}
+	
+	public byte[] getData() {
+		TelWriteResponse response = S7TelegrammFactory.get().newWriteResponse();
+		return response.getBytes();
+	}
+
 }

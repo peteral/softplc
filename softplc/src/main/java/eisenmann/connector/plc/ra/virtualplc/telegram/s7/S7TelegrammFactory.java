@@ -91,12 +91,20 @@ public class S7TelegrammFactory
         return new TelReadResponse(count, db, offset, data);
     }
 
-    public TelWriteRequest newWrite(int count,
+    public TelWriteRequest newWriteByte(int count,
                                     int db,
                                     int offset,
                                     byte[] byteData)
     {
         return new TelWriteRequest(count, db, offset, byteData);
+    }
+
+    public TelWriteRequest newWriteBit(int count,
+            int db,
+            int offset, int bitNum,
+            byte[] byteData)
+    {
+    	return new TelWriteRequest(count, db, offset, bitNum, byteData);
     }
 
     public TelWriteResponse newWriteResponse()

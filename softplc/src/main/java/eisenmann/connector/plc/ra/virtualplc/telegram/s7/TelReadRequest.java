@@ -58,4 +58,17 @@ public class TelReadRequest
     {
         return s7data.getOffset();
     }
+    
+    @Override
+	public boolean isByteType()
+    {
+    	return false;    	 
+    }
+    
+    @Override
+	public boolean isBitType()
+    {
+    	return false;    	 
+    }
+
 }

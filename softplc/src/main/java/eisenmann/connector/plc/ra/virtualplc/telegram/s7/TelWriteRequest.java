@@ -12,11 +12,17 @@ public class TelWriteRequest
 
     public TelWriteRequest(int count, int db, int offset, byte[] byteData)
     {
-        s7data.setWriteRequest(count, db, offset, byteData);
+        s7data.setWriteRequest(count, db, offset, byteData, true, 0);
         rfcHeader.setLenOfS7Telegramm(getTelegramLen());
     }
 
-    @Override
+    public TelWriteRequest(int count, int db, int offset, int bitNum, byte[] byteData)
+    {
+        s7data.setWriteRequest(count, db, offset, byteData, false, bitNum);
+        rfcHeader.setLenOfS7Telegramm(getTelegramLen());
+    }
+
+   @Override
     public TelWriteResponse getResponse()
     {
         TelWriteResponse response = new TelWriteResponse();
@@ -48,6 +54,16 @@ public class TelWriteRequest
         return s7data.getWriteData();
     }
 
+    public boolean getBitValue()
+    {
+    	return s7data.getBitValue();
+    }
+    
+    public int getBitNumber()
+    {
+    	return s7data.getBitNumber();
+    }
+
     @Override
     public int getError()
     {
@@ -59,5 +75,17 @@ public class TelWriteRequest
     public boolean isWrite()
     {
         return true;
+    }
+    
+    @Override
+	public boolean isByteType()
+    {
+    	return s7data.isByteType();    	 
+    }
+    
+    @Override
+	public boolean isBitType()
+    {
+    	return s7data.isBitType();    	 
     }
 }

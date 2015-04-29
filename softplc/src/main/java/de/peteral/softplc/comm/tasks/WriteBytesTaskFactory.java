@@ -2,6 +2,7 @@ package de.peteral.softplc.comm.tasks;
 
 import de.peteral.softplc.comm.common.ServerDataEvent;
 import de.peteral.softplc.model.CommunicationTask;
+import eisenmann.connector.plc.ra.virtualplc.telegram.s7.S7Telegram;
 import eisenmann.connector.plc.ra.virtualplc.telegram.s7.S7TelegrammFactory;
 import eisenmann.connector.plc.ra.virtualplc.telegram.s7.TelWriteRequest;
 
@@ -15,7 +16,8 @@ public class WriteBytesTaskFactory implements TaskFactory {
 
 	@Override
 	public boolean canHandle(ServerDataEvent dataEvent) {
-		return (S7TelegrammFactory.get().newTelegam(dataEvent.getData())  instanceof  TelWriteRequest);
+		S7Telegram telegramm = S7TelegrammFactory.get().newTelegam(dataEvent.getData()) ;
+		return (telegramm  instanceof  TelWriteRequest && telegramm.isByteType());
 	}
 
 	@Override

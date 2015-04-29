@@ -4,7 +4,10 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertSame;
+import static org.mockito.Mockito.when;
 
+import java.io.IOException;
+import java.net.SocketAddress;
 import java.nio.channels.SocketChannel;
 
 import org.junit.Before;
@@ -12,18 +15,20 @@ import org.junit.Test;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 
-import de.peteral.softplc.comm.common.ClientChannelCache;
-
 @SuppressWarnings("javadoc")
 public class ClientChannelCacheTest {
 	private static final int SLOT = 10;
 	@Mock
 	private SocketChannel socket;
+	@Mock
+	private SocketAddress address;
 
 	@Before
-	public void setup() {
+	public void setup() throws IOException {
 		MockitoAnnotations.initMocks(this);
 
+		when(socket.getRemoteAddress()).thenReturn(address);
+		
 		ClientChannelCache.getInstance().clear();
 	}
 

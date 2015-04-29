@@ -17,4 +17,7 @@ public interface S7Telegram
 
     boolean isWrite();
 
+    boolean isByteType();
+    boolean isBitType();
+
 } 

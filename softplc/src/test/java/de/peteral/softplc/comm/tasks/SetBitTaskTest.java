@@ -2,6 +2,7 @@ package de.peteral.softplc.comm.tasks;
 
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
+import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
@@ -46,11 +47,9 @@ public class SetBitTaskTest {
 
 	@Test
 	public void doExecute_ValidMemoryAreaSetBit_IsOkReturnsTrueCorrectBitSet() {
-		when(memory.readBytes(AREA, OFFSET, 1)).thenReturn(new byte[] { 1 });
-
 		task.execute(cpu);
 
-		verify(memory).writeBytes(AREA, OFFSET, new byte[] { 17 });
+		verify(memory).setBit("DB100,X20.4", true);
 
 		assertTrue(task.isOk());
 	}
@@ -59,20 +58,16 @@ public class SetBitTaskTest {
 	public void doExecute_ValidMemoryAreaResetBit_IsOkReturnsTrueCorrectBitReset() {
 		task = new SetBitTask(server, socket, factory, AREA, OFFSET,
 				BIT_NUMBER, false);
-
-		when(memory.readBytes(AREA, OFFSET, 1)).thenReturn(new byte[] { 17 });
-
 		task.execute(cpu);
 
-		verify(memory).writeBytes(AREA, OFFSET, new byte[] { 1 });
+		verify(memory).setBit("DB100,X20.4", false);
 
 		assertTrue(task.isOk());
 	}
 
 	@Test
 	public void doExecute_InvalidMemoryArea_IsOkReturnsFalse() {
-		when(memory.readBytes(AREA, OFFSET, 1)).thenThrow(
-				new MemoryAccessViolationException(""));
+		doThrow(new MemoryAccessViolationException("")).when(memory).setBit("DB100,X20.4", true);
 
 		task.execute(cpu);
 

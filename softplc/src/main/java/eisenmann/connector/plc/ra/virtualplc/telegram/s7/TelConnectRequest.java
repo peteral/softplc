@@ -45,6 +45,19 @@ public class TelConnectRequest
     {
     	return s7data.getSlot();
     }
+    
+    @Override
+	public boolean isByteType()
+    {
+    	return false;    	 
+    	     }
+    
+    @Override
+	public boolean isBitType()
+    {
+    	return false;    	 
+    }
+
 //    private static final int OFFSET_RACK_AND_SLOT = 18;
 //
 //    private static final byte WILDCARD = (byte) 0xFF;
