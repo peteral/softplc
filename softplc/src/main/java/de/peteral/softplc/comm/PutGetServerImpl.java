@@ -100,7 +100,7 @@ public class PutGetServerImpl implements PutGetServer, Runnable {
 		serverChannel.configureBlocking(false);
 
 		// Bind the server socket to the specified address and port
-		InetSocketAddress isa = new InetSocketAddress("localhost", this.port);
+		InetSocketAddress isa = new InetSocketAddress(this.port);
 		LOGGER.log(Level.INFO, "Open port " + port);
 		serverChannel.socket().bind(isa);
 
