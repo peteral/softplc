@@ -34,39 +34,10 @@ public abstract class AbstractS7ResponseTelegramm
         s7data.setConnectResponse();
     }
 
-
-//    public void setReadResponse(byte[] byteData)
-//    {
-//        s7data.setReadResponse(byteData);
-//    }
-//
-//    public void setReadResponse(int len)
-//    {
-//        s7data.setReadResponse(len);
-//    }
-
-//    public byte[] getReadData()
-//    {
-//        return Arrays.copyOfRange(bytes, POS_DATA_READ, bytes.length
-//            + POS_DATA_READ);
-//    }
-//
-
     public void setWriteResponse()
     {
         s7data.setWriteResponse();
     }
 
-    @Override
-    public boolean isRequest()
-    {
-        return s7Header.isRequest();
-    }
-
-    @Override
-    public boolean isResponse()
-    {
-        return s7Header.isResponse();
-    }
 
 }

@@ -18,7 +18,7 @@ public class TelReadResponse
 
     public TelReadResponse(int count, String db, int offset, byte[] data)
     {
-        db = db.replaceAll("DB", "");
+        db = db.replaceAll(S7.TYPE_DB, "");
         setReadResponse(count, Integer.parseInt(db), offset, data);
     }
 

@@ -39,6 +39,18 @@ public abstract class AbstractS7Telegram
     }
 
     @Override
+    public boolean isRequest()
+    {
+        return s7Header.isRequest();
+    }
+
+    @Override
+    public boolean isResponse()
+    {
+        return s7Header.isResponse();
+    }
+
+    @Override
     public byte[] getBytes()
     {
         byte[] bytes = new byte[getTelegramLen()];
@@ -59,9 +71,9 @@ public abstract class AbstractS7Telegram
                          s7data.getTelegramLen());
         return bytes;
     }
-
+    
     @Override
-    public boolean setValues(byte[] values)
+	public boolean setValues(byte[] values)
     {
         // TODO Auto-generated method stub
         return false;
@@ -70,7 +82,6 @@ public abstract class AbstractS7Telegram
     @Override
     public String getInfo()
     {
-        // TODO Auto-generated method stub
         return getClass() + ", Req=" + isRequest() + ", Res=" + isResponse()
             + ", Con=" + isConnect() + ", R=" + isRead() + ", W=" + isWrite();
     }

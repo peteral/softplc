@@ -22,13 +22,6 @@ public class HeaderRFC
     }
 
     @Override
-    public int getError()
-    {
-        // TODO Auto-generated method stub
-        return 0;
-    }
-
-    @Override
     public int getTelegramLen()
     {
         return LEN;

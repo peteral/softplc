@@ -2,6 +2,8 @@ package eisenmann.connector.plc.ra.virtualplc.telegram.s7.base;
 
 import java.util.Arrays;
 
+import eisenmann.connector.plc.ra.virtualplc.telegram.s7.S7;
+
 public abstract class AbstractByteTelegram
     implements ByteTelegram
 {
@@ -9,16 +11,6 @@ public abstract class AbstractByteTelegram
 
     @Override
     public abstract int getTelegramLen();
-
-//    @Override
-//    public byte[] getRawBytes()
-//    {
-//        for ( byte element : bytes )
-//        {
-//            element = 0;
-//        }
-//        return bytes;
-//    }
 
     @Override
     public byte[] getBytes()
@@ -70,7 +62,22 @@ public abstract class AbstractByteTelegram
     @Override
     public boolean isOK()
     {
-        return getError() == 0;
+        return getError() == S7.OK;
     }
+
+    @Override
+    public int getError()
+    {
+    	if(bytes == null || bytes.length < getTelegramLen())
+    	{
+    		return S7.ERR_TOO_SMALL;
+    	}
+    	else if(bytes.length > getTelegramLen())
+    	{
+    		return S7.ERR_TOO_LASRGE;
+    	}
+        return S7.OK;
+    }
+
 
 }

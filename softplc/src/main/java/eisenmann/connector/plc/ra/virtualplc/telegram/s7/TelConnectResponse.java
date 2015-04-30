@@ -5,6 +5,9 @@ import eisenmann.connector.plc.ra.virtualplc.telegram.s7.base.AbstractS7Response
 public class TelConnectResponse
     extends AbstractS7ResponseTelegramm
 {
+    private static int LEN = 5;
+    private static final Byte RESPONSE_OK = (byte) 0xD0;
+
     public TelConnectResponse(byte[] data)
     {
         super(data);
@@ -14,9 +17,6 @@ public class TelConnectResponse
     {
         setConnectResponse();
     }
-
-    private static int LEN = 5;
-    private static final Byte RESPONSE_OK = (byte) 0xD0;
 
     @Override
     public int getTelegramLen()

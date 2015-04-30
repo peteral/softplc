@@ -9,14 +9,6 @@ public abstract class AbstractS7RequestTelegramm
 
 {
 
-//    private final byte version = 0x03;
-//    private static final int POS_VER = 0;
-//    private final byte res1 = 0x00;
-//    private static final int POS_LEN = 0;
-//    //len-value get by getTelegramLen()
-//    private static final int POS_ = 0;
-//    private static final int POS_ = 0;
-
     /**
      * Create copy of telegram by its byte-stream
      * <p>
@@ -59,29 +51,22 @@ public abstract class AbstractS7RequestTelegramm
         s7data.setReadRequest(count, db, offset);
     }
 
-//    public byte[] getReadData()
-//    {
-//        return Arrays.copyOfRange(bytes, POS_DATA_READ, bytes.length
-//            + POS_DATA_READ);
-//    }
-
-//    public void setWriteRequest(int count, int db, int offset, byte[] byteData)
-//    {
-//        s7data.setWriteRequest(count, db, offset, byteData);
-//    }
-
     public abstract AbstractS7ResponseTelegramm getResponse();
 
-    @Override
-    public boolean isRequest()
+    public int getS7DataCount()
     {
-        return s7Header.isRequest();
+        return s7data.getCount();
     }
 
-    @Override
-    public boolean isResponse()
+    public int getDbNum()
     {
-        return s7Header.isResponse();
+        return s7data.getDbNum();
     }
+
+    public int getOffset()
+    {
+        return s7data.getOffset();
+    }
+
 
 }

@@ -29,27 +29,12 @@ public class TelWriteRequest
         return response;
     }
 
-    public int getCount()
+    public int getDataByteCount()
     {
-        return s7data.getReadData().length;
+        return s7data.getWriteData().length;
     }
 
-    public int getCountDef()
-    {
-        return s7data.getCount();
-    }
-
-    public int getDbNum()
-    {
-        return s7data.getDbNum();
-    }
-
-    public int getOffset()
-    {
-        return s7data.getOffset();
-    }
-
-    public byte[] getWrtieData()
+    public byte[] getWriteData()
     {
         return s7data.getWriteData();
     }

@@ -28,4 +28,9 @@ public class S7Bytes
         return ((src[pos + 1] & 0xFF) << 8) | (src[pos] & 0xFF);
     }
 
+    public static boolean getBitValue(byte value, int pos)
+    {
+    	 int bit = (value) & (0x01 << pos) ;
+    	 return bit == 0 ? false : true;
+    }
 }

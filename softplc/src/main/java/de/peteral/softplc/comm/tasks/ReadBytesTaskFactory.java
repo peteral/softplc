@@ -2,6 +2,7 @@ package de.peteral.softplc.comm.tasks;
 
 import de.peteral.softplc.comm.common.ServerDataEvent;
 import de.peteral.softplc.model.CommunicationTask;
+import eisenmann.connector.plc.ra.virtualplc.telegram.s7.S7;
 import eisenmann.connector.plc.ra.virtualplc.telegram.s7.S7TelegrammFactory;
 import eisenmann.connector.plc.ra.virtualplc.telegram.s7.TelReadRequest;
 
@@ -22,7 +23,7 @@ public class ReadBytesTaskFactory implements TaskFactory {
 	public CommunicationTask createTask(ServerDataEvent dataEvent,
 			CommunicationTaskFactory factory) {
 		TelReadRequest request = (TelReadRequest) S7TelegrammFactory.get().newTelegam(dataEvent.getData()); 
-		return new ReadBytesTask(dataEvent.getServer(), dataEvent.getSocket(), factory, "DB"+request.getDbNum(), request.getOffset(), request.getCountDef());
+		return new ReadBytesTask(dataEvent.getServer(), dataEvent.getSocket(), factory, S7.TYPE_DB + request.getDbNum(), request.getOffset(), request.getS7DataCount());
 	}
 
 }

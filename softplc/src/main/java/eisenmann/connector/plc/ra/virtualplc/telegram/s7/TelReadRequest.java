@@ -5,7 +5,6 @@ import eisenmann.connector.plc.ra.virtualplc.telegram.s7.base.AbstractS7RequestT
 public class TelReadRequest
     extends AbstractS7RequestTelegramm
 {
-    //Short count;
 
     public TelReadRequest(byte[] data)
     {
@@ -14,14 +13,13 @@ public class TelReadRequest
 
     public TelReadRequest(int count, int db, int offset)
     {
-        //  this.count = count;
         s7data.setReadRequest(count, db, offset);
     }
 
     @Override
     public TelReadResponse getResponse()
     {
-        TelReadResponse response = new TelReadResponse(getCountDef());
+        TelReadResponse response = new TelReadResponse(getS7DataCount());
 
         //response.setValues(new byte[getCountDef()]);
         return response;
@@ -39,26 +37,11 @@ public class TelReadRequest
         return true;
     }
 
-    public int getCount()
+    public int getDataByteCount()
     {
         return s7data.getReadData().length;
     }
 
-    public int getCountDef()
-    {
-        return s7data.getCount();
-    }
-
-    public int getDbNum()
-    {
-        return s7data.getDbNum();
-    }
-
-    public int getOffset()
-    {
-        return s7data.getOffset();
-    }
-    
     @Override
 	public boolean isByteType()
     {
