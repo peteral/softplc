@@ -6,19 +6,21 @@ package de.peteral.softplc.model;
  *
  * @author peteral
  */
-public interface ProgramCycleObserver
-{
-    /**
-     * Invoked after a program cycle was finished.
-     */
-    void afterCycleEnd();
+public interface ProgramCycleObserver {
+	/**
+	 * Invoked after a program cycle was finished.
+	 */
+	void afterCycleEnd();
 
-    /**
-     * Invoked in case of error just before the exception would be thrown.
-     *
-     * @param e
-     *        exception about to be thrown
-     * @return false - exception has been handled, do not throw it
-     */
-    boolean onError(String context, Throwable e);
+	/**
+	 * Invoked in case of error just before the exception would be thrown.
+	 * 
+	 * @param context
+	 *            context in which the error happened - for extended logging
+	 *
+	 * @param e
+	 *            exception about to be thrown
+	 * @return false - exception has been handled, do not throw it
+	 */
+	boolean onError(String context, Throwable e);
 }
