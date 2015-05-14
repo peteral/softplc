@@ -1,8 +1,14 @@
 package de.peteral.softplc.comm.tasks;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import de.peteral.softplc.comm.common.ServerDataEvent;
 import de.peteral.softplc.model.CommunicationTask;
 import de.peteral.softplc.model.ResponseFactory;
+import de.peteral.softplc.model.SoftplcResponseFactory;
+import de.peteral.softplc.model.SoftplcTaskFactory;
+import de.peteral.softplc.reflection.AnnotationProcessor;
 
 /**
  * Translates RF1006 byte arrays from / to communication tasks.
@@ -16,15 +22,16 @@ import de.peteral.softplc.model.ResponseFactory;
  *
  */
 public class CommunicationTaskFactory {
-	private static final TaskFactory TASK_FACTORIES[] = {
-			//new IsoConnectTaskFactory(), new PutGetConnectTaskFactory(),
-		new ReadBytesTaskFactory(), new WriteBytesTaskFactory(),
-		new SetBitTaskFactory(),new IsoConnectTaskFactory(), new PutGetConnectTaskFactory() };
+	private static final List<TaskFactory> TASK_FACTORIES = new ArrayList<>();
+	private static final List<ResponseFactory> RESPONSE_FACTORIES = new ArrayList<>();
 
-	private static final ResponseFactory RESPONSE_FACTORIES[] = {
-		new IsoConnectResponseFactory(),
-			new PutGetConnectResponseFactory(), new ReadBytesResponseFactory(),
-			new WriteBytesResponseFactory(), new SetBitResponseFactory() };
+	static {
+		new AnnotationProcessor<TaskFactory>(SoftplcTaskFactory.class)
+				.loadAnnotations(TASK_FACTORIES);
+
+		new AnnotationProcessor<ResponseFactory>(SoftplcResponseFactory.class)
+				.loadAnnotations(RESPONSE_FACTORIES);
+	}
 
 	/**
 	 * Creates a {@link CommunicationTask} from FRC1006 request.

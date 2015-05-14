@@ -50,4 +50,8 @@ public abstract class AbstractCommunicationTask implements CommunicationTask {
 	}
 
 	protected abstract void doExecute(Cpu cpu);
+
+	@Override
+	public void onInvalidCpu(int slot) {
+	}
 }

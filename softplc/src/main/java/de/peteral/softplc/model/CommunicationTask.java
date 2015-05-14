@@ -17,4 +17,12 @@ public interface CommunicationTask {
 	 *            interaction)
 	 */
 	void execute(Cpu cpu);
+
+	/**
+	 * Invoked when task requests invalid CPU slot
+	 *
+	 * @param slot
+	 *            requested cpu slot
+	 */
+	void onInvalidCpu(int slot);
 }

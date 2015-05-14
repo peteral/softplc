@@ -9,7 +9,6 @@ import java.util.logging.Logger;
 import de.peteral.softplc.comm.common.ClientChannelCache;
 import de.peteral.softplc.comm.common.ServerDataEvent;
 import de.peteral.softplc.comm.tasks.CommunicationTaskFactory;
-import de.peteral.softplc.comm.tasks.IsoConnectTask;
 import de.peteral.softplc.model.CommunicationTask;
 import de.peteral.softplc.model.Plc;
 import de.peteral.softplc.model.PutGetServerEvent;
@@ -84,22 +83,19 @@ public class RequestWorker implements Runnable {
 					plc.getCpu(slot).addCommunicationTask(task);
 				} else {
 					// handling for invalid CPU / rack during ISO connect
-					if (task instanceof IsoConnectTask) {
-						IsoConnectTask isoConnectTask = (IsoConnectTask) task;
-						isoConnectTask.invalidate();
-						isoConnectTask.sendResponse();
-//						LOGGER.warning("Got2 telegram received slot [" + slot
-//								+ "], data " + Arrays.toString(dataEvent.getData()));
-					} else {
-						LOGGER.warning("Communication task for invalid cpu slot ["
-								+ slot + "]: [" + task + "]");
-					}
+					task.onInvalidCpu(slot);
+					LOGGER.warning("Communication task for invalid cpu slot ["
+							+ slot + "]: [" + task + "]");
 				}
 
 			} else {
 				try {
-					LOGGER.warning("Invalid telegram received slot [" + slot
-							+ "] " + dataEvent.getSocket().getRemoteAddress().toString() +" , data " + Arrays.toString(dataEvent.getData()));
+					LOGGER.warning("Invalid telegram received slot ["
+							+ slot
+							+ "] "
+							+ dataEvent.getSocket().getRemoteAddress()
+									.toString() + " , data "
+							+ Arrays.toString(dataEvent.getData()));
 				} catch (IOException e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
