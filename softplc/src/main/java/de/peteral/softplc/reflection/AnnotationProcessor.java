@@ -3,6 +3,7 @@ package de.peteral.softplc.reflection;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.InvocationTargetException;
 import java.net.URL;
+import java.net.URLClassLoader;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
@@ -59,6 +60,8 @@ public class AnnotationProcessor<T> {
 	@SuppressWarnings("unchecked")
 	public void loadAnnotations(List<T> result) {
 		ConfigurationBuilder cb = new ConfigurationBuilder();
+		cb.addUrls(((URLClassLoader) ClassLoader.getSystemClassLoader())
+				.getURLs());
 		cb.addUrls(url);
 
 		Reflections reflections = new Reflections(cb);
