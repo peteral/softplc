@@ -12,21 +12,21 @@
         <menus>
           <Menu mnemonicParsing="false" text="File">
             <items>
-              <MenuItem mnemonicParsing="false" text="New">
+              <MenuItem mnemonicParsing="false" onAction="#handleNew" text="New">
                      <accelerator>
                         <KeyCodeCombination alt="UP" code="N" control="DOWN" meta="UP" shift="UP" shortcut="UP" />
                      </accelerator></MenuItem>
-                  <MenuItem mnemonicParsing="false" text="Save">
+                  <MenuItem mnemonicParsing="false" onAction="#handleSave" text="Save">
                      <accelerator>
                         <KeyCodeCombination alt="UP" code="S" control="DOWN" meta="UP" shift="UP" shortcut="UP" />
                      </accelerator></MenuItem>
-                  <MenuItem mnemonicParsing="false" text="Save As..." />
+                  <MenuItem mnemonicParsing="false" onAction="#handleSaveAs" text="Save As..." />
                   <MenuItem mnemonicParsing="false" onAction="#handleOpen" text="Open...">
                      <accelerator>
                         <KeyCodeCombination alt="UP" code="O" control="DOWN" meta="UP" shift="UP" shortcut="UP" />
                      </accelerator></MenuItem>
                   <SeparatorMenuItem mnemonicParsing="false" />
-                  <MenuItem mnemonicParsing="false" text="Exit">
+                  <MenuItem mnemonicParsing="false" onAction="#handleExit" text="Exit">
                      <accelerator>
                         <KeyCodeCombination alt="DOWN" code="F4" control="UP" meta="UP" shift="UP" shortcut="UP" />
                      </accelerator></MenuItem>
@@ -40,11 +40,17 @@
           </Menu>
             <Menu mnemonicParsing="false" text="Mode">
                <items>
-                  <MenuItem mnemonicParsing="false" text="Start CPU" />
-                  <MenuItem mnemonicParsing="false" text="Stop CPU" />
+                  <MenuItem mnemonicParsing="false" onAction="#handleStart" text="Start CPU">
+                     <accelerator>
+                        <KeyCodeCombination alt="DOWN" code="R" control="UP" meta="UP" shift="UP" shortcut="UP" />
+                     </accelerator></MenuItem>
+                  <MenuItem mnemonicParsing="false" onAction="#handleStop" text="Stop CPU">
+                     <accelerator>
+                        <KeyCodeCombination alt="DOWN" code="S" control="UP" meta="UP" shift="UP" shortcut="UP" />
+                     </accelerator></MenuItem>
                   <SeparatorMenuItem mnemonicParsing="false" />
-                  <MenuItem mnemonicParsing="false" text="Start All" />
-                  <MenuItem mnemonicParsing="false" text="Stop All" />
+                  <MenuItem mnemonicParsing="false" onAction="#handleStartAll" text="Start All" />
+                  <MenuItem mnemonicParsing="false" onAction="#handleStopAll" text="Stop All" />
                </items>
             </Menu>
           <Menu mnemonicParsing="false" text="Help">

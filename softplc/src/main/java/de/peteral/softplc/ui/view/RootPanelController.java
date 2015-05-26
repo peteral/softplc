@@ -59,4 +59,44 @@ public class RootPanelController {
 			mainApp.loadPlcFromFile(file);
 		}
 	}
+
+	@FXML
+	private void handleStart() {
+
+	}
+
+	@FXML
+	private void handleStop() {
+
+	}
+
+	@FXML
+	private void handleStartAll() {
+
+	}
+
+	@FXML
+	private void handleStopAll() {
+
+	}
+
+	@FXML
+	private void handleSave() {
+
+	}
+
+	@FXML
+	private void handleSaveAs() {
+
+	}
+
+	@FXML
+	private void handleNew() {
+
+	}
+
+	@FXML
+	private void handleExit() {
+		System.exit(0);
+	}
 }

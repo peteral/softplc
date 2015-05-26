@@ -3,6 +3,7 @@ package de.peteral.softplc.model;
 import java.util.logging.Logger;
 
 import javafx.beans.property.IntegerProperty;
+import javafx.beans.property.StringProperty;
 
 /**
  * Represent a Central Processing Unit of a {@link Plc}.
@@ -108,4 +109,6 @@ public interface Cpu {
 	 * @return maximum block size for one put/get request supported by this PLC.
 	 */
 	int getMaxDataSize();
+
+	StringProperty getStatusProperty();
 }
