@@ -9,6 +9,8 @@ import static org.mockito.Mockito.when;
 
 import java.io.IOException;
 
+import javafx.beans.property.SimpleIntegerProperty;
+
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mock;
@@ -34,7 +36,7 @@ public class PlcImplTest {
 	public void setup() {
 		MockitoAnnotations.initMocks(this);
 
-		when(cpu2.getSlot()).thenReturn(1);
+		when(cpu2.getSlot()).thenReturn(new SimpleIntegerProperty(1));
 		Cpu[] cpus = { cpu1, cpu2 };
 
 		plc = new PlcImpl(server, cpus);

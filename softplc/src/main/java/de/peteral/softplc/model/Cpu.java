@@ -2,6 +2,8 @@ package de.peteral.softplc.model;
 
 import java.util.logging.Logger;
 
+import javafx.beans.property.IntegerProperty;
+
 /**
  * Represent a Central Processing Unit of a {@link Plc}.
  * <p>
@@ -94,7 +96,7 @@ public interface Cpu {
 	 *
 	 * @return this CPUs slot
 	 */
-	int getSlot();
+	IntegerProperty getSlot();
 
 	/**
 	 *

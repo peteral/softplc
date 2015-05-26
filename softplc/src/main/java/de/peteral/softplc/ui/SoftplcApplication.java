@@ -2,6 +2,7 @@ package de.peteral.softplc.ui;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.prefs.Preferences;
 
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
@@ -10,6 +11,8 @@ import javafx.scene.image.Image;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.BorderPane;
 import javafx.stage.Stage;
+import de.peteral.softplc.model.Plc;
+import de.peteral.softplc.plc.PlcFactory;
 import de.peteral.softplc.ui.view.ActualViewController;
 import de.peteral.softplc.ui.view.RootPanelController;
 
@@ -23,6 +26,7 @@ public class SoftplcApplication extends Application {
 
 	private Stage primaryStage;
 	private BorderPane rootLayout;
+	private ActualViewController actualViewController;
 
 	@Override
 	public void start(Stage primaryStage) throws Exception {
@@ -36,6 +40,17 @@ public class SoftplcApplication extends Application {
 		initRootPanel();
 
 		showActualView();
+
+		loadLastFile();
+
+	}
+
+	private void loadLastFile() {
+		// Try to load last opened person file.
+		File file = getLastOpenedFilePath();
+		if (file != null) {
+			loadPlcFromFile(file);
+		}
 	}
 
 	private void initRootPanel() {
@@ -56,12 +71,33 @@ public class SoftplcApplication extends Application {
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
+	}
 
-		// // Try to load last opened person file.
-		// File file = getPersonFilePath();
-		// if (file != null) {
-		// loadPersonDataFromFile(file);
-		// }
+	private File getLastOpenedFilePath() {
+		Preferences prefs = Preferences
+				.userNodeForPackage(SoftplcApplication.class);
+		String filePath = prefs.get("filePath", null);
+		if (filePath != null) {
+			return new File(filePath);
+		} else {
+			return null;
+		}
+	}
+
+	private void setLastOpenedFilePath(File file) {
+		Preferences prefs = Preferences
+				.userNodeForPackage(SoftplcApplication.class);
+		if (file != null) {
+			prefs.put("filePath", file.getPath());
+
+			// Update the stage title.
+			primaryStage.setTitle("Softplc - " + file.getName());
+		} else {
+			prefs.remove("filePath");
+
+			// Update the stage title.
+			primaryStage.setTitle("Softplc");
+		}
 	}
 
 	/**
@@ -82,8 +118,8 @@ public class SoftplcApplication extends Application {
 			AnchorPane actualView = loader.load();
 			rootLayout.setCenter(actualView);
 
-			ActualViewController controller = loader.getController();
-			controller.setMainApp(this);
+			actualViewController = loader.getController();
+			actualViewController.setMainApp(this);
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
@@ -105,7 +141,8 @@ public class SoftplcApplication extends Application {
 	 *            file name
 	 */
 	public void loadPlcFromFile(File file) {
-		// TODO Auto-generated method stub
-
+		Plc plc = new PlcFactory().create(file.getAbsolutePath());
+		actualViewController.setPlc(plc);
+		setLastOpenedFilePath(file);
 	}
 }
