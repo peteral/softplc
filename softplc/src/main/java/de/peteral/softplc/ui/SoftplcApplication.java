@@ -27,6 +27,8 @@ public class SoftplcApplication extends Application {
 	private Stage primaryStage;
 	private BorderPane rootLayout;
 	private ActualViewController actualViewController;
+	private Plc plc;
+	private RootPanelController rootPanelController;
 
 	@Override
 	public void start(Stage primaryStage) throws Exception {
@@ -63,9 +65,8 @@ public class SoftplcApplication extends Application {
 			Scene scene = new Scene(rootLayout);
 			primaryStage.setScene(scene);
 
-			// Give the controller access to the main app.
-			RootPanelController controller = loader.getController();
-			controller.setMainApp(this);
+			rootPanelController = loader.getController();
+			rootPanelController.setMainApp(this);
 
 			primaryStage.show();
 		} catch (IOException e) {
@@ -120,6 +121,8 @@ public class SoftplcApplication extends Application {
 
 			actualViewController = loader.getController();
 			actualViewController.setMainApp(this);
+
+			rootPanelController.setActualViewController(actualViewController);
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
@@ -141,8 +144,23 @@ public class SoftplcApplication extends Application {
 	 *            file name
 	 */
 	public void loadPlcFromFile(File file) {
-		Plc plc = new PlcFactory().create(file.getAbsolutePath());
-		actualViewController.setPlc(plc);
+		setPlc(new PlcFactory().create(file.getAbsolutePath()));
+		actualViewController.setPlc(getPlc());
 		setLastOpenedFilePath(file);
+	}
+
+	/**
+	 * @return the plc
+	 */
+	public Plc getPlc() {
+		return plc;
+	}
+
+	/**
+	 * @param plc
+	 *            the plc to set
+	 */
+	public void setPlc(Plc plc) {
+		this.plc = plc;
 	}
 }

@@ -1,5 +1,6 @@
 package de.peteral.softplc.ui.view;
 
+import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
@@ -90,5 +91,9 @@ public class ActualViewController {
 		this.plc = plc;
 
 		cpuTable.setItems(plc.getCpus());
+	}
+
+	public ObservableList<Cpu> getSelectedCpus() {
+		return cpuTable.getSelectionModel().getSelectedItems();
 	}
 }
