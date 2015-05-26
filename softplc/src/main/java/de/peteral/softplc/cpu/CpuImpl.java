@@ -9,6 +9,8 @@ import java.util.logging.Logger;
 
 import javafx.beans.property.IntegerProperty;
 import javafx.beans.property.SimpleIntegerProperty;
+import javafx.beans.property.SimpleStringProperty;
+import javafx.beans.property.StringProperty;
 import de.peteral.softplc.model.CommunicationTask;
 import de.peteral.softplc.model.Cpu;
 import de.peteral.softplc.model.CpuStatus;
@@ -24,6 +26,8 @@ import de.peteral.softplc.model.ProgramCycleObserver;
  */
 public class CpuImpl implements Cpu, ProgramCycleObserver {
 	private CpuStatus status = CpuStatus.STOP;
+	private final StringProperty statusProperty = new SimpleStringProperty(
+			status.toString());
 	private final ErrorLog errorlog;
 	private final ScheduledThreadPoolExecutor executor;
 	private Program program;
@@ -77,6 +81,7 @@ public class CpuImpl implements Cpu, ProgramCycleObserver {
 
 	private void setStatus(CpuStatus status) {
 		this.status = status;
+		getStatusProperty().set(status.toString());
 		errorlog.log(Level.INFO, this.toString(), "Status changed: " + status);
 	}
 
@@ -109,7 +114,7 @@ public class CpuImpl implements Cpu, ProgramCycleObserver {
 
 	@Override
 	public long getTargetCycleTime() {
-		return program.getTargetCycleTime();
+		return program.getTargetCycleTime().get();
 	}
 
 	@Override
@@ -174,5 +179,10 @@ public class CpuImpl implements Cpu, ProgramCycleObserver {
 	@Override
 	public int getMaxDataSize() {
 		return maxBlockSize;
+	}
+
+	@Override
+	public StringProperty getStatusProperty() {
+		return statusProperty;
 	}
 }

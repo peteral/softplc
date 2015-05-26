@@ -4,6 +4,8 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.logging.Level;
 
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import de.peteral.softplc.address.AddressParserFactory;
 import de.peteral.softplc.address.ParsedAddress;
 import de.peteral.softplc.datatype.DataTypeFactory;
@@ -19,152 +21,144 @@ import de.peteral.softplc.model.MemoryArea;
  *
  * @author peteral
  */
-public class MemoryImpl
-    implements Memory
-{
+public class MemoryImpl implements Memory {
 
-    private final Map<String, MemoryArea> memoryAreas = new HashMap<>();
-    private final AddressParserFactory addressParserFactory;
-    private final DataTypeFactory dataTypeFactory;
+	private final Map<String, MemoryArea> memoryAreas = new HashMap<>();
+	private final ObservableList<MemoryArea> memoryAreaList = FXCollections
+			.observableArrayList();
+	private final AddressParserFactory addressParserFactory;
+	private final DataTypeFactory dataTypeFactory;
 
-    /**
-     * Creates a new instance.
-     * <p>
-     *
-     * @param addressParserFactory
-     *        {@link AddressParserFactory} instance.
-     * @param dataTypeFactory
-     *        {@link DataTypeFactory} instance.
-     * @param areas
-     *        set of {@link MemoryArea} managed within this {@link Memory}
-     */
-    public MemoryImpl(AddressParserFactory addressParserFactory,
-                      DataTypeFactory dataTypeFactory,
-                      MemoryArea... areas)
-    {
-        this.addressParserFactory = addressParserFactory;
-        this.dataTypeFactory = dataTypeFactory;
-        for ( MemoryArea memoryArea : areas )
-        {
-            memoryAreas.put(memoryArea.getAreaCode(), memoryArea);
-        }
-    }
+	/**
+	 * Creates a new instance.
+	 * <p>
+	 *
+	 * @param addressParserFactory
+	 *            {@link AddressParserFactory} instance.
+	 * @param dataTypeFactory
+	 *            {@link DataTypeFactory} instance.
+	 * @param areas
+	 *            set of {@link MemoryArea} managed within this {@link Memory}
+	 */
+	public MemoryImpl(AddressParserFactory addressParserFactory,
+			DataTypeFactory dataTypeFactory, MemoryArea... areas) {
+		this.addressParserFactory = addressParserFactory;
+		this.dataTypeFactory = dataTypeFactory;
+		for (MemoryArea memoryArea : areas) {
+			memoryAreas.put(memoryArea.getAreaCode().get(), memoryArea);
+			memoryAreaList.add(memoryArea);
+		}
 
-    @Override
-    public MemoryArea getMemoryArea(String key)
-    {
-        MemoryArea result = memoryAreas.get(key);
+		memoryAreaList.sort((m1, m2) -> m1.getAreaCode().get()
+				.compareTo(m2.getAreaCode().get()));
+	}
 
-        if ( result != null )
-        {
-            return result;
-        }
+	@Override
+	public MemoryArea getMemoryArea(String key) {
+		MemoryArea result = memoryAreas.get(key);
 
-        throw new MemoryAccessViolationException("Invalid memory area [" + key
-            + "]");
-    }
+		if (result != null) {
+			return result;
+		}
 
-    @Override
-    public byte[] readBytes(String area, int offset, int length)
-    {
-        return getMemoryArea(area).readBytes(offset, length);
-    }
+		throw new MemoryAccessViolationException("Invalid memory area [" + key
+				+ "]");
+	}
 
-    @Override
-    public void writeBytes(String area, int offset, byte[] data)
-    {
-        getMemoryArea(area).writeBytes(offset, data);
-    }
+	@Override
+	public byte[] readBytes(String area, int offset, int length) {
+		return getMemoryArea(area).readBytes(offset, length);
+	}
 
-    @Override
-    public Object read(String address)
-    {
-        ParsedAddress parsedAddress = addressParserFactory.parse(address);
+	@Override
+	public void writeBytes(String area, int offset, byte[] data) {
+		getMemoryArea(area).writeBytes(offset, data);
+	}
 
-        if ( parsedAddress.getTypeName().equals("X") )
-        {
-            return getBit(address);
-        }
+	@Override
+	public Object read(String address) {
+		ParsedAddress parsedAddress = addressParserFactory.parse(address);
 
-        MemoryArea memoryArea = getMemoryArea(parsedAddress.getAreaCode());
+		if (parsedAddress.getTypeName().equals("X")) {
+			return getBit(address);
+		}
 
-        byte[] bytes =
-            memoryArea.readBytes(parsedAddress.getOffset(),
-                                 dataTypeFactory.getTotalSize(parsedAddress));
+		MemoryArea memoryArea = getMemoryArea(parsedAddress.getAreaCode());
 
-        Object result = dataTypeFactory.fromBytes(bytes, parsedAddress);
+		byte[] bytes = memoryArea.readBytes(parsedAddress.getOffset(),
+				dataTypeFactory.getTotalSize(parsedAddress));
 
-        if ( memoryArea.getLogger() != null && memoryArea.getLogger().isLoggable(Level.FINER) )
-        {
-            memoryArea.getLogger().finer("Read: " + address + " = " + result);
-        }
+		Object result = dataTypeFactory.fromBytes(bytes, parsedAddress);
 
-        return result;
-    }
+		if ((memoryArea.getLogger() != null)
+				&& memoryArea.getLogger().isLoggable(Level.FINER)) {
+			memoryArea.getLogger().finer("Read: " + address + " = " + result);
+		}
 
-    @Override
-    public void write(String address, Object value)
-    {
-        ParsedAddress parser = addressParserFactory.parse(address);
+		return result;
+	}
 
-        if ( parser.getTypeName().equals("X") )
-        {
-            setBit(address, (Boolean) value);
-            return;
-        }
+	@Override
+	public void write(String address, Object value) {
+		ParsedAddress parser = addressParserFactory.parse(address);
 
-        MemoryArea memoryArea = getMemoryArea(parser.getAreaCode());
+		if (parser.getTypeName().equals("X")) {
+			setBit(address, (Boolean) value);
+			return;
+		}
 
-        memoryArea.writeBytes(parser.getOffset(),
-                              dataTypeFactory.toBytes(value, parser));
+		MemoryArea memoryArea = getMemoryArea(parser.getAreaCode());
 
-        if ( memoryArea.getLogger() != null && memoryArea.getLogger().isLoggable(Level.FINE) )
-        {
-            memoryArea.getLogger().fine("Write: " + address + " = " + value);
-        }
-    }
+		memoryArea.writeBytes(parser.getOffset(),
+				dataTypeFactory.toBytes(value, parser));
 
-    @Override
-    public boolean getBit(String address)
-    {
-        ParsedAddress parser = addressParserFactory.parse(address);
+		if ((memoryArea.getLogger() != null)
+				&& memoryArea.getLogger().isLoggable(Level.FINE)) {
+			memoryArea.getLogger().fine("Write: " + address + " = " + value);
+		}
+	}
 
-        MemoryArea memoryArea = getMemoryArea(parser.getAreaCode());
+	@Override
+	public boolean getBit(String address) {
+		ParsedAddress parser = addressParserFactory.parse(address);
 
-        int byteValue =
-            DataTypeUtils.byteToInt(memoryArea.readBytes(parser.getOffset(), 1)[0]);
-        int mask = 1 << parser.getBitNumber();
+		MemoryArea memoryArea = getMemoryArea(parser.getAreaCode());
 
-        return (byteValue & mask) == mask;
-    }
+		int byteValue = DataTypeUtils.byteToInt(memoryArea.readBytes(
+				parser.getOffset(), 1)[0]);
+		int mask = 1 << parser.getBitNumber();
 
-    @Override
-    public void setBit(String address, boolean value)
-    {
-        ParsedAddress parser = addressParserFactory.parse(address);
+		return (byteValue & mask) == mask;
+	}
 
-        MemoryArea memoryArea = getMemoryArea(parser.getAreaCode());
+	@Override
+	public void setBit(String address, boolean value) {
+		ParsedAddress parser = addressParserFactory.parse(address);
 
-        if ( memoryArea.getLogger() != null &&  memoryArea.getLogger().isLoggable(Level.FINE) )
-        {
-            memoryArea.getLogger().fine("setBit: " + address + " = " + value);
-        }
+		MemoryArea memoryArea = getMemoryArea(parser.getAreaCode());
 
-        int byteValue =
-            DataTypeUtils.byteToInt(memoryArea.readBytes(parser.getOffset(), 1)[0]);
+		if ((memoryArea.getLogger() != null)
+				&& memoryArea.getLogger().isLoggable(Level.FINE)) {
+			memoryArea.getLogger().fine("setBit: " + address + " = " + value);
+		}
 
-        if ( value )
-        {
-            int mask = 1 << parser.getBitNumber();
-            byteValue = byteValue | mask;
-        }
-        else
-        {
-            int mask = 1 << parser.getBitNumber();
-            mask = ~mask;
-            byteValue = byteValue & mask;
-        }
-        memoryArea.writeBytes(parser.getOffset(),
-                              new byte[] { (byte) byteValue });
-    }
+		int byteValue = DataTypeUtils.byteToInt(memoryArea.readBytes(
+				parser.getOffset(), 1)[0]);
+
+		if (value) {
+			int mask = 1 << parser.getBitNumber();
+			byteValue = byteValue | mask;
+		} else {
+			int mask = 1 << parser.getBitNumber();
+			mask = ~mask;
+			byteValue = byteValue & mask;
+		}
+		memoryArea.writeBytes(parser.getOffset(),
+				new byte[] { (byte) byteValue });
+	}
+
+	@Override
+	public ObservableList<MemoryArea> getMemoryAreaList() {
+		return memoryAreaList;
+	}
 }

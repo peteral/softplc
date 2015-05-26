@@ -37,6 +37,7 @@ public class PlcImplTest {
 		MockitoAnnotations.initMocks(this);
 
 		when(cpu2.getSlot()).thenReturn(new SimpleIntegerProperty(1));
+		when(cpu1.getSlot()).thenReturn(new SimpleIntegerProperty(3));
 		Cpu[] cpus = { cpu1, cpu2 };
 
 		plc = new PlcImpl(server, cpus);

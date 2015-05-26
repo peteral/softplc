@@ -1,5 +1,7 @@
 package de.peteral.softplc.model;
 
+import javafx.beans.property.LongProperty;
+
 /**
  * Represents the program which is cyclically executed by a {@link Cpu}
  * instance.
@@ -38,6 +40,6 @@ public interface Program extends Runnable {
 	 *
 	 * @return target cycle time in [ms]
 	 */
-	long getTargetCycleTime();
+	LongProperty getTargetCycleTime();
 
 }

@@ -7,7 +7,6 @@ import org.junit.Before;
 import org.junit.Test;
 import org.mockito.MockitoAnnotations;
 
-import de.peteral.softplc.memory.MemoryAreaImpl;
 import de.peteral.softplc.model.MemoryAccessViolationException;
 import de.peteral.softplc.model.MemoryArea;
 
@@ -27,7 +26,7 @@ public class MemoryAreaImplTest {
 
 	@Test
 	public void getAreaCode_None_ReturnsAreaCode() {
-		assertEquals(AREA_CODE, area.getAreaCode());
+		assertEquals(AREA_CODE, area.getAreaCode().get());
 	}
 
 	@Test
