@@ -3,7 +3,9 @@ package de.peteral.softplc.view;
 import javafx.fxml.FXML;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
+import javafx.scene.control.cell.TextFieldTableCell;
 import de.peteral.softplc.memorytables.MemoryTable;
+import de.peteral.softplc.memorytables.MemoryTableVariable;
 import de.peteral.softplc.model.Cpu;
 import de.peteral.softplc.model.MemoryArea;
 import de.peteral.softplc.program.ScriptFile;
@@ -32,6 +34,15 @@ public class CpuViewController {
 	@FXML
 	private TableColumn<MemoryTable, String> memoryTableNameColumn;
 
+	@FXML
+	private TableView<MemoryTableVariable> memoryTableVariableTable;
+	@FXML
+	private TableColumn<MemoryTableVariable, String> memoryTableVariableNameColumn;
+	@FXML
+	private TableColumn<MemoryTableVariable, String> memoryTableVariableCurrentColumn;
+	@FXML
+	private TableColumn<MemoryTableVariable, String> memoryTableVariableNewColumn;
+
 	private Cpu currentCpu;
 	private MemoryTable currentMemoryTable;
 
@@ -48,6 +59,20 @@ public class CpuViewController {
 
 		memoryTableNameColumn.setCellValueFactory(cellData -> cellData
 				.getValue().getName());
+		memoryTableNameColumn.setCellFactory(TextFieldTableCell
+				.forTableColumn());
+
+		memoryTableVariableNameColumn.setCellValueFactory(cellData -> cellData
+				.getValue().getVariable());
+		memoryTableVariableNameColumn.setCellFactory(TextFieldTableCell
+				.forTableColumn());
+		memoryTableVariableCurrentColumn
+				.setCellValueFactory(cellData -> cellData.getValue()
+						.getCurrentValue());
+		memoryTableVariableNewColumn.setCellValueFactory(cellData -> cellData
+				.getValue().getNewValue());
+		memoryTableVariableNewColumn.setCellFactory(TextFieldTableCell
+				.forTableColumn());
 
 		programNameColumn.setCellValueFactory(data -> data.getValue()
 				.getFileName());
@@ -86,8 +111,10 @@ public class CpuViewController {
 		currentMemoryTable = newValue;
 
 		if (newValue == null) {
+			memoryTableVariableTable.setItems(null);
 		} else {
-
+			memoryTableVariableTable
+					.setItems(currentMemoryTable.getVariables());
 		}
 
 	}
@@ -101,4 +128,10 @@ public class CpuViewController {
 	private void handleDeleteMemoryTable() {
 
 	}
+
+	@FXML
+	private void handleAddMemoryTableVariable() {
+		currentMemoryTable.getVariables().add(new MemoryTableVariable());
+	}
+
 }
