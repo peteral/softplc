@@ -5,6 +5,7 @@ import javafx.fxml.FXML;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import de.peteral.softplc.SoftplcApplication;
+import de.peteral.softplc.memorytables.MemoryTable;
 import de.peteral.softplc.model.Cpu;
 import de.peteral.softplc.model.MemoryArea;
 import de.peteral.softplc.model.Plc;
@@ -43,8 +44,15 @@ public class ActualViewController {
 	@FXML
 	private TableColumn<ScriptFile, String> programNameColumn;
 
+	@FXML
+	private TableView<MemoryTable> memoryTableTable;
+	@FXML
+	private TableColumn<MemoryTable, String> memoryTableNameColumn;
+
 	private SoftplcApplication mainApp;
 	private Plc plc;
+	private Cpu currentCpu;
+	private MemoryTable currentMemoryTable;
 
 	/**
 	 * Initializes the controller with main application reference.
@@ -75,6 +83,9 @@ public class ActualViewController {
 		memorySizeColumn.setCellValueFactory(cellData -> cellData.getValue()
 				.getSize());
 
+		memoryTableNameColumn.setCellValueFactory(cellData -> cellData
+				.getValue().getName());
+
 		programNameColumn.setCellValueFactory(data -> data.getValue()
 				.getFileName());
 
@@ -84,14 +95,37 @@ public class ActualViewController {
 				.selectedItemProperty()
 				.addListener(
 						(observable, oldValue, newValue) -> showCpuDetails(newValue));
+
+		memoryTableTable
+				.getSelectionModel()
+				.selectedItemProperty()
+				.addListener(
+						(observable, oldValue, newValue) -> showMemoryTable(newValue));
 	}
 
 	private void showCpuDetails(Cpu newValue) {
+		currentCpu = newValue;
+
 		if (newValue == null) {
+			memoryTable.setItems(null);
+			programTable.setItems(null);
+			memoryTableTable.setItems(null);
 		} else {
 			memoryTable.setItems(newValue.getMemory().getMemoryAreaList());
 			programTable.setItems(newValue.getProgram().getScriptFiles());
+			memoryTableTable.setItems(newValue.getMemory().getMemoryTables());
 		}
+
+	}
+
+	private void showMemoryTable(MemoryTable newValue) {
+		currentMemoryTable = newValue;
+
+		if (newValue == null) {
+		} else {
+
+		}
+
 	}
 
 	/**
@@ -111,5 +145,35 @@ public class ActualViewController {
 	 */
 	public ObservableList<Cpu> getSelectedCpus() {
 		return cpuTable.getSelectionModel().getSelectedItems();
+	}
+
+	@FXML
+	private void handleAddMemoryTable() {
+		currentCpu.getMemory().getMemoryTables().add(new MemoryTable());
+	}
+
+	@FXML
+	private void handleDeleteMemoryTable() {
+
+	}
+
+	@FXML
+	private void handleStart() {
+		getSelectedCpus().forEach(cpu -> cpu.start());
+	}
+
+	@FXML
+	private void handleStop() {
+		getSelectedCpus().forEach(cpu -> cpu.stop());
+	}
+
+	@FXML
+	private void handleStartAll() {
+		mainApp.getPlc().getCpus().forEach(cpu -> cpu.start());
+	}
+
+	@FXML
+	private void handleStopAll() {
+		mainApp.getPlc().getCpus().forEach(cpu -> cpu.stop());
 	}
 }

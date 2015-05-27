@@ -32,27 +32,6 @@
                      </accelerator></MenuItem>
             </items>
           </Menu>
-          <Menu mnemonicParsing="false" text="CPU">
-            <items>
-              <MenuItem mnemonicParsing="false" text="Add" />
-                  <MenuItem mnemonicParsing="false" text="Delete" />
-            </items>
-          </Menu>
-            <Menu mnemonicParsing="false" text="Mode">
-               <items>
-                  <MenuItem mnemonicParsing="false" onAction="#handleStart" text="Start CPU">
-                     <accelerator>
-                        <KeyCodeCombination alt="DOWN" code="R" control="UP" meta="UP" shift="UP" shortcut="UP" />
-                     </accelerator></MenuItem>
-                  <MenuItem mnemonicParsing="false" onAction="#handleStop" text="Stop CPU">
-                     <accelerator>
-                        <KeyCodeCombination alt="DOWN" code="S" control="UP" meta="UP" shift="UP" shortcut="UP" />
-                     </accelerator></MenuItem>
-                  <SeparatorMenuItem mnemonicParsing="false" />
-                  <MenuItem mnemonicParsing="false" onAction="#handleStartAll" text="Start All" />
-                  <MenuItem mnemonicParsing="false" onAction="#handleStopAll" text="Stop All" />
-               </items>
-            </Menu>
           <Menu mnemonicParsing="false" text="Help">
             <items>
               <MenuItem mnemonicParsing="false" onAction="#handleAbout" text="About" />

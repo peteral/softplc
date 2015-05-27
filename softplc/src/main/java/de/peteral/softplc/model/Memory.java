@@ -2,6 +2,7 @@ package de.peteral.softplc.model;
 
 import javafx.collections.ObservableList;
 import de.peteral.softplc.address.ParsedAddress;
+import de.peteral.softplc.memorytables.MemoryTable;
 
 /**
  * This interface provides access to the memory of a {@link Cpu}.
@@ -98,6 +99,14 @@ public interface Memory {
 	 */
 	void setBit(String address, boolean value);
 
+	/**
+	 *
+	 * @return observable list of all memory areas
+	 */
 	ObservableList<MemoryArea> getMemoryAreaList();
 
+	/**
+	 * @return list of all memory tables associated with this CPU memory.
+	 */
+	ObservableList<MemoryTable> getMemoryTables();
 }

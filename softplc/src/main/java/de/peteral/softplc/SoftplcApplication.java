@@ -121,8 +121,6 @@ public class SoftplcApplication extends Application {
 
 			actualViewController = loader.getController();
 			actualViewController.setMainApp(this);
-
-			rootPanelController.setActualViewController(actualViewController);
 		} catch (IOException e) {
 			e.printStackTrace();
 		}

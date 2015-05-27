@@ -10,6 +10,7 @@ import de.peteral.softplc.address.AddressParserFactory;
 import de.peteral.softplc.address.ParsedAddress;
 import de.peteral.softplc.datatype.DataTypeFactory;
 import de.peteral.softplc.datatype.DataTypeUtils;
+import de.peteral.softplc.memorytables.MemoryTable;
 import de.peteral.softplc.model.Memory;
 import de.peteral.softplc.model.MemoryAccessViolationException;
 import de.peteral.softplc.model.MemoryArea;
@@ -25,6 +26,8 @@ public class MemoryImpl implements Memory {
 
 	private final Map<String, MemoryArea> memoryAreas = new HashMap<>();
 	private final ObservableList<MemoryArea> memoryAreaList = FXCollections
+			.observableArrayList();
+	private final ObservableList<MemoryTable> memoryTables = FXCollections
 			.observableArrayList();
 	private final AddressParserFactory addressParserFactory;
 	private final DataTypeFactory dataTypeFactory;
@@ -160,5 +163,10 @@ public class MemoryImpl implements Memory {
 	@Override
 	public ObservableList<MemoryArea> getMemoryAreaList() {
 		return memoryAreaList;
+	}
+
+	@Override
+	public ObservableList<MemoryTable> getMemoryTables() {
+		return memoryTables;
 	}
 }

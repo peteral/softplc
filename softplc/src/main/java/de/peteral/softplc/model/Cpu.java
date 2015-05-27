@@ -110,5 +110,9 @@ public interface Cpu {
 	 */
 	int getMaxDataSize();
 
+	/**
+	 *
+	 * @return current status as {@link StringProperty}
+	 */
 	StringProperty getStatusProperty();
 }

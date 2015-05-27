@@ -17,7 +17,6 @@ import de.peteral.softplc.SoftplcApplication;
 public class RootPanelController {
 
 	private SoftplcApplication mainApp;
-	private ActualViewController actualViewController;
 
 	/**
 	 * Initializes the controller with main app reference.
@@ -26,12 +25,6 @@ public class RootPanelController {
 	 */
 	public void setMainApp(SoftplcApplication mainApp) {
 		this.mainApp = mainApp;
-	}
-
-	public void setActualViewController(
-			ActualViewController actualViewController) {
-		this.actualViewController = actualViewController;
-
 	}
 
 	/**
@@ -65,26 +58,6 @@ public class RootPanelController {
 		if (file != null) {
 			mainApp.loadPlcFromFile(file);
 		}
-	}
-
-	@FXML
-	private void handleStart() {
-		actualViewController.getSelectedCpus().forEach(cpu -> cpu.start());
-	}
-
-	@FXML
-	private void handleStop() {
-		actualViewController.getSelectedCpus().forEach(cpu -> cpu.stop());
-	}
-
-	@FXML
-	private void handleStartAll() {
-		mainApp.getPlc().getCpus().forEach(cpu -> cpu.start());
-	}
-
-	@FXML
-	private void handleStopAll() {
-		mainApp.getPlc().getCpus().forEach(cpu -> cpu.stop());
 	}
 
 	@FXML
