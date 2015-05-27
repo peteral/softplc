@@ -98,6 +98,8 @@ public class CpuImpl implements Cpu, ProgramCycleObserver {
 
 		setStatus(CpuStatus.STOP);
 
+		program.resetCycleTime();
+
 		executor.shutdown();
 
 		program.removeObserver(this);

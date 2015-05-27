@@ -15,8 +15,8 @@
                     <columns>
                       <TableColumn fx:id="cpuSlotColumn" prefWidth="75.0" text="Slot" />
                       <TableColumn fx:id="cpuModeColumn" prefWidth="75.0" text="Mode" />
-                        <TableColumn fx:id="cpuCycleTarColumn" prefWidth="75.0" text="Cycle Tar" />
-                        <TableColumn fx:id="cpuCycleActColumn" prefWidth="75.0" text="Cycle Act" />
+                        <TableColumn fx:id="cpuCycleTarColumn" prefWidth="75.0" text="Target [ms]" />
+                        <TableColumn fx:id="cpuCycleActColumn" prefWidth="75.0" text="Current [ms]" />
                         <TableColumn fx:id="cpuConnectionsColumn" prefWidth="75.0" text="Connections" />
                     </columns>
                      <columnResizePolicy>
@@ -63,21 +63,49 @@
                           <content>
                             <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
                                  <children>
-                                    <TableView layoutX="68.0" layoutY="14.0" prefHeight="569.0" prefWidth="590.0" AnchorPane.bottomAnchor="40.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
-                                      <columns>
-                                        <TableColumn prefWidth="75.0" text="Name" />
-                                      </columns>
-                                       <columnResizePolicy>
-                                          <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
-                                       </columnResizePolicy>
-                                    </TableView>
-                                    <ButtonBar layoutX="54.0" layoutY="521.0" prefHeight="40.0" prefWidth="200.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="5.0" AnchorPane.rightAnchor="5.0">
-                                      <buttons>
-                                        <Button mnemonicParsing="false" text="Add" />
-                                          <Button mnemonicParsing="false" text="Delete" />
-                                          <Button mnemonicParsing="false" text="Open" />
-                                      </buttons>
-                                    </ButtonBar>
+                                    <SplitPane dividerPositions="0.3282312925170068" prefHeight="569.0" prefWidth="590.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                                      <items>
+                                        <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="160.0" prefWidth="100.0">
+                                             <children>
+                                                <TableView prefHeight="569.0" prefWidth="590.0" AnchorPane.bottomAnchor="40.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                                                  <columns>
+                                                    <TableColumn prefWidth="75.0" text="Name" />
+                                                  </columns>
+                                                   <columnResizePolicy>
+                                                      <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
+                                                   </columnResizePolicy>
+                                                </TableView>
+                                                <ButtonBar prefHeight="40.0" prefWidth="200.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="5.0" AnchorPane.rightAnchor="5.0">
+                                                  <buttons>
+                                                    <Button mnemonicParsing="false" text="Add" />
+                                                      <Button mnemonicParsing="false" text="Delete" />
+                                                  </buttons>
+                                                </ButtonBar>
+                                             </children>
+                                          </AnchorPane>
+                                        <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="160.0" prefWidth="100.0">
+                                             <children>
+                                                <TableView editable="true" layoutX="22.0" layoutY="14.0" prefHeight="567.0" prefWidth="392.0" AnchorPane.bottomAnchor="40.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                                                  <columns>
+                                                    <TableColumn prefWidth="75.0" text="Variable" />
+                                                    <TableColumn editable="false" prefWidth="75.0" text="Current" />
+                                                      <TableColumn prefWidth="75.0" text="New" />
+                                                  </columns>
+                                                   <columnResizePolicy>
+                                                      <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
+                                                   </columnResizePolicy>
+                                                </TableView>
+                                                <ButtonBar layoutX="38.0" layoutY="513.0" prefHeight="40.0" prefWidth="200.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="5.0" AnchorPane.rightAnchor="5.0">
+                                                  <buttons>
+                                                    <Button mnemonicParsing="false" text="Observe" />
+                                                      <Button mnemonicParsing="false" text="Read" />
+                                                      <Button mnemonicParsing="false" text="Write" />
+                                                  </buttons>
+                                                </ButtonBar>
+                                             </children>
+                                          </AnchorPane>
+                                      </items>
+                                    </SplitPane>
                                  </children>
                               </AnchorPane>
                           </content>

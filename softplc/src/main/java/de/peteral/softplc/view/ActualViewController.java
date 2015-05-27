@@ -67,6 +67,8 @@ public class ActualViewController {
 				.getStatusProperty());
 		cpuCycleTarColumn.setCellValueFactory(cellData -> cellData.getValue()
 				.getProgram().getTargetCycleTime());
+		cpuCycleActColumn.setCellValueFactory(cellData -> cellData.getValue()
+				.getProgram().getCurrentCycleTime());
 
 		memoryAreaColumn.setCellValueFactory(cellData -> cellData.getValue()
 				.getAreaCode());

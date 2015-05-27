@@ -38,6 +38,10 @@ public class ProgramImpl implements Program {
 	private CompiledScript compiled;
 	private final Cpu cpu;
 	private final LongProperty targetCycleTime;
+	private final LongProperty currentCycleTime = new SimpleLongProperty();
+
+	private int currentIndex = 0;
+	private final long[] executionDuration = new long[10];
 
 	/**
 	 * Creates a new instance.
@@ -67,8 +71,11 @@ public class ProgramImpl implements Program {
 
 	@Override
 	public void run() {
+		long before = System.currentTimeMillis();
 		try {
+
 			compiled.eval(context);
+
 		} catch (Exception e) {
 			observers.forEach(observer -> observer.onError("executing main()",
 					e));
@@ -76,6 +83,27 @@ public class ProgramImpl implements Program {
 
 		// notify observers
 		observers.forEach(observer -> observer.afterCycleEnd());
+		long duration = System.currentTimeMillis() - before;
+
+		updateCycleTime(duration);
+
+	}
+
+	private void updateCycleTime(long duration) {
+		executionDuration[currentIndex] = duration;
+		currentIndex++;
+
+		if (currentIndex > 9) {
+			currentIndex = 0;
+
+			long total = 0;
+			for (long x : executionDuration) {
+				total += x;
+			}
+
+			currentCycleTime.set(total / 10);
+		}
+
 	}
 
 	@Override
@@ -127,6 +155,17 @@ public class ProgramImpl implements Program {
 	@Override
 	public ObservableList<ScriptFile> getScriptFiles() {
 		return scriptFiles;
+	}
+
+	@Override
+	public LongProperty getCurrentCycleTime() {
+		return currentCycleTime;
+	}
+
+	@Override
+	public void resetCycleTime() {
+		currentIndex = 0;
+		currentCycleTime.set(0L);
 	}
 
 }

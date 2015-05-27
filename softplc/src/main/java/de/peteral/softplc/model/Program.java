@@ -50,4 +50,16 @@ public interface Program extends Runnable {
 	 */
 	ObservableList<ScriptFile> getScriptFiles();
 
+	/**
+	 *
+	 * @return current cycle time
+	 */
+	LongProperty getCurrentCycleTime();
+
+	/**
+	 * Resets current cycle time counter. Invoked by CPU when the CPU is
+	 * stopped.
+	 */
+	void resetCycleTime();
+
 }
