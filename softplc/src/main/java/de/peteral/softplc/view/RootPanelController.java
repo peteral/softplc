@@ -1,4 +1,4 @@
-package de.peteral.softplc.ui.view;
+package de.peteral.softplc.view;
 
 import java.io.File;
 
@@ -6,7 +6,7 @@ import javafx.fxml.FXML;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
 import javafx.stage.FileChooser;
-import de.peteral.softplc.ui.SoftplcApplication;
+import de.peteral.softplc.SoftplcApplication;
 
 /**
  * Root panel Java FX controller.

@@ -1,13 +1,13 @@
-package de.peteral.softplc.ui.view;
+package de.peteral.softplc.view;
 
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
+import de.peteral.softplc.SoftplcApplication;
 import de.peteral.softplc.model.Cpu;
 import de.peteral.softplc.model.MemoryArea;
 import de.peteral.softplc.model.Plc;
-import de.peteral.softplc.ui.SoftplcApplication;
 
 /**
  * Actual PLC view controller.

@@ -1,4 +1,4 @@
-package de.peteral.softplc.ui;
+package de.peteral.softplc;
 
 import java.io.File;
 import java.io.IOException;
@@ -13,8 +13,8 @@ import javafx.scene.layout.BorderPane;
 import javafx.stage.Stage;
 import de.peteral.softplc.model.Plc;
 import de.peteral.softplc.plc.PlcFactory;
-import de.peteral.softplc.ui.view.ActualViewController;
-import de.peteral.softplc.ui.view.RootPanelController;
+import de.peteral.softplc.view.ActualViewController;
+import de.peteral.softplc.view.RootPanelController;
 
 /**
  * Java FX application entry point.
