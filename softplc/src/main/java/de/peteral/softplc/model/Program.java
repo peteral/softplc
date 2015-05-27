@@ -1,6 +1,8 @@
 package de.peteral.softplc.model;
 
 import javafx.beans.property.LongProperty;
+import javafx.collections.ObservableList;
+import de.peteral.softplc.program.ScriptFile;
 
 /**
  * Represents the program which is cyclically executed by a {@link Cpu}
@@ -41,5 +43,11 @@ public interface Program extends Runnable {
 	 * @return target cycle time in [ms]
 	 */
 	LongProperty getTargetCycleTime();
+
+	/**
+	 *
+	 * @return list of all source files for UI
+	 */
+	ObservableList<ScriptFile> getScriptFiles();
 
 }

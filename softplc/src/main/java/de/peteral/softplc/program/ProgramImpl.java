@@ -5,6 +5,8 @@ import java.util.List;
 
 import javafx.beans.property.LongProperty;
 import javafx.beans.property.SimpleLongProperty;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 
 import javax.script.Bindings;
 import javax.script.Compilable;
@@ -30,7 +32,8 @@ public class ProgramImpl implements Program {
 	private final List<ProgramCycleObserver> observers = new ArrayList<>();
 	private final ScriptEngineManager scriptEngineManager;
 	private final Precompiler precompiler;
-	private final String[] sources;
+	private final ObservableList<ScriptFile> scriptFiles = FXCollections
+			.observableArrayList();
 	private ScriptContext context;
 	private CompiledScript compiled;
 	private final Cpu cpu;
@@ -51,13 +54,15 @@ public class ProgramImpl implements Program {
 	 *            java script code with memory access tags
 	 */
 	public ProgramImpl(Cpu cpu, ScriptEngineManager scriptEngineManager,
-			Precompiler precompiler, long targetCycleTime, String... sources) {
+			Precompiler precompiler, long targetCycleTime,
+			ScriptFile... sources) {
 
 		this.cpu = cpu;
 		this.scriptEngineManager = scriptEngineManager;
 		this.precompiler = precompiler;
 		this.targetCycleTime = new SimpleLongProperty(targetCycleTime);
-		this.sources = sources;
+		getScriptFiles().addAll(sources);
+
 	}
 
 	@Override
@@ -85,8 +90,9 @@ public class ProgramImpl implements Program {
 			bindings.put("memory", cpu.getMemory());
 			bindings.put("logger", cpu.getLogger());
 
-			for (String source : sources) {
-				String precompiled = precompiler.translate(source);
+			for (ScriptFile file : getScriptFiles()) {
+				String precompiled = precompiler.translate(file.getSource()
+						.get());
 				CompiledScript compiledScript = compiler.compile(precompiled);
 				compiledScript.eval(context);
 			}
@@ -116,6 +122,11 @@ public class ProgramImpl implements Program {
 	@Override
 	public LongProperty getTargetCycleTime() {
 		return targetCycleTime;
+	}
+
+	@Override
+	public ObservableList<ScriptFile> getScriptFiles() {
+		return scriptFiles;
 	}
 
 }

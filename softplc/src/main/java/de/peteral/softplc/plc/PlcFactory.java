@@ -40,6 +40,7 @@ import de.peteral.softplc.model.Plc;
 import de.peteral.softplc.model.Program;
 import de.peteral.softplc.program.Precompiler;
 import de.peteral.softplc.program.ProgramImpl;
+import de.peteral.softplc.program.ScriptFile;
 
 /**
  * Creates a {@link Plc} instance from configuration file.
@@ -145,24 +146,25 @@ public class PlcFactory {
 		long targetCycleTime = Integer.parseInt(programElement
 				.getAttribute("cycleTime"));
 
-		String sourceFiles[] = getSourceFiles(programElement, path);
+		ScriptFile scriptFiles[] = getScriptFiles(programElement, path);
 
 		return new ProgramImpl(cpu, new ScriptEngineManager(),
-				new Precompiler(), targetCycleTime, sourceFiles);
+				new Precompiler(), targetCycleTime, scriptFiles);
 	}
 
-	private String[] getSourceFiles(Element programElement, String path)
+	private ScriptFile[] getScriptFiles(Element programElement, String path)
 			throws DOMException, IOException {
-		List<String> result = new ArrayList<>();
+		List<ScriptFile> result = new ArrayList<>();
 		List<Element> sourceElements = getChildrenByName(programElement, "file");
 		for (Element e : sourceElements) {
 			URI file = new File(path).getParentFile().toURI()
 					.resolve(e.getTextContent());
 			byte[] bytes = Files.readAllBytes(Paths.get(file));
-			result.add(new String(bytes));
+			result.add(new ScriptFile(new File(file).getAbsolutePath(),
+					new String(bytes)));
 		}
 
-		return result.toArray(new String[result.size()]);
+		return result.toArray(new ScriptFile[result.size()]);
 	}
 
 	private Memory createMemory(Element cpuElement) {

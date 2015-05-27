@@ -8,6 +8,7 @@ import de.peteral.softplc.SoftplcApplication;
 import de.peteral.softplc.model.Cpu;
 import de.peteral.softplc.model.MemoryArea;
 import de.peteral.softplc.model.Plc;
+import de.peteral.softplc.program.ScriptFile;
 
 /**
  * Actual PLC view controller.
@@ -36,6 +37,11 @@ public class ActualViewController {
 	private TableColumn<MemoryArea, String> memoryAreaColumn;
 	@FXML
 	private TableColumn<MemoryArea, Number> memorySizeColumn;
+
+	@FXML
+	private TableView<ScriptFile> programTable;
+	@FXML
+	private TableColumn<ScriptFile, String> programNameColumn;
 
 	private SoftplcApplication mainApp;
 	private Plc plc;
@@ -67,6 +73,9 @@ public class ActualViewController {
 		memorySizeColumn.setCellValueFactory(cellData -> cellData.getValue()
 				.getSize());
 
+		programNameColumn.setCellValueFactory(data -> data.getValue()
+				.getFileName());
+
 		showCpuDetails(null);
 
 		cpuTable.getSelectionModel()
@@ -79,6 +88,7 @@ public class ActualViewController {
 		if (newValue == null) {
 		} else {
 			memoryTable.setItems(newValue.getMemory().getMemoryAreaList());
+			programTable.setItems(newValue.getProgram().getScriptFiles());
 		}
 	}
 
@@ -93,6 +103,10 @@ public class ActualViewController {
 		cpuTable.setItems(plc.getCpus());
 	}
 
+	/**
+	 *
+	 * @return list of all CPUs selected by user
+	 */
 	public ObservableList<Cpu> getSelectedCpus() {
 		return cpuTable.getSelectionModel().getSelectedItems();
 	}
