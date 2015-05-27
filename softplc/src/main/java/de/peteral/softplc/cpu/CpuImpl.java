@@ -11,6 +11,7 @@ import javafx.beans.property.IntegerProperty;
 import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
+import de.peteral.softplc.executor.ScheduledThreadPoolExecutorFactory;
 import de.peteral.softplc.model.CommunicationTask;
 import de.peteral.softplc.model.Cpu;
 import de.peteral.softplc.model.CpuStatus;
@@ -29,12 +30,13 @@ public class CpuImpl implements Cpu, ProgramCycleObserver {
 	private final StringProperty statusProperty = new SimpleStringProperty(
 			status.toString());
 	private final ErrorLog errorlog;
-	private final ScheduledThreadPoolExecutor executor;
+	private ScheduledThreadPoolExecutor executor;
 	private Program program;
 	private final List<CommunicationTask> pendingTasks = new ArrayList<>();
 	private final Memory memory;
 	private final IntegerProperty slot;
 	private final int maxBlockSize;
+	private final ScheduledThreadPoolExecutorFactory executorFactory;
 
 	/**
 	 * Creates a new instance.
@@ -43,7 +45,7 @@ public class CpuImpl implements Cpu, ProgramCycleObserver {
 	 *            slot number
 	 * @param errorlog
 	 *            {@link ErrorLog} instance associated with this {@link Cpu}
-	 * @param executor
+	 * @param executorFactory
 	 *            executor responsible for this {@link Cpu}
 	 * @param memory
 	 *            {@link Memory} instance of this {@link Cpu}
@@ -51,11 +53,11 @@ public class CpuImpl implements Cpu, ProgramCycleObserver {
 	 *            maximum data block size transferable via one PUT/GET telegram
 	 */
 	public CpuImpl(int slot, ErrorLog errorlog,
-			ScheduledThreadPoolExecutor executor, Memory memory,
+			ScheduledThreadPoolExecutorFactory executorFactory, Memory memory,
 			int maxBlockSize) {
+		this.executorFactory = executorFactory;
 		this.slot = new SimpleIntegerProperty(slot);
 		this.errorlog = errorlog;
-		this.executor = executor;
 		this.memory = memory;
 		this.maxBlockSize = maxBlockSize;
 	}
@@ -65,11 +67,14 @@ public class CpuImpl implements Cpu, ProgramCycleObserver {
 		return status;
 	}
 
+	// TODO possibly we need warm and cold restart
 	@Override
 	public void start() {
 		if (getStatus() == CpuStatus.ERROR) {
 			return;
 		}
+
+		executor = executorFactory.createExecutor();
 
 		setStatus(CpuStatus.RUN);
 
@@ -148,7 +153,9 @@ public class CpuImpl implements Cpu, ProgramCycleObserver {
 				+ context + " : " + e);
 		setStatus(CpuStatus.ERROR);
 
-		executor.shutdown();
+		if (executor != null) {
+			executor.shutdown();
+		}
 
 		program.removeObserver(this);
 

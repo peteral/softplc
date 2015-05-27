@@ -11,7 +11,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.concurrent.ScheduledThreadPoolExecutor;
 import java.util.logging.Logger;
 
 import javax.script.ScriptEngineManager;
@@ -31,6 +30,7 @@ import de.peteral.softplc.comm.PutGetServerImpl;
 import de.peteral.softplc.cpu.CpuImpl;
 import de.peteral.softplc.cpu.ErrorLogImpl;
 import de.peteral.softplc.datatype.DataTypeFactory;
+import de.peteral.softplc.executor.ScheduledThreadPoolExecutorFactory;
 import de.peteral.softplc.memory.MemoryAreaImpl;
 import de.peteral.softplc.memory.MemoryImpl;
 import de.peteral.softplc.model.Cpu;
@@ -46,211 +46,172 @@ import de.peteral.softplc.program.ProgramImpl;
  *
  * @author peteral
  */
-public class PlcFactory
-{
-    private final Logger logger = Logger.getLogger("PlcFactory");
+public class PlcFactory {
+	private final Logger logger = Logger.getLogger("PlcFactory");
 
-    private static final int PORT = 102;
-    private static final Map<String, Integer> DEFAULT_MEMORY_AREAS =
-        new HashMap<>();
-    static
-    {
-        DEFAULT_MEMORY_AREAS.put("M", 65535);
-        DEFAULT_MEMORY_AREAS.put("I", 65535);
-        DEFAULT_MEMORY_AREAS.put("O", 65535);
-    }
+	private static final int PORT = 102;
+	private static final Map<String, Integer> DEFAULT_MEMORY_AREAS = new HashMap<>();
+	static {
+		DEFAULT_MEMORY_AREAS.put("M", 65535);
+		DEFAULT_MEMORY_AREAS.put("I", 65535);
+		DEFAULT_MEMORY_AREAS.put("O", 65535);
+	}
 
-    /**
-     * Creates {@link Plc} instance based on the configuration file.
-     *
-     * @param path
-     *        path to the configuration file
-     * @return configured {@link Plc} instance
-     */
-    public Plc create(String path)
-    {
-        try
-        {
-            byte[] contents = Files.readAllBytes(Paths.get(path));
-            DocumentBuilder builder =
-                DocumentBuilderFactory.newInstance().newDocumentBuilder();
-            Document doc = builder.parse(new ByteArrayInputStream(contents));
+	/**
+	 * Creates {@link Plc} instance based on the configuration file.
+	 *
+	 * @param path
+	 *            path to the configuration file
+	 * @return configured {@link Plc} instance
+	 */
+	public Plc create(String path) {
+		try {
+			byte[] contents = Files.readAllBytes(Paths.get(path));
+			DocumentBuilder builder = DocumentBuilderFactory.newInstance()
+					.newDocumentBuilder();
+			Document doc = builder.parse(new ByteArrayInputStream(contents));
 
-            return createFromDocument(doc, path);
-        }
-        catch ( IOException | ParserConfigurationException | SAXException
-                | URISyntaxException e )
-        {
-            throw new PlcFactoryException(path, e);
-        }
-    }
+			return createFromDocument(doc, path);
+		} catch (IOException | ParserConfigurationException | SAXException
+				| URISyntaxException e) {
+			throw new PlcFactoryException(path, e);
+		}
+	}
 
-    private Plc createFromDocument(Document doc, String path)
-        throws IOException,
-            ParserConfigurationException,
-            SAXException,
-            URISyntaxException
-    {
-        logger.info("Parsing file: " + path);
-        List<Cpu> cpus = new ArrayList<>();
+	private Plc createFromDocument(Document doc, String path)
+			throws IOException, ParserConfigurationException, SAXException,
+			URISyntaxException {
+		logger.info("Parsing file: " + path);
+		List<Cpu> cpus = new ArrayList<>();
 
-        // process includes
-        NodeList includeElements = doc.getElementsByTagName("includes");
-        for ( int i = 0; i < includeElements.getLength(); i++ )
-        {
-            Element includeElement = (Element) includeElements.item(i);
-            URI includeUri =
-                new File(path).getParentFile()
-                    .toURI()
-                    .resolve(includeElement.getAttribute("file"));
-            String includePath = new File(includeUri).getAbsolutePath();
-            byte[] contents = Files.readAllBytes(Paths.get(includePath));
-            DocumentBuilder builder =
-                DocumentBuilderFactory.newInstance().newDocumentBuilder();
-            Document includeDoc =
-                builder.parse(new ByteArrayInputStream(contents));
+		// process includes
+		NodeList includeElements = doc.getElementsByTagName("includes");
+		for (int i = 0; i < includeElements.getLength(); i++) {
+			Element includeElement = (Element) includeElements.item(i);
+			URI includeUri = new File(path).getParentFile().toURI()
+					.resolve(includeElement.getAttribute("file"));
+			String includePath = new File(includeUri).getAbsolutePath();
+			byte[] contents = Files.readAllBytes(Paths.get(includePath));
+			DocumentBuilder builder = DocumentBuilderFactory.newInstance()
+					.newDocumentBuilder();
+			Document includeDoc = builder.parse(new ByteArrayInputStream(
+					contents));
 
-            Plc plc = createFromDocument(includeDoc, includePath);
+			Plc plc = createFromDocument(includeDoc, includePath);
 
-            for ( Cpu cpu : plc.getCpus() )
-            {
-                cpus.add(cpu);
-            }
-        }
+			for (Cpu cpu : plc.getCpus()) {
+				cpus.add(cpu);
+			}
+		}
 
-        NodeList cpuElements = doc.getElementsByTagName("cpu");
-        for ( int i = 0; i < cpuElements.getLength(); i++ )
-        {
-            Element cpuElement = (Element) cpuElements.item(i);
+		NodeList cpuElements = doc.getElementsByTagName("cpu");
+		for (int i = 0; i < cpuElements.getLength(); i++) {
+			Element cpuElement = (Element) cpuElements.item(i);
 
-            cpus.add(createCpu(cpuElement, path));
-        }
+			cpus.add(createCpu(cpuElement, path));
+		}
 
-        return new PlcImpl(new PutGetServerImpl(PORT),
-                           cpus.toArray(new Cpu[cpus.size()]));
-    }
+		return new PlcImpl(new PutGetServerImpl(PORT),
+				cpus.toArray(new Cpu[cpus.size()]));
+	}
 
-    private Cpu createCpu(Element cpuElement, String path)
-        throws IOException
-    {
-        int slot = Integer.parseInt(cpuElement.getAttribute("slot"));
+	private Cpu createCpu(Element cpuElement, String path) throws IOException {
+		int slot = Integer.parseInt(cpuElement.getAttribute("slot"));
 
-        Memory memory = createMemory(cpuElement);
-        int maxBlockSize =
-            Integer.parseInt(cpuElement.getAttribute("maxBlockSize"));
+		Memory memory = createMemory(cpuElement);
+		int maxBlockSize = Integer.parseInt(cpuElement
+				.getAttribute("maxBlockSize"));
 
-        Cpu cpu =
-            new CpuImpl(slot,
-                        new ErrorLogImpl(),
-                        new ScheduledThreadPoolExecutor(1),
-                        memory,
-                        maxBlockSize);
+		Cpu cpu = new CpuImpl(slot, new ErrorLogImpl(),
+				new ScheduledThreadPoolExecutorFactory(), memory, maxBlockSize);
 
-        Program program = createProgram(cpuElement, cpu, path);
+		Program program = createProgram(cpuElement, cpu, path);
 
-        cpu.loadProgram(program);
+		cpu.loadProgram(program);
 
-        return cpu;
-    }
+		return cpu;
+	}
 
-    private Program createProgram(Element cpuElement, Cpu cpu, String path)
-        throws IOException
-    {
-        List<Element> programElements =
-            getChildrenByName(cpuElement, "program");
-        if ( programElements.size() != 1 )
-        {
-            throw new PlcFactoryException(path,
-                                          "Exactly one program node is required; Cpu: "
-                                              + cpu);
-        }
+	private Program createProgram(Element cpuElement, Cpu cpu, String path)
+			throws IOException {
+		List<Element> programElements = getChildrenByName(cpuElement, "program");
+		if (programElements.size() != 1) {
+			throw new PlcFactoryException(path,
+					"Exactly one program node is required; Cpu: " + cpu);
+		}
 
-        Element programElement = programElements.get(0);
+		Element programElement = programElements.get(0);
 
-        long targetCycleTime =
-            Integer.parseInt(programElement.getAttribute("cycleTime"));
+		long targetCycleTime = Integer.parseInt(programElement
+				.getAttribute("cycleTime"));
 
-        String sourceFiles[] = getSourceFiles(programElement, path);
+		String sourceFiles[] = getSourceFiles(programElement, path);
 
-        return new ProgramImpl(cpu,
-                               new ScriptEngineManager(),
-                               new Precompiler(),
-                               targetCycleTime,
-                               sourceFiles);
-    }
+		return new ProgramImpl(cpu, new ScriptEngineManager(),
+				new Precompiler(), targetCycleTime, sourceFiles);
+	}
 
-    private String[] getSourceFiles(Element programElement, String path)
-        throws DOMException,
-            IOException
-    {
-        List<String> result = new ArrayList<>();
-        List<Element> sourceElements =
-            getChildrenByName(programElement, "file");
-        for ( Element e : sourceElements )
-        {
-            URI file =
-                new File(path).getParentFile()
-                    .toURI()
-                    .resolve(e.getTextContent());
-            byte[] bytes = Files.readAllBytes(Paths.get(file));
-            result.add(new String(bytes));
-        }
+	private String[] getSourceFiles(Element programElement, String path)
+			throws DOMException, IOException {
+		List<String> result = new ArrayList<>();
+		List<Element> sourceElements = getChildrenByName(programElement, "file");
+		for (Element e : sourceElements) {
+			URI file = new File(path).getParentFile().toURI()
+					.resolve(e.getTextContent());
+			byte[] bytes = Files.readAllBytes(Paths.get(file));
+			result.add(new String(bytes));
+		}
 
-        return result.toArray(new String[result.size()]);
-    }
+		return result.toArray(new String[result.size()]);
+	}
 
-    private Memory createMemory(Element cpuElement)
-    {
-        Map<String, MemoryArea> areas = new HashMap<>();
+	private Memory createMemory(Element cpuElement) {
+		Map<String, MemoryArea> areas = new HashMap<>();
 
-        // create memory areas configured in configuration file
-        List<Element> memoryElements = getChildrenByName(cpuElement, "memory");
-        memoryElements.forEach((memoryElement) -> {
-            List<Element> areaElements =
-                getChildrenByName(memoryElement, "area");
+		// create memory areas configured in configuration file
+		List<Element> memoryElements = getChildrenByName(cpuElement, "memory");
+		memoryElements.forEach((memoryElement) -> {
+			List<Element> areaElements = getChildrenByName(memoryElement,
+					"area");
 
-            areaElements.forEach((areaElement) -> {
-                String name = areaElement.getAttribute("name");
-                int size = Integer.parseInt(areaElement.getAttribute("size"));
+			areaElements.forEach((areaElement) -> {
+				String name = areaElement.getAttribute("name");
+				int size = Integer.parseInt(areaElement.getAttribute("size"));
 
-                areas.put(name, new MemoryAreaImpl(name, size));
-            });
-        });
+				areas.put(name, new MemoryAreaImpl(name, size));
+			});
+		});
 
-        // create default memory areas not redefined in configuration file
-        DEFAULT_MEMORY_AREAS.entrySet()
-            .forEach((entry) -> {
-                if ( !areas.containsKey(entry.getKey()) )
-                {
-                    areas.put(entry.getKey(),
-                              new MemoryAreaImpl(entry.getKey(),
-                                                 entry.getValue()));
-                }
-            });
+		// create default memory areas not redefined in configuration file
+		DEFAULT_MEMORY_AREAS.entrySet().forEach(
+				(entry) -> {
+					if (!areas.containsKey(entry.getKey())) {
+						areas.put(
+								entry.getKey(),
+								new MemoryAreaImpl(entry.getKey(), entry
+										.getValue()));
+					}
+				});
 
-        return new MemoryImpl(new AddressParserFactory(),
-                              new DataTypeFactory(),
-                              areas.values()
-                                  .toArray(new MemoryArea[areas.size()]));
-    }
+		return new MemoryImpl(new AddressParserFactory(),
+				new DataTypeFactory(), areas.values().toArray(
+						new MemoryArea[areas.size()]));
+	}
 
-    private List<Element> getChildrenByName(Element cpuElement, String name)
-    {
-        // looks like Element.getElementsByName operates within the whole
-        // document context instead of within the element it is invoked on as
-        // specified
+	private List<Element> getChildrenByName(Element cpuElement, String name) {
+		// looks like Element.getElementsByName operates within the whole
+		// document context instead of within the element it is invoked on as
+		// specified
 
-        List<Element> result = new ArrayList<>();
-        for ( int i = 0; i < cpuElement.getChildNodes().getLength(); i++ )
-        {
-            Node node = cpuElement.getChildNodes().item(i);
-            if ( (node instanceof Element)
-                && node.getNodeName().equalsIgnoreCase(name) )
-            {
-                result.add((Element) node);
-            }
-        }
+		List<Element> result = new ArrayList<>();
+		for (int i = 0; i < cpuElement.getChildNodes().getLength(); i++) {
+			Node node = cpuElement.getChildNodes().item(i);
+			if ((node instanceof Element)
+					&& node.getNodeName().equalsIgnoreCase(name)) {
+				result.add((Element) node);
+			}
+		}
 
-        return result;
-    }
+		return result;
+	}
 }

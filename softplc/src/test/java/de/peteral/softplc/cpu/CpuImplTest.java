@@ -21,6 +21,7 @@ import org.junit.Test;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 
+import de.peteral.softplc.executor.ScheduledThreadPoolExecutorFactory;
 import de.peteral.softplc.model.CommunicationTask;
 import de.peteral.softplc.model.CpuStatus;
 import de.peteral.softplc.model.ErrorLog;
@@ -45,15 +46,19 @@ public class CpuImplTest {
 	private Memory memory;
 	@Mock
 	private Throwable exception;
+	@Mock
+	private ScheduledThreadPoolExecutorFactory executorFactory;
 
 	@Before
 	public void setup() {
 		MockitoAnnotations.initMocks(this);
 
+		when(executorFactory.createExecutor()).thenReturn(executor);
+
 		when(program.getTargetCycleTime()).thenReturn(
 				new SimpleLongProperty(TARGET_CYCLE_TIME));
 
-		cpu = new CpuImpl(0, errorlog, executor, memory, MAX_BLOCK_SIZE);
+		cpu = new CpuImpl(0, errorlog, executorFactory, memory, MAX_BLOCK_SIZE);
 	}
 
 	@Test
@@ -184,7 +189,9 @@ public class CpuImplTest {
 
 	@Test
 	public void onError_Mock_ShutsDownExecutor() {
+		when(program.compile()).thenReturn(true);
 		cpu.loadProgram(program);
+		cpu.start();
 
 		cpu.onError("", exception);
 
