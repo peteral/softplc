@@ -116,15 +116,19 @@ public class PlcFactory {
 				cpus.toArray(new Cpu[cpus.size()]));
 	}
 
-	private Cpu createCpu(Element cpuElement, String path) throws IOException {
+	private Cpu createCpu(Element cpuElement, String path) throws IOException,
+			DOMException, URISyntaxException {
 		int slot = Integer.parseInt(cpuElement.getAttribute("slot"));
 
 		Memory memory = createMemory(cpuElement);
 		int maxBlockSize = Integer.parseInt(cpuElement
 				.getAttribute("maxBlockSize"));
+		int maxConnections = Integer.parseInt(cpuElement
+				.getAttribute("connections"));
 
 		Cpu cpu = new CpuImpl(slot, new ErrorLogImpl(),
-				new ScheduledThreadPoolExecutorFactory(), memory, maxBlockSize);
+				new ScheduledThreadPoolExecutorFactory(), memory, maxBlockSize,
+				maxConnections);
 
 		Program program = createProgram(cpuElement, cpu, path);
 
@@ -134,7 +138,7 @@ public class PlcFactory {
 	}
 
 	private Program createProgram(Element cpuElement, Cpu cpu, String path)
-			throws IOException {
+			throws IOException, DOMException, URISyntaxException {
 		List<Element> programElements = getChildrenByName(cpuElement, "program");
 		if (programElements.size() != 1) {
 			throw new PlcFactoryException(path,
@@ -153,15 +157,14 @@ public class PlcFactory {
 	}
 
 	private ScriptFile[] getScriptFiles(Element programElement, String path)
-			throws DOMException, IOException {
+			throws DOMException, IOException, URISyntaxException {
 		List<ScriptFile> result = new ArrayList<>();
 		List<Element> sourceElements = getChildrenByName(programElement, "file");
 		for (Element e : sourceElements) {
 			URI file = new File(path).getParentFile().toURI()
 					.resolve(e.getTextContent());
 			byte[] bytes = Files.readAllBytes(Paths.get(file));
-			result.add(new ScriptFile(new File(file).getAbsolutePath(),
-					new String(bytes)));
+			result.add(new ScriptFile(e.getTextContent(), new String(bytes)));
 		}
 
 		return result.toArray(new ScriptFile[result.size()]);

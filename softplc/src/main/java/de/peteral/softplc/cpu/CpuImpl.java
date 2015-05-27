@@ -37,6 +37,7 @@ public class CpuImpl implements Cpu, ProgramCycleObserver {
 	private final IntegerProperty slot;
 	private final int maxBlockSize;
 	private final ScheduledThreadPoolExecutorFactory executorFactory;
+	private final IntegerProperty maxConnections = new SimpleIntegerProperty();
 
 	/**
 	 * Creates a new instance.
@@ -51,15 +52,17 @@ public class CpuImpl implements Cpu, ProgramCycleObserver {
 	 *            {@link Memory} instance of this {@link Cpu}
 	 * @param maxBlockSize
 	 *            maximum data block size transferable via one PUT/GET telegram
+	 * @param maxConnections
 	 */
 	public CpuImpl(int slot, ErrorLog errorlog,
 			ScheduledThreadPoolExecutorFactory executorFactory, Memory memory,
-			int maxBlockSize) {
+			int maxBlockSize, int maxConnections) {
 		this.executorFactory = executorFactory;
 		this.slot = new SimpleIntegerProperty(slot);
 		this.errorlog = errorlog;
 		this.memory = memory;
 		this.maxBlockSize = maxBlockSize;
+		this.maxConnections.set(maxConnections);
 	}
 
 	@Override
@@ -193,5 +196,10 @@ public class CpuImpl implements Cpu, ProgramCycleObserver {
 	@Override
 	public StringProperty getStatusProperty() {
 		return statusProperty;
+	}
+
+	@Override
+	public IntegerProperty getMaxConnections() {
+		return maxConnections;
 	}
 }

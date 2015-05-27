@@ -33,6 +33,7 @@ public class CpuImplTest {
 
 	private static final int MAX_BLOCK_SIZE = 123;
 	private static final long TARGET_CYCLE_TIME = 50;
+	private static final int MAX_CONNECTIONS = 20;
 	private CpuImpl cpu;
 	@Mock
 	private Program program;
@@ -58,7 +59,8 @@ public class CpuImplTest {
 		when(program.getTargetCycleTime()).thenReturn(
 				new SimpleLongProperty(TARGET_CYCLE_TIME));
 
-		cpu = new CpuImpl(0, errorlog, executorFactory, memory, MAX_BLOCK_SIZE);
+		cpu = new CpuImpl(0, errorlog, executorFactory, memory, MAX_BLOCK_SIZE,
+				MAX_CONNECTIONS);
 	}
 
 	@Test

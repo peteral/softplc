@@ -115,4 +115,10 @@ public interface Cpu {
 	 * @return current status as {@link StringProperty}
 	 */
 	StringProperty getStatusProperty();
+
+	/**
+	 *
+	 * @return max connection count
+	 */
+	IntegerProperty getMaxConnections();
 }
