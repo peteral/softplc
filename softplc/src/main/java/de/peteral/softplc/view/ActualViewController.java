@@ -1,15 +1,15 @@
 package de.peteral.softplc.view;
 
+import java.io.IOException;
+
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
-import de.peteral.softplc.SoftplcApplication;
-import de.peteral.softplc.memorytables.MemoryTable;
+import javafx.scene.layout.AnchorPane;
 import de.peteral.softplc.model.Cpu;
-import de.peteral.softplc.model.MemoryArea;
 import de.peteral.softplc.model.Plc;
-import de.peteral.softplc.program.ScriptFile;
 
 /**
  * Actual PLC view controller.
@@ -31,37 +31,11 @@ public class ActualViewController {
 	private TableColumn<Cpu, Number> cpuCycleTarColumn;
 	@FXML
 	private TableColumn<Cpu, Number> cpuConnectionsColumn;
+	@FXML
+	private AnchorPane cpuDetailPane;
+	private CpuViewController cpuDetailController;
 
-	@FXML
-	private TableView<MemoryArea> memoryTable;
-	@FXML
-	private TableColumn<MemoryArea, String> memoryAreaColumn;
-	@FXML
-	private TableColumn<MemoryArea, Number> memorySizeColumn;
-
-	@FXML
-	private TableView<ScriptFile> programTable;
-	@FXML
-	private TableColumn<ScriptFile, String> programNameColumn;
-
-	@FXML
-	private TableView<MemoryTable> memoryTableTable;
-	@FXML
-	private TableColumn<MemoryTable, String> memoryTableNameColumn;
-
-	private SoftplcApplication mainApp;
 	private Plc plc;
-	private Cpu currentCpu;
-	private MemoryTable currentMemoryTable;
-
-	/**
-	 * Initializes the controller with main application reference.
-	 *
-	 * @param mainApp
-	 */
-	public void setMainApp(SoftplcApplication mainApp) {
-		this.mainApp = mainApp;
-	}
 
 	/**
 	 * Initializes the controller class. This method is automatically called
@@ -78,54 +52,31 @@ public class ActualViewController {
 		cpuCycleActColumn.setCellValueFactory(cellData -> cellData.getValue()
 				.getProgram().getCurrentCycleTime());
 
-		memoryAreaColumn.setCellValueFactory(cellData -> cellData.getValue()
-				.getAreaCode());
-		memorySizeColumn.setCellValueFactory(cellData -> cellData.getValue()
-				.getSize());
+		initCpuDetailScene();
 
-		memoryTableNameColumn.setCellValueFactory(cellData -> cellData
-				.getValue().getName());
-
-		programNameColumn.setCellValueFactory(data -> data.getValue()
-				.getFileName());
-
-		showCpuDetails(null);
+		cpuDetailController.update(null);
 
 		cpuTable.getSelectionModel()
 				.selectedItemProperty()
 				.addListener(
-						(observable, oldValue, newValue) -> showCpuDetails(newValue));
-
-		memoryTableTable
-				.getSelectionModel()
-				.selectedItemProperty()
-				.addListener(
-						(observable, oldValue, newValue) -> showMemoryTable(newValue));
-	}
-
-	private void showCpuDetails(Cpu newValue) {
-		currentCpu = newValue;
-
-		if (newValue == null) {
-			memoryTable.setItems(null);
-			programTable.setItems(null);
-			memoryTableTable.setItems(null);
-		} else {
-			memoryTable.setItems(newValue.getMemory().getMemoryAreaList());
-			programTable.setItems(newValue.getProgram().getScriptFiles());
-			memoryTableTable.setItems(newValue.getMemory().getMemoryTables());
-		}
+						(observable, oldValue, newValue) -> cpuDetailController
+								.update(newValue));
 
 	}
 
-	private void showMemoryTable(MemoryTable newValue) {
-		currentMemoryTable = newValue;
+	private void initCpuDetailScene() {
+		try {
+			FXMLLoader loader = new FXMLLoader();
+			loader.setLocation(ActualViewController.class
+					.getResource("CpuView.fxml"));
+			AnchorPane layout = loader.load();
 
-		if (newValue == null) {
-		} else {
+			cpuDetailPane.getChildren().add(layout);
 
+			cpuDetailController = loader.getController();
+		} catch (IOException e) {
+			e.printStackTrace();
 		}
-
 	}
 
 	/**
@@ -139,22 +90,8 @@ public class ActualViewController {
 		cpuTable.setItems(plc.getCpus());
 	}
 
-	/**
-	 *
-	 * @return list of all CPUs selected by user
-	 */
-	public ObservableList<Cpu> getSelectedCpus() {
+	private ObservableList<Cpu> getSelectedCpus() {
 		return cpuTable.getSelectionModel().getSelectedItems();
-	}
-
-	@FXML
-	private void handleAddMemoryTable() {
-		currentCpu.getMemory().getMemoryTables().add(new MemoryTable());
-	}
-
-	@FXML
-	private void handleDeleteMemoryTable() {
-
 	}
 
 	@FXML
@@ -169,11 +106,11 @@ public class ActualViewController {
 
 	@FXML
 	private void handleStartAll() {
-		mainApp.getPlc().getCpus().forEach(cpu -> cpu.start());
+		plc.getCpus().forEach(cpu -> cpu.start());
 	}
 
 	@FXML
 	private void handleStopAll() {
-		mainApp.getPlc().getCpus().forEach(cpu -> cpu.stop());
+		plc.getCpus().forEach(cpu -> cpu.stop());
 	}
 }

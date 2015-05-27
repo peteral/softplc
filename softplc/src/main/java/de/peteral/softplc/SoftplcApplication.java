@@ -120,7 +120,6 @@ public class SoftplcApplication extends Application {
 			rootLayout.setCenter(actualView);
 
 			actualViewController = loader.getController();
-			actualViewController.setMainApp(this);
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
