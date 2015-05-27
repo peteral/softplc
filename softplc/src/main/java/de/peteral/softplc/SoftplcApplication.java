@@ -39,6 +39,8 @@ public class SoftplcApplication extends Application {
 		this.primaryStage.getIcons().add(
 				new Image("file:src/main/resources/images/softplc_32.png"));
 
+		this.primaryStage.setOnCloseRequest(event -> System.exit(0));
+
 		initRootPanel();
 
 		showActualView();
