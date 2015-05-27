@@ -50,7 +50,6 @@ public class SoftplcApplication extends Application {
 	}
 
 	private void loadLastFile() {
-		// Try to load last opened person file.
 		File file = getLastOpenedFilePath();
 		if (file != null) {
 			loadPlcFromFile(file);
