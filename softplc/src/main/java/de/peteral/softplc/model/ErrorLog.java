@@ -2,6 +2,9 @@ package de.peteral.softplc.model;
 
 import java.util.logging.Level;
 
+import javafx.collections.ObservableList;
+import de.peteral.softplc.cpu.ErrorLogEntry;
+
 /**
  * Each {@link Cpu} posesses an {@link ErrorLog} instance. This is used by
  * {@link Memory} and {@link Program} to log problems and helps locate errors in
@@ -23,5 +26,11 @@ public interface ErrorLog {
 	 *            message text
 	 */
 	void log(Level level, String module, String message);
+
+	/**
+	 *
+	 * @return observable list of last n logged entries for this CPU
+	 */
+	ObservableList<ErrorLogEntry> getEntries();
 
 }

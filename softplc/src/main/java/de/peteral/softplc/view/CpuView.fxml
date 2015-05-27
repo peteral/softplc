@@ -50,13 +50,13 @@
                                           <ContextMenu>
                                              <items>
                                                 <MenuItem mnemonicParsing="false" onAction="#handleAddMemoryTableVariable" text="Add" />
-                                                <MenuItem mnemonicParsing="false" text="Remove" />
+                                                <MenuItem mnemonicParsing="false" onAction="#handleDeleteMemoryTableVariable" text="Remove" />
                                                 <SeparatorMenuItem mnemonicParsing="false" />
-                                                <MenuItem mnemonicParsing="false" text="Read" />
-                                                <MenuItem mnemonicParsing="false" text="Write" />
+                                                <MenuItem mnemonicParsing="false" onAction="#handleReadMemoryTable" text="Read" />
+                                                <MenuItem mnemonicParsing="false" onAction="#handleWriteMemoryTable" text="Write" />
                                                 <SeparatorMenuItem mnemonicParsing="false" />
-                                                <CheckMenuItem mnemonicParsing="false" text="Observe" />
-                                                <CheckMenuItem mnemonicParsing="false" text="Force" />
+                                                <CheckMenuItem mnemonicParsing="false" onAction="#handleObserveMemoryTable" text="Observe" />
+                                                <CheckMenuItem mnemonicParsing="false" onAction="#handleForceMemoryTable" text="Force" />
                                              </items>
                                           </ContextMenu>
                                        </contextMenu>
@@ -84,11 +84,11 @@
                            <contextMenu>
                               <ContextMenu>
                                  <items>
-                                    <MenuItem mnemonicParsing="false" text="Add" />
-                                    <MenuItem mnemonicParsing="false" text="Remove" />
+                                    <MenuItem mnemonicParsing="false" onAction="#handleAddMemoryArea" text="Add" />
+                                    <MenuItem mnemonicParsing="false" onAction="#handleDeleteMemoryArea" text="Remove" />
                                     <SeparatorMenuItem mnemonicParsing="false" />
-                                    <MenuItem mnemonicParsing="false" text="Save snapshot" />
-                                    <MenuItem mnemonicParsing="false" text="Load snapshot" />
+                                    <MenuItem mnemonicParsing="false" onAction="#handleSaveSnapshot" text="Save snapshot" />
+                                    <MenuItem mnemonicParsing="false" onAction="#handleLoadSnapshot" text="Load snapshot" />
                                  </items>
                               </ContextMenu>
                            </contextMenu>
@@ -111,8 +111,8 @@
                            <contextMenu>
                               <ContextMenu>
                                  <items>
-                                    <MenuItem mnemonicParsing="false" text="Add" />
-                                    <MenuItem mnemonicParsing="false" text="Remove" />
+                                    <MenuItem mnemonicParsing="false" onAction="#handleAddSourceFile" text="Add" />
+                                    <MenuItem mnemonicParsing="false" onAction="#handleDeleteSourceFile" text="Remove" />
                                  </items>
                               </ContextMenu>
                            </contextMenu>
@@ -123,7 +123,17 @@
             </Tab>
             <Tab text="Log">
                <content>
-                  <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0" />
+                  <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
+                     <children>
+                        <TableView fx:id="errorLogTable" layoutX="23.0" layoutY="14.0" prefHeight="571.0" prefWidth="1024.0" tableMenuButtonVisible="true" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                          <columns>
+                            <TableColumn fx:id="errorLogTimestampColumn" prefWidth="75.0" text="Time" />
+                            <TableColumn fx:id="errorLogLevelColumn" prefWidth="75.0" text="Level" />
+                              <TableColumn fx:id="errorLogModuleColumn" prefWidth="75.0" text="Module" />
+                              <TableColumn fx:id="errorLogMessageColumn" prefWidth="485.0" text="Message" />
+                          </columns>
+                        </TableView>
+                     </children></AnchorPane>
                </content>
             </Tab>
          </tabs>

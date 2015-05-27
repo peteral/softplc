@@ -172,7 +172,7 @@ public class CpuImpl implements Cpu, ProgramCycleObserver {
 
 	@Override
 	public String toString() {
-		return "cpu." + slot;
+		return "cpu." + slot.get();
 	}
 
 	@Override
