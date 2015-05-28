@@ -117,4 +117,18 @@ public interface Memory {
 	 * @param value
 	 */
 	void parse(String address, String value);
+
+	/**
+	 * removes given memory areas
+	 *
+	 * @param selectedItems
+	 */
+	void removeMemoryAreas(ObservableList<MemoryArea> selectedItems);
+
+	/**
+	 * adds memory area
+	 * 
+	 * @param createMemoryArea
+	 */
+	void addMemoryArea(MemoryArea createMemoryArea);
 }

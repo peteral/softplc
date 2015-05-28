@@ -19,6 +19,7 @@ import de.peteral.softplc.memorytables.MemoryTableWriteTask;
 import de.peteral.softplc.model.Cpu;
 import de.peteral.softplc.model.CpuStatus;
 import de.peteral.softplc.model.MemoryArea;
+import de.peteral.softplc.plc.PlcFactory;
 import de.peteral.softplc.program.ScriptFile;
 
 /**
@@ -268,10 +269,14 @@ public class CpuViewController {
 
 	@FXML
 	private void handleAddMemoryArea() {
+		currentCpu.getMemory().addMemoryArea(
+				new PlcFactory().createMemoryArea());
 	}
 
 	@FXML
 	private void handleDeleteMemoryArea() {
+		currentCpu.getMemory().removeMemoryAreas(
+				memoryTable.getSelectionModel().getSelectedItems());
 	}
 
 	@FXML

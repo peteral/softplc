@@ -48,12 +48,8 @@ public class MemoryImpl implements Memory {
 		this.addressParserFactory = addressParserFactory;
 		this.dataTypeFactory = dataTypeFactory;
 		for (MemoryArea memoryArea : areas) {
-			memoryAreas.put(memoryArea.getAreaCode().get(), memoryArea);
-			memoryAreaList.add(memoryArea);
+			addMemoryArea(memoryArea);
 		}
-
-		memoryAreaList.sort((m1, m2) -> m1.getAreaCode().get()
-				.compareTo(m2.getAreaCode().get()));
 	}
 
 	@Override
@@ -188,5 +184,20 @@ public class MemoryImpl implements Memory {
 				&& memoryArea.getLogger().isLoggable(Level.FINE)) {
 			memoryArea.getLogger().fine("Parse: " + address + " = " + value);
 		}
+	}
+
+	@Override
+	public void removeMemoryAreas(ObservableList<MemoryArea> toDelete) {
+		memoryAreas.values().removeAll(toDelete);
+		memoryAreaList.removeAll(toDelete);
+	}
+
+	@Override
+	public void addMemoryArea(MemoryArea memoryArea) {
+		memoryAreas.put(memoryArea.getAreaCode().get(), memoryArea);
+		memoryAreaList.add(memoryArea);
+
+		memoryAreaList.sort((m1, m2) -> m1.getAreaCode().get()
+				.compareTo(m2.getAreaCode().get()));
 	}
 }

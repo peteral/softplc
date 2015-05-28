@@ -62,10 +62,12 @@ public class PlcFactory {
 
 	private static final long DEFAULT_CYCLE_TIME = 50;
 
+	private static final int DEFAULT_SIZE = 65535;
+
 	static {
-		DEFAULT_MEMORY_AREAS.put("M", 65535);
-		DEFAULT_MEMORY_AREAS.put("I", 65535);
-		DEFAULT_MEMORY_AREAS.put("O", 65535);
+		DEFAULT_MEMORY_AREAS.put("M", DEFAULT_SIZE);
+		DEFAULT_MEMORY_AREAS.put("I", DEFAULT_SIZE);
+		DEFAULT_MEMORY_AREAS.put("O", DEFAULT_SIZE);
 	}
 
 	/**
@@ -302,5 +304,13 @@ public class PlcFactory {
 	 */
 	public Plc createNew() {
 		return new PlcImpl(new PutGetServerImpl(PORT));
+	}
+
+	/**
+	 *
+	 * @return new default memory area instance
+	 */
+	public MemoryArea createMemoryArea() {
+		return new MemoryAreaImpl("New", DEFAULT_SIZE, false);
 	}
 }
