@@ -36,7 +36,7 @@ public class PlcFactoryTest {
 		assertEquals(2000, memory.getMemoryArea("DB100").getSize().get());
 		assertEquals(1000, memory.getMemoryArea("DB101").getSize().get());
 		assertEquals(50, cpu.getTargetCycleTime());
-		assertEquals(222, cpu.getMaxDataSize());
+		assertEquals(222, cpu.getMaxDataSize().get());
 
 		assertNotNull(cpu.getProgram());
 
@@ -59,7 +59,7 @@ public class PlcFactoryTest {
 		assertEquals(2000, memory.getMemoryArea("DB100").getSize().get());
 		assertEquals(1000, memory.getMemoryArea("DB101").getSize().get());
 		assertEquals(50, cpu.getTargetCycleTime());
-		assertEquals(222, cpu.getMaxDataSize());
+		assertEquals(222, cpu.getMaxDataSize().get());
 
 		assertNotNull(cpu.getProgram());
 	}
