@@ -29,6 +29,7 @@ import de.peteral.softplc.program.ScriptFile;
  */
 public class CpuViewController {
 	private static final long OBSERVE_PERIOD = 100L;
+	private static final long FORCE_PERIOD = 100L;
 	@FXML
 	private TableView<MemoryArea> memoryTable;
 	@FXML
@@ -56,6 +57,8 @@ public class CpuViewController {
 	private TableColumn<MemoryTableVariable, String> memoryTableVariableNewColumn;
 	@FXML
 	private CheckMenuItem observeMemoryTableItem;
+	@FXML
+	private CheckMenuItem forceMemoryTableItem;
 
 	@FXML
 	private TableView<ErrorLogEntry> errorLogTable;
@@ -72,6 +75,7 @@ public class CpuViewController {
 	private MemoryTable currentMemoryTable;
 	private TimerTask updateMemoryTableTask;
 	private Timer timer;
+	private TimerTask forceMemoryTableTask;
 
 	/**
 	 * Initializes the controller class. This method is automatically called
@@ -242,6 +246,24 @@ public class CpuViewController {
 
 	@FXML
 	private void handleForceMemoryTable() {
+		if (forceMemoryTableItem.isSelected()) {
+			// start background task
+			forceMemoryTableTask = new TimerTask() {
+				@Override
+				public void run() {
+					if ((currentCpu.getStatus() == CpuStatus.RUN)
+							&& (currentMemoryTable != null)) {
+						handleWriteMemoryTable();
+					}
+				}
+			};
+
+			timer.scheduleAtFixedRate(forceMemoryTableTask, 0, FORCE_PERIOD);
+		} else {
+			// stop background task
+			forceMemoryTableTask.cancel();
+			timer.purge();
+		}
 	}
 
 	@FXML

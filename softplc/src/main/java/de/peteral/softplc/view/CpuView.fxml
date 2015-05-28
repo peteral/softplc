@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.scene.input.*?>
 <?import javafx.scene.control.*?>
 <?import java.lang.*?>
 <?import javafx.scene.layout.*?>
@@ -52,14 +53,29 @@
                                                 <MenuItem mnemonicParsing="false" onAction="#handleAddMemoryTableVariable" text="Add" />
                                                 <MenuItem mnemonicParsing="false" onAction="#handleDeleteMemoryTableVariable" text="Remove" />
                                                 <SeparatorMenuItem mnemonicParsing="false" />
-                                                <MenuItem mnemonicParsing="false" onAction="#handleReadMemoryTable" text="Read" />
-                                                <MenuItem mnemonicParsing="false" onAction="#handleWriteMemoryTableVariable" text="Write selected" />
+                                                <MenuItem mnemonicParsing="false" onAction="#handleReadMemoryTable" text="Read">
+                                                   <accelerator>
+                                                      <KeyCodeCombination alt="UP" code="R" control="DOWN" meta="UP" shift="UP" shortcut="UP" />
+                                                   </accelerator></MenuItem>
+                                                <MenuItem mnemonicParsing="false" onAction="#handleWriteMemoryTableVariable" text="Write selected">
+                                                   <accelerator>
+                                                      <KeyCodeCombination alt="UP" code="W" control="DOWN" meta="UP" shift="UP" shortcut="UP" />
+                                                   </accelerator></MenuItem>
                                                 <MenuItem mnemonicParsing="false" onAction="#handleWriteMemoryTable" text="Write all" />
                                                 <SeparatorMenuItem mnemonicParsing="false" />
-                                                <MenuItem mnemonicParsing="false" onAction="#handleToggleCommentVariable" text="Toggle Comment" />
+                                                <MenuItem mnemonicParsing="false" onAction="#handleToggleCommentVariable" text="Toggle Comment">
+                                                   <accelerator>
+                                                      <KeyCodeCombination alt="UP" code="C" control="DOWN" meta="UP" shift="UP" shortcut="UP" />
+                                                   </accelerator></MenuItem>
                                                 <SeparatorMenuItem mnemonicParsing="false" />
-                                                <CheckMenuItem fx:id="observeMemoryTableItem" mnemonicParsing="false" onAction="#handleObserveMemoryTable" text="Observe" />
-                                                <CheckMenuItem mnemonicParsing="false" onAction="#handleForceMemoryTable" text="Force" />
+                                                <CheckMenuItem fx:id="observeMemoryTableItem" mnemonicParsing="false" onAction="#handleObserveMemoryTable" text="Observe">
+                                                   <accelerator>
+                                                      <KeyCodeCombination alt="UP" code="V" control="DOWN" meta="UP" shift="UP" shortcut="UP" />
+                                                   </accelerator></CheckMenuItem>
+                                                <CheckMenuItem fx:id="forceMemoryTableItem" mnemonicParsing="false" onAction="#handleForceMemoryTable" text="Force">
+                                                   <accelerator>
+                                                      <KeyCodeCombination alt="UP" code="F" control="DOWN" meta="UP" shift="UP" shortcut="UP" />
+                                                   </accelerator></CheckMenuItem>
                                              </items>
                                           </ContextMenu>
                                        </contextMenu>

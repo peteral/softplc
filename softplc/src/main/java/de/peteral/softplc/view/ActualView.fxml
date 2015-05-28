@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.scene.input.*?>
 <?import javafx.scene.*?>
 <?import javafx.scene.control.*?>
 <?import java.lang.*?>
@@ -30,9 +31,13 @@
 										<MenuItem mnemonicParsing="false" text="Add" />
 										<MenuItem mnemonicParsing="false" text="Delete" />
 										<MenuItem mnemonicParsing="false" onAction="#handleStart" text="Start CPU">
-										</MenuItem>
+                                 <accelerator>
+                                    <KeyCodeCombination alt="DOWN" code="R" control="UP" meta="UP" shift="UP" shortcut="UP" />
+                                 </accelerator></MenuItem>
 										<MenuItem mnemonicParsing="false" onAction="#handleStop" text="Stop CPU">
-										</MenuItem>
+                                 <accelerator>
+                                    <KeyCodeCombination alt="DOWN" code="S" control="UP" meta="UP" shift="UP" shortcut="UP" />
+                                 </accelerator></MenuItem>
 										<SeparatorMenuItem mnemonicParsing="false" />
 										<MenuItem mnemonicParsing="false" onAction="#handleStartAll" text="Start All" />
 										<MenuItem mnemonicParsing="false" onAction="#handleStopAll" text="Stop All" />
