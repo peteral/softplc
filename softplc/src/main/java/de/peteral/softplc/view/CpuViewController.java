@@ -1,6 +1,8 @@
 package de.peteral.softplc.view;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
 
@@ -184,14 +186,32 @@ public class CpuViewController {
 
 	@FXML
 	private void handleWriteMemoryTable() {
+		List<MemoryTableVariable> variables = new ArrayList<>();
+
+		currentMemoryTable.getVariables().forEach(variable -> {
+			String value = variable.getNewValue().get().trim();
+
+			if (!value.isEmpty() && !value.startsWith("//")) {
+				variables.add(variable);
+			}
+		});
+
+		if (!variables.isEmpty()) {
+			currentCpu.addCommunicationTask(new MemoryTableWriteTask(variables
+					.toArray(new MemoryTableVariable[variables.size()])));
+		}
 	}
 
 	@FXML
 	private void handleWriteMemoryTableVariable() {
-		currentCpu
-				.addCommunicationTask(new MemoryTableWriteTask(
-						memoryTableVariableTable.getSelectionModel()
-								.getSelectedItem()));
+		MemoryTableVariable variable = memoryTableVariableTable
+				.getSelectionModel().getSelectedItem();
+
+		String value = variable.getNewValue().get().trim();
+
+		if (!value.isEmpty() && !value.startsWith("//")) {
+			currentCpu.addCommunicationTask(new MemoryTableWriteTask(variable));
+		}
 	}
 
 	@FXML
