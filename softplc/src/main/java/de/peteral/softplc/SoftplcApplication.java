@@ -1,6 +1,7 @@
 package de.peteral.softplc;
 
 import java.io.File;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.util.prefs.Preferences;
 
@@ -11,8 +12,21 @@ import javafx.scene.image.Image;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.BorderPane;
 import javafx.stage.Stage;
+
+import javax.xml.parsers.ParserConfigurationException;
+import javax.xml.transform.OutputKeys;
+import javax.xml.transform.Transformer;
+import javax.xml.transform.TransformerException;
+import javax.xml.transform.TransformerFactory;
+import javax.xml.transform.dom.DOMSource;
+import javax.xml.transform.stream.StreamResult;
+
+import org.w3c.dom.Document;
+
 import de.peteral.softplc.model.Plc;
 import de.peteral.softplc.plc.PlcFactory;
+import de.peteral.softplc.plc.PlcFactoryException;
+import de.peteral.softplc.transformer.PlcTransformer;
 import de.peteral.softplc.view.ActualViewController;
 import de.peteral.softplc.view.RootPanelController;
 
@@ -75,7 +89,11 @@ public class SoftplcApplication extends Application {
 		}
 	}
 
-	private File getLastOpenedFilePath() {
+	/**
+	 *
+	 * @return last opened / saved file
+	 */
+	public File getLastOpenedFilePath() {
 		Preferences prefs = Preferences
 				.userNodeForPackage(SoftplcApplication.class);
 		String filePath = prefs.get("filePath", null);
@@ -142,9 +160,14 @@ public class SoftplcApplication extends Application {
 	 *            file name
 	 */
 	public void loadPlcFromFile(File file) {
-		setPlc(new PlcFactory().create(file.getAbsolutePath()));
-		actualViewController.setPlc(getPlc());
-		setLastOpenedFilePath(file);
+		try {
+			setPlc(new PlcFactory().create(file.getAbsolutePath()));
+			actualViewController.setPlc(getPlc());
+			setLastOpenedFilePath(file);
+		} catch (PlcFactoryException e) {
+			e.printStackTrace();
+			// TODO error dialog
+		}
 	}
 
 	/**
@@ -160,5 +183,33 @@ public class SoftplcApplication extends Application {
 	 */
 	public void setPlc(Plc plc) {
 		this.plc = plc;
+	}
+
+	/**
+	 * Saves current configuration to a file
+	 *
+	 * @param file
+	 */
+	public void save(File file) {
+		try {
+			Document doc = new PlcTransformer().transform(getPlc());
+			TransformerFactory tf = TransformerFactory.newInstance();
+			Transformer transformer = tf.newTransformer();
+			transformer.setOutputProperty(OutputKeys.DOCTYPE_SYSTEM,
+					"softplc.dtd");
+			transformer.setOutputProperty(OutputKeys.INDENT, "yes");
+			transformer.setOutputProperty(
+					"{http://xml.apache.org/xslt}indent-amount", "4");
+			FileWriter writer = new FileWriter(file);
+			transformer.transform(new DOMSource(doc), new StreamResult(writer));
+
+			setLastOpenedFilePath(file);
+
+			// TODO handling for script files - do we copy them?
+		} catch (ParserConfigurationException | IOException
+				| TransformerException e) {
+			// TODO - error dialog
+			e.printStackTrace();
+		}
 	}
 }

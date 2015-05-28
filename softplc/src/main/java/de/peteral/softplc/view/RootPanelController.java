@@ -62,12 +62,33 @@ public class RootPanelController {
 
 	@FXML
 	private void handleSave() {
-
+		File currentFile = mainApp.getLastOpenedFilePath();
+		if (currentFile != null) {
+			mainApp.save(currentFile);
+		} else {
+			handleSaveAs();
+		}
 	}
 
 	@FXML
 	private void handleSaveAs() {
+		FileChooser fileChooser = new FileChooser();
 
+		// Set extension filter
+		FileChooser.ExtensionFilter extFilter = new FileChooser.ExtensionFilter(
+				"XML files (*.xml)", "*.xml");
+		fileChooser.getExtensionFilters().add(extFilter);
+
+		// Show save file dialog
+		File file = fileChooser.showSaveDialog(mainApp.getPrimaryStage());
+
+		if (file != null) {
+			// Make sure it has the correct extension
+			if (!file.getPath().endsWith(".xml")) {
+				file = new File(file.getPath() + ".xml");
+			}
+			mainApp.save(file);
+		}
 	}
 
 	@FXML
