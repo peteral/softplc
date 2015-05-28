@@ -290,18 +290,24 @@ public class CpuViewController {
 
 	@FXML
 	private void handleSaveSnapshot() {
+		// TODO implement
 	}
 
 	@FXML
 	private void handleLoadSnapshot() {
+		// TODO implement
 	}
 
 	@FXML
 	private void handleAddSourceFile() {
+		// TODO implement
 	}
 
 	@FXML
 	private void handleDeleteSourceFile() {
+		currentCpu.getProgram().getScriptFiles()
+				.removeAll(programTable.getSelectionModel().getSelectedItems());
+		currentCpu.loadProgram(currentCpu.getProgram());
 	}
 
 	@FXML

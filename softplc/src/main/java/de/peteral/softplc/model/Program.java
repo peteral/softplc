@@ -61,5 +61,4 @@ public interface Program extends Runnable {
 	 * stopped.
 	 */
 	void resetCycleTime();
-
 }
