@@ -126,9 +126,9 @@ public class PlcFactory {
 		int maxConnections = Integer.parseInt(cpuElement
 				.getAttribute("connections"));
 
-		Cpu cpu = new CpuImpl(slot, new ErrorLogImpl(),
-				new ScheduledThreadPoolExecutorFactory(), memory, maxBlockSize,
-				maxConnections);
+		Cpu cpu = new CpuImpl(cpuElement.getAttribute("name"), slot,
+				new ErrorLogImpl(), new ScheduledThreadPoolExecutorFactory(),
+				memory, maxBlockSize, maxConnections);
 
 		Program program = createProgram(cpuElement, cpu, path);
 

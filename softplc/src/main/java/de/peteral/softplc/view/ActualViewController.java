@@ -7,6 +7,7 @@ import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
+import javafx.scene.control.cell.TextFieldTableCell;
 import javafx.scene.layout.AnchorPane;
 import de.peteral.softplc.model.Cpu;
 import de.peteral.softplc.model.Plc;
@@ -21,6 +22,8 @@ public class ActualViewController {
 
 	@FXML
 	private TableView<Cpu> cpuTable;
+	@FXML
+	private TableColumn<Cpu, String> cpuNameColumn;
 	@FXML
 	private TableColumn<Cpu, Number> cpuSlotColumn;
 	@FXML
@@ -51,6 +54,8 @@ public class ActualViewController {
 				.getProgram().getTargetCycleTime());
 		cpuCycleActColumn.setCellValueFactory(cellData -> cellData.getValue()
 				.getProgram().getCurrentCycleTime());
+		cpuNameColumn.setCellValueFactory(data -> data.getValue().getName());
+		cpuNameColumn.setCellFactory(TextFieldTableCell.forTableColumn());
 
 		initCpuDetailScene();
 

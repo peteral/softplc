@@ -59,8 +59,8 @@ public class CpuImplTest {
 		when(program.getTargetCycleTime()).thenReturn(
 				new SimpleLongProperty(TARGET_CYCLE_TIME));
 
-		cpu = new CpuImpl(0, errorlog, executorFactory, memory, MAX_BLOCK_SIZE,
-				MAX_CONNECTIONS);
+		cpu = new CpuImpl("", 0, errorlog, executorFactory, memory,
+				MAX_BLOCK_SIZE, MAX_CONNECTIONS);
 	}
 
 	@Test

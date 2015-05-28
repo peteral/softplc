@@ -7,6 +7,7 @@
 
 <!ELEMENT cpu (memory, program)*>
 <!ATTLIST cpu
+	name		CDATA		""
 	slot		CDATA		#REQUIRED
 	connections	CDATA		"32"
 	maxBlockSize	CDATA	"222"

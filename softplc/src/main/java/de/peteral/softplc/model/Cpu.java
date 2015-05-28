@@ -121,4 +121,10 @@ public interface Cpu {
 	 * @return max connection count
 	 */
 	IntegerProperty getMaxConnections();
+
+	/**
+	 *
+	 * @return optional CPU name for organizational purposes
+	 */
+	StringProperty getName();
 }

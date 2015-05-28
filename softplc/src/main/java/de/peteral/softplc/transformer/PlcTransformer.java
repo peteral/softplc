@@ -44,6 +44,7 @@ public class PlcTransformer {
 	private void appendCpu(Document doc, Cpu cpu) {
 		Element cpuElement = doc.createElement("cpu");
 		cpuElement.setAttribute("slot", "" + cpu.getSlot().get());
+		cpuElement.setAttribute("name", cpu.getName().get());
 		cpuElement.setAttribute("connections", ""
 				+ cpu.getMaxConnections().get());
 		cpuElement.setAttribute("maxBlockSize", "" + cpu.getMaxDataSize());
