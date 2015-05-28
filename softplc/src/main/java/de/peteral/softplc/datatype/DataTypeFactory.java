@@ -187,7 +187,7 @@ public class DataTypeFactory {
 			converter.parseToBytes(value, address, result, 0);
 		} else {
 
-			String[] values = value.replaceAll("[", "").replaceAll("]", "")
+			String[] values = value.replaceAll("\\[", "").replaceAll("\\]", "")
 					.split(",");
 			for (int i = 0; i < address.getCount(); i++) {
 				converter.parseToBytes(values[i].trim(), address, result, i

@@ -250,4 +250,12 @@ public class PlcFactory {
 
 		return result;
 	}
+
+	/**
+	 *
+	 * @return new empty PLC instance
+	 */
+	public Plc createNew() {
+		return new PlcImpl(new PutGetServerImpl(PORT));
+	}
 }

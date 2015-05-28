@@ -93,7 +93,7 @@ public class RootPanelController {
 
 	@FXML
 	private void handleNew() {
-
+		mainApp.newPlc();
 	}
 
 	@FXML

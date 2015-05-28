@@ -47,7 +47,7 @@ public class SoftplcApplication extends Application {
 	@Override
 	public void start(Stage primaryStage) throws Exception {
 		this.primaryStage = primaryStage;
-		primaryStage.setTitle("Softplc");
+		setTitle("");
 
 		this.primaryStage.getIcons().add(
 				new Image(SoftplcApplication.class
@@ -63,10 +63,18 @@ public class SoftplcApplication extends Application {
 
 	}
 
+	private void setTitle(String appendix) {
+		primaryStage.setTitle("Softplc ["
+				+ SoftplcApplication.class.getPackage()
+						.getImplementationVersion() + "] " + appendix);
+	}
+
 	private void loadLastFile() {
 		File file = getLastOpenedFilePath();
 		if (file != null) {
 			loadPlcFromFile(file);
+		} else {
+			newPlc();
 		}
 	}
 
@@ -111,12 +119,12 @@ public class SoftplcApplication extends Application {
 			prefs.put("filePath", file.getPath());
 
 			// Update the stage title.
-			primaryStage.setTitle("Softplc - " + file.getName());
+			setTitle(" - " + file.getName());
 		} else {
 			prefs.remove("filePath");
 
 			// Update the stage title.
-			primaryStage.setTitle("Softplc");
+			setTitle("");
 		}
 	}
 
@@ -161,8 +169,8 @@ public class SoftplcApplication extends Application {
 	 */
 	public void loadPlcFromFile(File file) {
 		try {
-			setPlc(new PlcFactory().create(file.getAbsolutePath()));
-			actualViewController.setPlc(getPlc());
+			Plc newPlc = new PlcFactory().create(file.getAbsolutePath());
+			setPlc(newPlc);
 			setLastOpenedFilePath(file);
 		} catch (PlcFactoryException e) {
 			e.printStackTrace();
@@ -183,6 +191,7 @@ public class SoftplcApplication extends Application {
 	 */
 	public void setPlc(Plc plc) {
 		this.plc = plc;
+		actualViewController.setPlc(getPlc());
 	}
 
 	/**
@@ -211,5 +220,14 @@ public class SoftplcApplication extends Application {
 			// TODO - error dialog
 			e.printStackTrace();
 		}
+	}
+
+	/**
+	 * creates new empty configuration
+	 */
+	public void newPlc() {
+		Plc newPlc = new PlcFactory().createNew();
+		setPlc(newPlc);
+		setLastOpenedFilePath(null);
 	}
 }
