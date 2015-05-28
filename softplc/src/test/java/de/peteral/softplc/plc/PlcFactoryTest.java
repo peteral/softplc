@@ -7,6 +7,7 @@ import org.junit.Before;
 import org.junit.Test;
 import org.mockito.MockitoAnnotations;
 
+import de.peteral.softplc.memorytables.MemoryTable;
 import de.peteral.softplc.model.Cpu;
 import de.peteral.softplc.model.Memory;
 import de.peteral.softplc.model.Plc;
@@ -38,6 +39,11 @@ public class PlcFactoryTest {
 		assertEquals(222, cpu.getMaxDataSize());
 
 		assertNotNull(cpu.getProgram());
+
+		cpu = plc.getCpu(2);
+		MemoryTable table = cpu.getMemory().getMemoryTables().get(0);
+		assertNotNull(table);
+		assertEquals("table1", table.getName().get());
 	}
 
 	@Test

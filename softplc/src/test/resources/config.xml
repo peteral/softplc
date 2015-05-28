@@ -19,5 +19,11 @@
 		<program cycleTime="50">
 			<file>./program/main.js</file>
 		</program>
+		<tables>
+			<table name="table1">
+				<variable variable="DB100,X0.0"/>
+				<variable variable="DB100,W2" newValue="10"/>
+			</table>
+		</tables>
 	</cpu>
 </softplc>

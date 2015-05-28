@@ -1,4 +1,4 @@
-package de.peteral.softplc.transformer;
+package de.peteral.softplc.plc;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
@@ -7,6 +7,7 @@ import javax.xml.parsers.ParserConfigurationException;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
+import de.peteral.softplc.memorytables.MemoryTable;
 import de.peteral.softplc.model.Cpu;
 import de.peteral.softplc.model.MemoryArea;
 import de.peteral.softplc.model.Plc;
@@ -63,6 +64,36 @@ public class PlcTransformer {
 		programElement.setAttribute("cycleTime", "" + cpu.getTargetCycleTime());
 		cpu.getProgram().getScriptFiles()
 				.forEach(file -> addFile(file, programElement, doc));
+
+		if (!cpu.getMemory().getMemoryTables().isEmpty()) {
+			Element memoryTablesElement = doc.createElement("tables");
+			cpuElement.appendChild(memoryTablesElement);
+
+			cpu.getMemory()
+					.getMemoryTables()
+					.forEach(
+							table -> addMemoryTable(memoryTablesElement, table,
+									doc));
+		}
+	}
+
+	private void addMemoryTable(Element memoryTablesElement, MemoryTable table,
+			Document doc) {
+
+		Element tableElement = doc.createElement("table");
+		tableElement.setAttribute("name", table.getName().get());
+		memoryTablesElement.appendChild(tableElement);
+
+		table.getVariables().forEach(
+				variable -> {
+					Element variableElement = doc.createElement("variable");
+					variableElement.setAttribute("variable", variable
+							.getVariable().get());
+					String newValue = variable.getNewValue().get();
+					variableElement.setAttribute("newValue",
+							(newValue == null) ? "" : newValue);
+					tableElement.appendChild(variableElement);
+				});
 	}
 
 	private void addFile(ScriptFile file, Element programElement, Document doc) {

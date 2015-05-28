@@ -33,6 +33,8 @@ import de.peteral.softplc.datatype.DataTypeFactory;
 import de.peteral.softplc.executor.ScheduledThreadPoolExecutorFactory;
 import de.peteral.softplc.memory.MemoryAreaImpl;
 import de.peteral.softplc.memory.MemoryImpl;
+import de.peteral.softplc.memorytables.MemoryTable;
+import de.peteral.softplc.memorytables.MemoryTableVariable;
 import de.peteral.softplc.model.Cpu;
 import de.peteral.softplc.model.Memory;
 import de.peteral.softplc.model.MemoryArea;
@@ -130,11 +132,40 @@ public class PlcFactory {
 				new ErrorLogImpl(), new ScheduledThreadPoolExecutorFactory(),
 				memory, maxBlockSize, maxConnections);
 
+		createTables(cpu, cpuElement);
+
 		Program program = createProgram(cpuElement, cpu, path);
 
 		cpu.loadProgram(program);
 
 		return cpu;
+	}
+
+	private void createTables(Cpu cpu, Element cpuElement) {
+		List<Element> tablesElements = getChildrenByName(cpuElement, "tables");
+		if (tablesElements.size() == 0) {
+			return;
+		}
+
+		tablesElements.forEach(tablesElement -> {
+			List<Element> tableElements = getChildrenByName(tablesElement,
+					"table");
+			tableElements
+					.forEach(tableElement -> createTable(tableElement, cpu));
+		});
+	}
+
+	private void createTable(Element tableElement, Cpu cpu) {
+		MemoryTable table = new MemoryTable();
+		table.getName().set(tableElement.getAttribute("name"));
+		cpu.getMemory().getMemoryTables().add(table);
+
+		List<Element> variableElements = getChildrenByName(tableElement,
+				"variable");
+		variableElements.forEach(variableElement -> table.getVariables().add(
+				new MemoryTableVariable(variableElement
+						.getAttribute("variable"), variableElement
+						.getAttribute("newValue"))));
 	}
 
 	private Program createProgram(Element cpuElement, Cpu cpu, String path)

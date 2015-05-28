@@ -5,12 +5,25 @@
 	file	CDATA	#REQUIRED
 >
 
-<!ELEMENT cpu (memory, program)*>
+<!ELEMENT cpu (memory | program | tables)*>
 <!ATTLIST cpu
 	name		CDATA		""
 	slot		CDATA		#REQUIRED
 	connections	CDATA		"32"
 	maxBlockSize	CDATA	"222"
+>
+
+<!ELEMENT tables (table)*>
+
+<!ELEMENT table (variable)*>
+<!ATTLIST table
+	name	CDATA	""
+>
+
+<!ELEMENT variable EMPTY>
+<!ATTLIST variable
+	variable	CDATA 	#REQUIRED
+	newValue	CDATA	""
 >
 
 <!ELEMENT memory (area)*>

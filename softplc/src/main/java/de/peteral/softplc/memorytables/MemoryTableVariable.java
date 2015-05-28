@@ -15,6 +15,26 @@ public class MemoryTableVariable {
 	private final StringProperty newValue = new SimpleStringProperty();
 
 	/**
+	 * This constructor is used during configuration parsing.
+	 *
+	 * @param name
+	 *            variable name
+	 * @param newValue
+	 *            new value
+	 */
+	public MemoryTableVariable(String name, String newValue) {
+		variable.set(name);
+		this.newValue.set(newValue);
+	}
+
+	/**
+	 * Default constructor.
+	 */
+	public MemoryTableVariable() {
+
+	}
+
+	/**
 	 * @return the variable
 	 */
 	public StringProperty getVariable() {

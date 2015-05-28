@@ -1,4 +1,4 @@
-package de.peteral.softplc.transformer;
+package de.peteral.softplc.plc;
 
 import static org.junit.Assert.assertEquals;
 
@@ -28,6 +28,7 @@ import org.xml.sax.SAXException;
 
 import de.peteral.softplc.model.Plc;
 import de.peteral.softplc.plc.PlcFactory;
+import de.peteral.softplc.plc.PlcTransformer;
 
 @SuppressWarnings("javadoc")
 public class PlcTransformerTest {
