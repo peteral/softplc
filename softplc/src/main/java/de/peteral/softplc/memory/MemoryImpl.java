@@ -1,7 +1,5 @@
 package de.peteral.softplc.memory;
 
-import java.util.HashMap;
-import java.util.Map;
 import java.util.logging.Level;
 
 import javafx.collections.FXCollections;
@@ -24,8 +22,7 @@ import de.peteral.softplc.model.MemoryArea;
  */
 public class MemoryImpl implements Memory {
 
-	private final Map<String, MemoryArea> memoryAreas = new HashMap<>();
-	private final ObservableList<MemoryArea> memoryAreaList = FXCollections
+	private final ObservableList<MemoryArea> memoryAreas = FXCollections
 			.observableArrayList();
 	private final ObservableList<MemoryTable> memoryTables = FXCollections
 			.observableArrayList();
@@ -54,10 +51,10 @@ public class MemoryImpl implements Memory {
 
 	@Override
 	public MemoryArea getMemoryArea(String key) {
-		MemoryArea result = memoryAreas.get(key);
-
-		if (result != null) {
-			return result;
+		for (MemoryArea area : memoryAreas) {
+			if (area.getAreaCode().get().equals(key)) {
+				return area;
+			}
 		}
 
 		throw new MemoryAccessViolationException("Invalid memory area [" + key
@@ -157,8 +154,8 @@ public class MemoryImpl implements Memory {
 	}
 
 	@Override
-	public ObservableList<MemoryArea> getMemoryAreaList() {
-		return memoryAreaList;
+	public ObservableList<MemoryArea> getMemoryAreas() {
+		return memoryAreas;
 	}
 
 	@Override
@@ -188,16 +185,14 @@ public class MemoryImpl implements Memory {
 
 	@Override
 	public void removeMemoryAreas(ObservableList<MemoryArea> toDelete) {
-		memoryAreas.values().removeAll(toDelete);
-		memoryAreaList.removeAll(toDelete);
+		memoryAreas.removeAll(toDelete);
 	}
 
 	@Override
 	public void addMemoryArea(MemoryArea memoryArea) {
-		memoryAreas.put(memoryArea.getAreaCode().get(), memoryArea);
-		memoryAreaList.add(memoryArea);
+		memoryAreas.add(memoryArea);
 
-		memoryAreaList.sort((m1, m2) -> m1.getAreaCode().get()
+		memoryAreas.sort((m1, m2) -> m1.getAreaCode().get()
 				.compareTo(m2.getAreaCode().get()));
 	}
 }

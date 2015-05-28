@@ -54,7 +54,7 @@ public class PlcTransformer {
 		Element memoryElement = doc.createElement("memory");
 		cpuElement.appendChild(memoryElement);
 		cpu.getMemory()
-				.getMemoryAreaList()
+				.getMemoryAreas()
 				.forEach(
 						memoryArea -> appendMemoryArea(memoryArea,
 								memoryElement, doc));

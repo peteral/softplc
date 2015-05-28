@@ -11,6 +11,7 @@ import javafx.scene.control.CheckMenuItem;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.cell.TextFieldTableCell;
+import javafx.util.converter.NumberStringConverter;
 import de.peteral.softplc.cpu.ErrorLogEntry;
 import de.peteral.softplc.memorytables.MemoryTable;
 import de.peteral.softplc.memorytables.MemoryTableUpdateTask;
@@ -86,8 +87,12 @@ public class CpuViewController {
 	private void initialize() {
 		memoryAreaColumn.setCellValueFactory(cellData -> cellData.getValue()
 				.getAreaCode());
+		memoryAreaColumn.setCellFactory(TextFieldTableCell.forTableColumn());
+
 		memorySizeColumn.setCellValueFactory(cellData -> cellData.getValue()
 				.getSize());
+		memorySizeColumn.setCellFactory(TextFieldTableCell
+				.forTableColumn(new NumberStringConverter()));
 
 		memoryTableNameColumn.setCellValueFactory(cellData -> cellData
 				.getValue().getName());
@@ -144,7 +149,7 @@ public class CpuViewController {
 			memoryTableTable.setItems(null);
 			errorLogTable.setItems(null);
 		} else {
-			memoryTable.setItems(newValue.getMemory().getMemoryAreaList());
+			memoryTable.setItems(newValue.getMemory().getMemoryAreas());
 			programTable.setItems(newValue.getProgram().getScriptFiles());
 			memoryTableTable.setItems(newValue.getMemory().getMemoryTables());
 			errorLogTable.setItems(newValue.getErrorLog().getEntries());

@@ -103,7 +103,7 @@ public interface Memory {
 	 *
 	 * @return observable list of all memory areas
 	 */
-	ObservableList<MemoryArea> getMemoryAreaList();
+	ObservableList<MemoryArea> getMemoryAreas();
 
 	/**
 	 * @return list of all memory tables associated with this CPU memory.

@@ -19,7 +19,7 @@ public class MemoryAreaImpl implements MemoryArea {
 
 	private final StringProperty areaCode;
 	private final IntegerProperty size;
-	private final byte[] buffer;
+	private byte[] buffer;
 	private final Logger logger;
 	private final boolean defaultArea;
 
@@ -39,6 +39,8 @@ public class MemoryAreaImpl implements MemoryArea {
 		this.size = new SimpleIntegerProperty(size);
 		buffer = new byte[size];
 		logger = Logger.getLogger("memory." + areaCode);
+
+		this.size.addListener(event -> buffer = new byte[this.size.get()]);
 	}
 
 	@Override
@@ -65,8 +67,8 @@ public class MemoryAreaImpl implements MemoryArea {
 	private void checkValid(int offset, int size, String method) {
 		if ((offset < 0) || ((offset + size) > buffer.length)) {
 			throw new MemoryAccessViolationException("Invalid " + method
-					+ " access areaCode = " + areaCode + ", offset = " + offset
-					+ ", len = " + size);
+					+ " access areaCode = " + areaCode.get() + ", offset = "
+					+ offset + ", len = " + size);
 		}
 	}
 
