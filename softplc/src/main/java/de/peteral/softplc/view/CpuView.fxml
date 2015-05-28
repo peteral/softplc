@@ -53,7 +53,8 @@
                                                 <MenuItem mnemonicParsing="false" onAction="#handleDeleteMemoryTableVariable" text="Remove" />
                                                 <SeparatorMenuItem mnemonicParsing="false" />
                                                 <MenuItem mnemonicParsing="false" onAction="#handleReadMemoryTable" text="Read" />
-                                                <MenuItem mnemonicParsing="false" onAction="#handleWriteMemoryTable" text="Write" />
+                                                <MenuItem mnemonicParsing="false" onAction="#handleWriteMemoryTableVariable" text="Write selected" />
+                                                <MenuItem mnemonicParsing="false" onAction="#handleWriteMemoryTable" text="Write all" />
                                                 <SeparatorMenuItem mnemonicParsing="false" />
                                                 <CheckMenuItem mnemonicParsing="false" onAction="#handleObserveMemoryTable" text="Observe" />
                                                 <CheckMenuItem mnemonicParsing="false" onAction="#handleForceMemoryTable" text="Force" />

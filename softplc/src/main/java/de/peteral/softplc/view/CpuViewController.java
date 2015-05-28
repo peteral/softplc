@@ -8,6 +8,7 @@ import javafx.scene.control.TableView;
 import javafx.scene.control.cell.TextFieldTableCell;
 import de.peteral.softplc.cpu.ErrorLogEntry;
 import de.peteral.softplc.memorytables.MemoryTable;
+import de.peteral.softplc.memorytables.MemoryTableUpdateTask;
 import de.peteral.softplc.memorytables.MemoryTableVariable;
 import de.peteral.softplc.model.Cpu;
 import de.peteral.softplc.model.MemoryArea;
@@ -165,6 +166,8 @@ public class CpuViewController {
 
 	@FXML
 	private void handleReadMemoryTable() {
+		currentCpu.addCommunicationTask(new MemoryTableUpdateTask(
+				currentMemoryTable));
 	}
 
 	@FXML
@@ -172,7 +175,12 @@ public class CpuViewController {
 	}
 
 	@FXML
+	private void handleWriteMemoryTableVariable() {
+	}
+
+	@FXML
 	private void handleObserveMemoryTable() {
+
 	}
 
 	@FXML
