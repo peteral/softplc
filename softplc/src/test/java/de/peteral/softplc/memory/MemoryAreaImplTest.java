@@ -21,7 +21,7 @@ public class MemoryAreaImplTest {
 	public void setup() {
 		MockitoAnnotations.initMocks(this);
 
-		area = new MemoryAreaImpl(AREA_CODE, SIZE);
+		area = new MemoryAreaImpl(AREA_CODE, SIZE, false);
 	}
 
 	@Test

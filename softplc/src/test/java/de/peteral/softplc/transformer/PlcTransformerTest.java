@@ -68,6 +68,7 @@ public class PlcTransformerTest {
 				"{http://xml.apache.org/xslt}indent-amount", "4");
 		StringWriter writer = new StringWriter();
 		transformer.transform(new DOMSource(doc), new StreamResult(writer));
-		return writer.toString().replaceAll("\t", "    ");
+		return writer.toString().replaceAll("\t", "    ")
+				.replaceAll("^\\s*\\n", "");
 	}
 }

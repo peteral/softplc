@@ -76,4 +76,10 @@ public interface MemoryArea {
 	 * @return logger for this memory area
 	 */
 	Logger getLogger();
+
+	/**
+	 *
+	 * @return default memory area is added automatically even if not configured
+	 */
+	boolean isDefaultArea();
 }

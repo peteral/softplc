@@ -21,6 +21,7 @@ public class MemoryAreaImpl implements MemoryArea {
 	private final IntegerProperty size;
 	private final byte[] buffer;
 	private final Logger logger;
+	private final boolean defaultArea;
 
 	/**
 	 * Creates a new instance.
@@ -29,8 +30,11 @@ public class MemoryAreaImpl implements MemoryArea {
 	 *            identifier of this {@link MemoryArea}
 	 * @param size
 	 *            total size in bytes
+	 * @param defaultArea
+	 *            true - automatically added memory area, bypass during save
 	 */
-	public MemoryAreaImpl(String areaCode, int size) {
+	public MemoryAreaImpl(String areaCode, int size, boolean defaultArea) {
+		this.defaultArea = defaultArea;
 		this.areaCode = new SimpleStringProperty(areaCode);
 		this.size = new SimpleIntegerProperty(size);
 		buffer = new byte[size];
@@ -85,5 +89,10 @@ public class MemoryAreaImpl implements MemoryArea {
 	@Override
 	public Logger getLogger() {
 		return logger;
+	}
+
+	@Override
+	public boolean isDefaultArea() {
+		return defaultArea;
 	}
 }

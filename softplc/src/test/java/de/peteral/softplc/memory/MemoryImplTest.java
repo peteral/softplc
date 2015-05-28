@@ -117,7 +117,7 @@ public class MemoryImplTest {
 	@Test
 	public void getBit_TestData_ReturnsCorrectValue() {
 		memory = new MemoryImpl(new AddressParserFactory(),
-				new DataTypeFactory(), new MemoryAreaImpl("M", 100));
+				new DataTypeFactory(), new MemoryAreaImpl("M", 100, false));
 
 		memory.writeBytes("M", 1, new byte[] { (byte) 128 });
 
@@ -127,7 +127,7 @@ public class MemoryImplTest {
 	@Test
 	public void setBit_TestData_WritesCorrectValue() {
 		memory = new MemoryImpl(new AddressParserFactory(),
-				new DataTypeFactory(), new MemoryAreaImpl("M", 100));
+				new DataTypeFactory(), new MemoryAreaImpl("M", 100, false));
 
 		memory.setBit("M,X1.7", true);
 

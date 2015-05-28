@@ -72,6 +72,11 @@ public class PlcTransformer {
 
 	private void appendMemoryArea(MemoryArea memoryArea, Element memoryElement,
 			Document doc) {
+
+		if (memoryArea.isDefaultArea()) {
+			return;
+		}
+
 		Element memoryAreaElement = doc.createElement("area");
 		memoryAreaElement.setAttribute("name", memoryArea.getAreaCode().get());
 		memoryAreaElement.setAttribute("size", "" + memoryArea.getSize().get());

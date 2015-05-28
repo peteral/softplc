@@ -6,19 +6,16 @@
 			<area name="DB100" size="2000" />
 			<area name="DB101" size="1000" />
 		</memory>
-
 		<program cycleTime="50">
 			<file>./program/main.js</file>
 		</program>
 	</cpu>
-
 	<cpu slot="2" maxBlockSize="400">
 		<memory>
-			<area name="M" size="8000"/>
 			<area name="DB100" size="2000" />
 			<area name="DB101" size="1000" />
+			<area name="M" size="8000"/>
 		</memory>
-
 		<program cycleTime="50">
 			<file>./program/main.js</file>
 		</program>

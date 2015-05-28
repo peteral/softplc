@@ -183,7 +183,7 @@ public class PlcFactory {
 				String name = areaElement.getAttribute("name");
 				int size = Integer.parseInt(areaElement.getAttribute("size"));
 
-				areas.put(name, new MemoryAreaImpl(name, size));
+				areas.put(name, new MemoryAreaImpl(name, size, false));
 			});
 		});
 
@@ -194,7 +194,7 @@ public class PlcFactory {
 						areas.put(
 								entry.getKey(),
 								new MemoryAreaImpl(entry.getKey(), entry
-										.getValue()));
+										.getValue(), true));
 					}
 				});
 
