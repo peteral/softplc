@@ -207,6 +207,10 @@ public class CpuViewController {
 		MemoryTableVariable variable = memoryTableVariableTable
 				.getSelectionModel().getSelectedItem();
 
+		if (variable == null) {
+			return;
+		}
+
 		String value = variable.getNewValue().get().trim();
 
 		if (!value.isEmpty() && !value.startsWith("//")) {
@@ -262,6 +266,28 @@ public class CpuViewController {
 
 	@FXML
 	private void handleDeleteSourceFile() {
+	}
+
+	@FXML
+	private void handleToggleCommentVariable() {
+		MemoryTableVariable variable = memoryTableVariableTable
+				.getSelectionModel().getSelectedItem();
+
+		if (variable == null) {
+			return;
+		}
+
+		String value = variable.getNewValue().get().trim();
+
+		if (value.isEmpty()) {
+			return;
+		}
+
+		if (value.startsWith("//")) {
+			variable.getNewValue().set(value.substring(2));
+		} else {
+			variable.getNewValue().set("//" + value);
+		}
 	}
 
 }
