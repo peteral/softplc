@@ -176,7 +176,7 @@ public class CpuViewController {
 
 	@FXML
 	private void handleDeleteMemoryTable() {
-
+		currentCpu.getMemory().getMemoryTables().remove(currentMemoryTable);
 	}
 
 	@FXML
