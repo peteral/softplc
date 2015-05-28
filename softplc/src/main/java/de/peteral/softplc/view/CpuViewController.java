@@ -186,6 +186,10 @@ public class CpuViewController {
 
 	@FXML
 	private void handleDeleteMemoryTableVariable() {
+		currentMemoryTable.getVariables()
+				.removeAll(
+						memoryTableVariableTable.getSelectionModel()
+								.getSelectedItems());
 	}
 
 	@FXML
