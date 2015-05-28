@@ -1,8 +1,11 @@
 package de.peteral.softplc.view;
 
 import java.time.LocalDate;
+import java.util.Timer;
+import java.util.TimerTask;
 
 import javafx.fxml.FXML;
+import javafx.scene.control.CheckMenuItem;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.cell.TextFieldTableCell;
@@ -11,6 +14,7 @@ import de.peteral.softplc.memorytables.MemoryTable;
 import de.peteral.softplc.memorytables.MemoryTableUpdateTask;
 import de.peteral.softplc.memorytables.MemoryTableVariable;
 import de.peteral.softplc.model.Cpu;
+import de.peteral.softplc.model.CpuStatus;
 import de.peteral.softplc.model.MemoryArea;
 import de.peteral.softplc.program.ScriptFile;
 
@@ -21,6 +25,7 @@ import de.peteral.softplc.program.ScriptFile;
  *
  */
 public class CpuViewController {
+	private static final long OBSERVE_PERIOD = 100L;
 	@FXML
 	private TableView<MemoryArea> memoryTable;
 	@FXML
@@ -46,6 +51,8 @@ public class CpuViewController {
 	private TableColumn<MemoryTableVariable, String> memoryTableVariableCurrentColumn;
 	@FXML
 	private TableColumn<MemoryTableVariable, String> memoryTableVariableNewColumn;
+	@FXML
+	private CheckMenuItem observeMemoryTableItem;
 
 	@FXML
 	private TableView<ErrorLogEntry> errorLogTable;
@@ -60,6 +67,8 @@ public class CpuViewController {
 
 	private Cpu currentCpu;
 	private MemoryTable currentMemoryTable;
+	private TimerTask updateMemoryTableTask;
+	private Timer timer;
 
 	/**
 	 * Initializes the controller class. This method is automatically called
@@ -100,6 +109,8 @@ public class CpuViewController {
 				.getModule());
 		errorLogMessageColumn.setCellValueFactory(data -> data.getValue()
 				.getMessage());
+
+		timer = new Timer();
 
 		update(null);
 
@@ -180,7 +191,24 @@ public class CpuViewController {
 
 	@FXML
 	private void handleObserveMemoryTable() {
+		if (observeMemoryTableItem.isSelected()) {
+			// start background task
+			updateMemoryTableTask = new TimerTask() {
+				@Override
+				public void run() {
+					if ((currentCpu.getStatus() == CpuStatus.RUN)
+							&& (currentMemoryTable != null)) {
+						handleReadMemoryTable();
+					}
+				}
+			};
 
+			timer.scheduleAtFixedRate(updateMemoryTableTask, 0, OBSERVE_PERIOD);
+		} else {
+			// stop background task
+			updateMemoryTableTask.cancel();
+			timer.purge();
+		}
 	}
 
 	@FXML

@@ -56,7 +56,7 @@
                                                 <MenuItem mnemonicParsing="false" onAction="#handleWriteMemoryTableVariable" text="Write selected" />
                                                 <MenuItem mnemonicParsing="false" onAction="#handleWriteMemoryTable" text="Write all" />
                                                 <SeparatorMenuItem mnemonicParsing="false" />
-                                                <CheckMenuItem mnemonicParsing="false" onAction="#handleObserveMemoryTable" text="Observe" />
+                                                <CheckMenuItem fx:id="observeMemoryTableItem" mnemonicParsing="false" onAction="#handleObserveMemoryTable" text="Observe" />
                                                 <CheckMenuItem mnemonicParsing="false" onAction="#handleForceMemoryTable" text="Force" />
                                              </items>
                                           </ContextMenu>
