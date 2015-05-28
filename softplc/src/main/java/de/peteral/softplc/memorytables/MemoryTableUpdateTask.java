@@ -28,12 +28,16 @@ public class MemoryTableUpdateTask implements CommunicationTask {
 	public void execute(Cpu cpu) {
 		memoryTable.getVariables().forEach(
 				variable -> {
-					Object read = cpu.getMemory().read(
-							variable.getVariable().get());
-					String strValue = (read.getClass().isArray()) ? Arrays
-							.toString((Object[]) read) : "" + read;
+					try {
+						Object read = cpu.getMemory().read(
+								variable.getVariable().get());
+						String strValue = (read.getClass().isArray()) ? Arrays
+								.toString((Object[]) read) : "" + read;
 
-					variable.getCurrentValue().set(strValue);
+						variable.getCurrentValue().set(strValue);
+					} catch (Exception e) {
+						variable.getCurrentValue().set(e.getMessage());
+					}
 				});
 	}
 
