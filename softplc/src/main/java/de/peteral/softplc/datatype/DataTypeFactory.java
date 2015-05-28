@@ -171,4 +171,30 @@ public class DataTypeFactory {
 		return address.getCount()
 				* (getHeaderSize(address) + (address.getSize() * getElementSize(address)));
 	}
+
+	/**
+	 * Converts value encoded as string into bytes array
+	 *
+	 * @param value
+	 * @param address
+	 * @return byte array containing address
+	 */
+	public byte[] parseToBytes(String value, ParsedAddress address) {
+		byte[] result = new byte[getByteArraySize(address) * address.getCount()];
+
+		Converter converter = CONVERTERS.get(address.getTypeName());
+		if (address.getCount() == 1) {
+			converter.parseToBytes(value, address, result, 0);
+		} else {
+
+			String[] values = value.replaceAll("[", "").replaceAll("]", "")
+					.split(",");
+			for (int i = 0; i < address.getCount(); i++) {
+				converter.parseToBytes(values[i].trim(), address, result, i
+						* getByteArraySize(address));
+			}
+		}
+
+		return result;
+	}
 }

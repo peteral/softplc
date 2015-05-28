@@ -52,4 +52,11 @@ public class StringConverter implements Converter<String> {
 
 		return new String(bytes, offset, length);
 	}
+
+	@Override
+	public void parseToBytes(String value, ParsedAddress address,
+			byte[] buffer, int offset) {
+
+		toBytes(value, address, buffer, offset);
+	}
 }

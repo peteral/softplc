@@ -47,4 +47,17 @@ public interface Converter<T> {
 	 * @return uninitialized array of element
 	 */
 	T[] createArray(int count);
+
+	/**
+	 * Converts string to byte array
+	 *
+	 * @param value
+	 *            the java value to be converted
+	 * @param address
+	 * @param buffer
+	 *            byte buffer
+	 * @param offset
+	 */
+	void parseToBytes(String value, ParsedAddress address, byte[] buffer,
+			int offset);
 }

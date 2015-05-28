@@ -169,4 +169,24 @@ public class MemoryImpl implements Memory {
 	public ObservableList<MemoryTable> getMemoryTables() {
 		return memoryTables;
 	}
+
+	@Override
+	public void parse(String address, String value) {
+		ParsedAddress parser = addressParserFactory.parse(address);
+
+		if (parser.getTypeName().equals("X")) {
+			setBit(address, Boolean.parseBoolean(value));
+			return;
+		}
+
+		MemoryArea memoryArea = getMemoryArea(parser.getAreaCode());
+
+		memoryArea.writeBytes(parser.getOffset(),
+				dataTypeFactory.parseToBytes(value, parser));
+
+		if ((memoryArea.getLogger() != null)
+				&& memoryArea.getLogger().isLoggable(Level.FINE)) {
+			memoryArea.getLogger().fine("Parse: " + address + " = " + value);
+		}
+	}
 }

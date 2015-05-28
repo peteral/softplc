@@ -8,32 +8,31 @@ import de.peteral.softplc.model.Converter;
  *
  * @author peteral
  */
-public class IntConverter
-    implements Converter<Number>
-{
-    private WordConverter wordConverter = new WordConverter();
+public class IntConverter implements Converter<Number> {
+	private final WordConverter wordConverter = new WordConverter();
 
-    @Override
-    public Number[] createArray(int count)
-    {
-        return new Short[count];
-    }
+	@Override
+	public Number[] createArray(int count) {
+		return new Short[count];
+	}
 
-    @Override
-    public void toBytes(Number value,
-                        ParsedAddress address,
-                        byte[] buffer,
-                        int offset)
-    {
-        wordConverter.toBytes(value, address, buffer, offset);
-    }
+	@Override
+	public void toBytes(Number value, ParsedAddress address, byte[] buffer,
+			int offset) {
+		wordConverter.toBytes(value, address, buffer, offset);
+	}
 
-    @Override
-    public Number fromBytes(byte[] bytes, ParsedAddress address, int offset)
-    {
-        int intValue = (int) wordConverter.fromBytes(bytes, address, offset);
+	@Override
+	public Number fromBytes(byte[] bytes, ParsedAddress address, int offset) {
+		int intValue = (int) wordConverter.fromBytes(bytes, address, offset);
 
-        return (short) intValue;
-    }
+		return (short) intValue;
+	}
 
+	@Override
+	public void parseToBytes(String value, ParsedAddress address,
+			byte[] buffer, int offset) {
+
+		toBytes(Short.parseShort(value), address, buffer, offset);
+	}
 }

@@ -37,4 +37,11 @@ public class S7StringConverter implements Converter<String> {
 		return null;
 	}
 
+	@Override
+	public void parseToBytes(String value, ParsedAddress address,
+			byte[] buffer, int offset) {
+		// TODO Auto-generated method stub
+
+	}
+
 }

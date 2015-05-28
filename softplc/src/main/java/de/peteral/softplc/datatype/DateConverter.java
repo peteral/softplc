@@ -32,4 +32,11 @@ public class DateConverter implements Converter<Date> {
 		return null;
 	}
 
+	@Override
+	public void parseToBytes(String value, ParsedAddress address,
+			byte[] buffer, int offset) {
+		// TODO Auto-generated method stub
+
+	}
+
 }

@@ -109,4 +109,12 @@ public interface Memory {
 	 * @return list of all memory tables associated with this CPU memory.
 	 */
 	ObservableList<MemoryTable> getMemoryTables();
+
+	/**
+	 * Writes value to memory. Value is encoded as a string.
+	 *
+	 * @param address
+	 * @param value
+	 */
+	void parse(String address, String value);
 }

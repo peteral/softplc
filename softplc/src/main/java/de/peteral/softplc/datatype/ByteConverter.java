@@ -8,30 +8,30 @@ import de.peteral.softplc.model.Converter;
  *
  * @author peteral
  */
-public class ByteConverter
-    implements Converter<Number>
-{
+public class ByteConverter implements Converter<Number> {
 
-    @Override
-    public Number[] createArray(int count)
-    {
-        return new Integer[count];
-    }
+	@Override
+	public Number[] createArray(int count) {
+		return new Integer[count];
+	}
 
-    @Override
-    public void toBytes(Number value,
-                        ParsedAddress address,
-                        byte[] buffer,
-                        int offset)
-    {
+	@Override
+	public void toBytes(Number value, ParsedAddress address, byte[] buffer,
+			int offset) {
 
-        buffer[offset] = value.byteValue();
-    }
+		buffer[offset] = value.byteValue();
+	}
 
-    @Override
-    public Number fromBytes(byte[] bytes, ParsedAddress address, int offset)
-    {
-        return Integer.valueOf(DataTypeUtils.byteToInt(bytes[offset]));
-    }
+	@Override
+	public Number fromBytes(byte[] bytes, ParsedAddress address, int offset) {
+		return Integer.valueOf(DataTypeUtils.byteToInt(bytes[offset]));
+	}
+
+	@Override
+	public void parseToBytes(String value, ParsedAddress address,
+			byte[] buffer, int offset) {
+
+		toBytes(Byte.parseByte(value), address, buffer, offset);
+	}
 
 }

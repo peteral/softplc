@@ -13,6 +13,7 @@ import de.peteral.softplc.cpu.ErrorLogEntry;
 import de.peteral.softplc.memorytables.MemoryTable;
 import de.peteral.softplc.memorytables.MemoryTableUpdateTask;
 import de.peteral.softplc.memorytables.MemoryTableVariable;
+import de.peteral.softplc.memorytables.MemoryTableWriteTask;
 import de.peteral.softplc.model.Cpu;
 import de.peteral.softplc.model.CpuStatus;
 import de.peteral.softplc.model.MemoryArea;
@@ -187,6 +188,10 @@ public class CpuViewController {
 
 	@FXML
 	private void handleWriteMemoryTableVariable() {
+		currentCpu
+				.addCommunicationTask(new MemoryTableWriteTask(
+						memoryTableVariableTable.getSelectionModel()
+								.getSelectedItem()));
 	}
 
 	@FXML
