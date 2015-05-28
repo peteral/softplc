@@ -35,9 +35,9 @@ public class SoftplcApplication extends Application {
 		this.primaryStage = primaryStage;
 		primaryStage.setTitle("Softplc");
 
-		// FIXME icon path
 		this.primaryStage.getIcons().add(
-				new Image("file:src/main/resources/images/softplc_32.png"));
+				new Image(SoftplcApplication.class
+						.getResourceAsStream("/images/softplc_32.png")));
 
 		this.primaryStage.setOnCloseRequest(event -> System.exit(0));
 
