@@ -35,10 +35,11 @@ public class CpuImpl implements Cpu, ProgramCycleObserver {
 	private final List<CommunicationTask> pendingTasks = new ArrayList<>();
 	private final Memory memory;
 	private final IntegerProperty slot;
-	private final int maxBlockSize;
+	private final IntegerProperty maxBlockSize = new SimpleIntegerProperty();
 	private final ScheduledThreadPoolExecutorFactory executorFactory;
 	private final IntegerProperty maxConnections = new SimpleIntegerProperty();
 	private final StringProperty name = new SimpleStringProperty();
+	private final IntegerProperty currentConnections = new SimpleIntegerProperty();
 
 	/**
 	 * Creates a new instance.
@@ -65,7 +66,7 @@ public class CpuImpl implements Cpu, ProgramCycleObserver {
 		this.slot = new SimpleIntegerProperty(slot);
 		this.errorlog = errorlog;
 		this.memory = memory;
-		this.maxBlockSize = maxBlockSize;
+		this.maxBlockSize.set(maxBlockSize);
 		this.maxConnections.set(maxConnections);
 		this.name.set(name);
 	}
@@ -194,7 +195,7 @@ public class CpuImpl implements Cpu, ProgramCycleObserver {
 	}
 
 	@Override
-	public int getMaxDataSize() {
+	public IntegerProperty getMaxDataSize() {
 		return maxBlockSize;
 	}
 
@@ -211,5 +212,10 @@ public class CpuImpl implements Cpu, ProgramCycleObserver {
 	@Override
 	public StringProperty getName() {
 		return name;
+	}
+
+	@Override
+	public IntegerProperty getCurrentConnections() {
+		return currentConnections;
 	}
 }

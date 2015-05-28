@@ -13,6 +13,9 @@ import java.util.List;
 import java.util.Map;
 import java.util.logging.Logger;
 
+import javafx.beans.property.IntegerProperty;
+import javafx.beans.property.SimpleIntegerProperty;
+
 import javax.script.ScriptEngineManager;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
@@ -53,7 +56,12 @@ public class PlcFactory {
 	private final Logger logger = Logger.getLogger("PlcFactory");
 
 	private static final int PORT = 102;
+	private static final int DEFAULT_MAX_CONNECTIONS = 16;
+	private static final int DEFAULT_MAX_BLOCK_SIZE = 222;
 	private static final Map<String, Integer> DEFAULT_MEMORY_AREAS = new HashMap<>();
+
+	private static final long DEFAULT_CYCLE_TIME = 50;
+
 	static {
 		DEFAULT_MEMORY_AREAS.put("M", 65535);
 		DEFAULT_MEMORY_AREAS.put("I", 65535);
@@ -79,6 +87,43 @@ public class PlcFactory {
 				| URISyntaxException e) {
 			throw new PlcFactoryException(path, e);
 		}
+	}
+
+	/**
+	 * Creates new empty CPU for given PLC. Looks up next free CPU number
+	 *
+	 * @param plc
+	 * @return new CPU instance
+	 */
+	public Cpu createCpu(Plc plc) {
+
+		final List<MemoryArea> memoryAreas = new ArrayList<>();
+
+		DEFAULT_MEMORY_AREAS.entrySet().forEach(
+				entry -> memoryAreas.add(new MemoryAreaImpl(entry.getKey(),
+						entry.getValue(), true)));
+
+		Cpu result = new CpuImpl("New PLC", getFreeSlot(plc),
+				new ErrorLogImpl(), new ScheduledThreadPoolExecutorFactory(),
+				new MemoryImpl(new AddressParserFactory(),
+						new DataTypeFactory(), memoryAreas
+								.toArray(new MemoryArea[memoryAreas.size()])),
+				DEFAULT_MAX_BLOCK_SIZE, DEFAULT_MAX_CONNECTIONS);
+
+		result.loadProgram(new ProgramImpl(result, new ScriptEngineManager(),
+				new Precompiler(), DEFAULT_CYCLE_TIME));
+
+		return result;
+	}
+
+	private int getFreeSlot(Plc plc) {
+		final IntegerProperty highestSlot = new SimpleIntegerProperty();
+
+		plc.getCpus().forEach(
+				cpu -> highestSlot.set(Math.max(highestSlot.get(), cpu
+						.getSlot().get())));
+
+		return highestSlot.get() + 1;
 	}
 
 	private Plc createFromDocument(Document doc, String path)

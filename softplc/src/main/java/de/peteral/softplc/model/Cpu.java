@@ -108,7 +108,7 @@ public interface Cpu {
 	/**
 	 * @return maximum block size for one put/get request supported by this PLC.
 	 */
-	int getMaxDataSize();
+	IntegerProperty getMaxDataSize();
 
 	/**
 	 *
@@ -127,4 +127,10 @@ public interface Cpu {
 	 * @return optional CPU name for organizational purposes
 	 */
 	StringProperty getName();
+
+	/**
+	 *
+	 * @return current active connection count
+	 */
+	IntegerProperty getCurrentConnections();
 }

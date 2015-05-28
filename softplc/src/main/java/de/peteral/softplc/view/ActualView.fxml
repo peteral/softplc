@@ -20,7 +20,9 @@
 								<TableColumn fx:id="cpuModeColumn" editable="false" prefWidth="75.0" text="Mode" />
 								<TableColumn fx:id="cpuCycleTarColumn" prefWidth="75.0" text="Target [ms]" />
 								<TableColumn fx:id="cpuCycleActColumn" editable="false" prefWidth="75.0" text="Current [ms]" />
-								<TableColumn fx:id="cpuConnectionsColumn" editable="false" prefWidth="75.0" text="Connections" />
+								<TableColumn fx:id="cpuMaxBlockSizeColumn" prefWidth="75.0" text="Block Size" />
+                        <TableColumn fx:id="cpuMaxConnectionsColumn" prefWidth="75.0" text="Max Conn" />
+                        <TableColumn fx:id="cpuActualConnectionsColumn" prefWidth="75.0" text="Curr Conn" />
 							</columns>
 							<columnResizePolicy>
 								<TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
@@ -28,8 +30,8 @@
 							<contextMenu>
 								<ContextMenu>
 									<items>
-										<MenuItem mnemonicParsing="false" text="Add" />
-										<MenuItem mnemonicParsing="false" text="Delete" />
+										<MenuItem mnemonicParsing="false" onAction="#handleAdd" text="Add" />
+										<MenuItem mnemonicParsing="false" onAction="#handleDelete" text="Delete" />
 										<MenuItem mnemonicParsing="false" onAction="#handleStart" text="Start CPU">
                                  <accelerator>
                                     <KeyCodeCombination alt="DOWN" code="R" control="UP" meta="UP" shift="UP" shortcut="UP" />

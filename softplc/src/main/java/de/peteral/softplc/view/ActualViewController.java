@@ -9,8 +9,10 @@ import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.cell.TextFieldTableCell;
 import javafx.scene.layout.AnchorPane;
+import javafx.util.converter.NumberStringConverter;
 import de.peteral.softplc.model.Cpu;
 import de.peteral.softplc.model.Plc;
+import de.peteral.softplc.plc.PlcFactory;
 
 /**
  * Actual PLC view controller.
@@ -33,7 +35,11 @@ public class ActualViewController {
 	@FXML
 	private TableColumn<Cpu, Number> cpuCycleTarColumn;
 	@FXML
-	private TableColumn<Cpu, Number> cpuConnectionsColumn;
+	private TableColumn<Cpu, Number> cpuActualConnectionsColumn;
+	@FXML
+	private TableColumn<Cpu, Number> cpuMaxConnectionsColumn;
+	@FXML
+	private TableColumn<Cpu, Number> cpuMaxBlockSizeColumn;
 	@FXML
 	private AnchorPane cpuDetailPane;
 	private CpuViewController cpuDetailController;
@@ -48,12 +54,33 @@ public class ActualViewController {
 	private void initialize() {
 		cpuSlotColumn.setCellValueFactory(cellData -> cellData.getValue()
 				.getSlot());
+		cpuSlotColumn.setCellFactory(TextFieldTableCell
+				.forTableColumn(new NumberStringConverter()));
+
 		cpuModeColumn.setCellValueFactory(cellData -> cellData.getValue()
 				.getStatusProperty());
+
 		cpuCycleTarColumn.setCellValueFactory(cellData -> cellData.getValue()
 				.getProgram().getTargetCycleTime());
+		cpuCycleTarColumn.setCellFactory(TextFieldTableCell
+				.forTableColumn(new NumberStringConverter()));
+
 		cpuCycleActColumn.setCellValueFactory(cellData -> cellData.getValue()
 				.getProgram().getCurrentCycleTime());
+
+		cpuActualConnectionsColumn.setCellValueFactory(cellData -> cellData
+				.getValue().getCurrentConnections());
+
+		cpuMaxConnectionsColumn.setCellValueFactory(cellData -> cellData
+				.getValue().getMaxConnections());
+		cpuMaxConnectionsColumn.setCellFactory(TextFieldTableCell
+				.forTableColumn(new NumberStringConverter()));
+
+		cpuMaxBlockSizeColumn.setCellValueFactory(cellData -> cellData
+				.getValue().getMaxDataSize());
+		cpuMaxBlockSizeColumn.setCellFactory(TextFieldTableCell
+				.forTableColumn(new NumberStringConverter()));
+
 		cpuNameColumn.setCellValueFactory(data -> data.getValue().getName());
 		cpuNameColumn.setCellFactory(TextFieldTableCell.forTableColumn());
 
@@ -117,5 +144,16 @@ public class ActualViewController {
 	@FXML
 	private void handleStopAll() {
 		plc.getCpus().forEach(cpu -> cpu.stop());
+	}
+
+	@FXML
+	private void handleAdd() {
+		plc.getCpus().add(new PlcFactory().createCpu(plc));
+	}
+
+	@FXML
+	private void handleDelete() {
+		handleStop();
+		plc.getCpus().removeAll(getSelectedCpus());
 	}
 }
