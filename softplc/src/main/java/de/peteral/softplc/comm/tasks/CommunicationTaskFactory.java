@@ -64,4 +64,25 @@ public class CommunicationTaskFactory {
 		}
 		return null;
 	}
+
+	/**
+	 * Logs all registered tasks into a string builder:
+	 *
+	 * @param builder
+	 */
+	public void logContents(StringBuilder builder) {
+		builder.append("Task factories:\n");
+		TASK_FACTORIES.forEach(f -> {
+			builder.append("  ");
+			builder.append(f.getClass().getName());
+			builder.append("\n");
+		});
+		builder.append("Response factories:\n");
+		RESPONSE_FACTORIES.forEach(f -> {
+			builder.append("  ");
+			builder.append(f.getClass().getName());
+			builder.append("\n");
+		});
+
+	}
 }

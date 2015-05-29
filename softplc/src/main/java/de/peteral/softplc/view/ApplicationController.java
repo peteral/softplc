@@ -7,6 +7,7 @@ import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
 import javafx.stage.FileChooser;
 import de.peteral.softplc.SoftplcApplication;
+import de.peteral.softplc.comm.tasks.CommunicationTaskFactory;
 
 /**
  * Root panel Java FX controller.
@@ -32,10 +33,14 @@ public class ApplicationController {
 	 */
 	@FXML
 	private void handleAbout() {
+		// TODO use proper about dialog
 		Alert alert = new Alert(AlertType.INFORMATION);
 		alert.setTitle("Softplc");
 		alert.setHeaderText("About");
-		alert.setContentText("Author: Ladislav Petera, 2014-2015");
+		StringBuilder builder = new StringBuilder(
+				"Author: Ladislav Petera, 2014-2015\n");
+		new CommunicationTaskFactory().logContents(builder);
+		alert.setContentText(builder.toString());
 
 		alert.showAndWait();
 	}
