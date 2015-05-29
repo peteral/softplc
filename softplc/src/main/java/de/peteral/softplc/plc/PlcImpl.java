@@ -32,7 +32,7 @@ public class PlcImpl implements Plc {
 	 *            list of {@link Cpu} units managed by this PLC.
 	 */
 	public PlcImpl(String path, PutGetServer server, Cpu... cpus) {
-		this.setPath(new File(path));
+		this.setPath((path == null) ? null : new File(path));
 		this.server = server;
 		this.cpus = FXCollections.observableArrayList(cpus);
 	}

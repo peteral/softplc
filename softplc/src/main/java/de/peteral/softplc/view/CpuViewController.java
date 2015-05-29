@@ -8,6 +8,7 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
@@ -317,28 +318,28 @@ public class CpuViewController {
 		fileChooser.getExtensionFilters().add(extFilter);
 
 		// Show open file dialog
-		File file = fileChooser.showOpenDialog(primaryStage);
+		List<File> files = fileChooser.showOpenMultipleDialog(primaryStage);
 
-		try {
-			URI uri = file.toURI();
-			byte[] bytes = Files.readAllBytes(Paths.get(uri));
-			currentCpu
-					.getProgram()
-					.getScriptFiles()
-					.add(new ScriptFile(file.getAbsolutePath(), new String(
-							bytes)));
-			currentCpu.loadProgram(currentCpu.getProgram());
-		} catch (IOException e) {
-			// TODO error dialog
-			e.printStackTrace();
-		}
+		files.forEach(file -> {
+			try {
+				URI uri = file.toURI();
+				byte[] bytes = Files.readAllBytes(Paths.get(uri));
+				currentCpu
+						.getProgram()
+						.getScriptFiles()
+						.add(new ScriptFile(file.getAbsolutePath(), new String(
+								bytes)));
+			} catch (IOException e) {
+				// TODO error dialog
+				e.printStackTrace();
+			}
+		});
 	}
 
 	@FXML
 	private void handleDeleteSourceFile() {
 		currentCpu.getProgram().getScriptFiles()
 				.removeAll(programTable.getSelectionModel().getSelectedItems());
-		currentCpu.loadProgram(currentCpu.getProgram());
 	}
 
 	@FXML
@@ -425,5 +426,33 @@ public class CpuViewController {
 								}
 							}
 						});
+	}
+
+	@FXML
+	private void handleSourceUp() {
+		int selected = programTable.getSelectionModel().getSelectedIndex();
+		if (selected > 0) {
+			Collections.swap(currentCpu.getProgram().getScriptFiles(),
+					selected, selected - 1);
+		}
+	}
+
+	@FXML
+	private void handleSourceDown() {
+		int selected = programTable.getSelectionModel().getSelectedIndex();
+		if (selected < (currentCpu.getProgram().getScriptFiles().size() - 1)) {
+			Collections.swap(currentCpu.getProgram().getScriptFiles(),
+					selected, selected + 1);
+		}
+	}
+
+	@FXML
+	private void handleLoadProgram() {
+		currentCpu.loadProgram(currentCpu.getProgram());
+	}
+
+	@FXML
+	private void handleAddMemoryAreaRange() {
+		// TODO implement feature
 	}
 }

@@ -104,6 +104,7 @@
                               <ContextMenu>
                                  <items>
                                     <MenuItem mnemonicParsing="false" onAction="#handleAddMemoryArea" text="Add" />
+                                    <MenuItem mnemonicParsing="false" onAction="#handleAddMemoryAreaRange" text="Add range..." />
                                     <MenuItem mnemonicParsing="false" onAction="#handleDeleteMemoryArea" text="Remove" />
                                     <SeparatorMenuItem mnemonicParsing="false" />
                                     <MenuItem mnemonicParsing="false" onAction="#handleSaveSnapshot" text="Save snapshot" />
@@ -135,6 +136,11 @@
                                     <SeparatorMenuItem mnemonicParsing="false" />
                                     <MenuItem mnemonicParsing="false" onAction="#handleToAbsolutePath" text="To absolute path" />
                                     <MenuItem mnemonicParsing="false" onAction="#handleToRelativePath" text="To relative path" />
+                                    <SeparatorMenuItem mnemonicParsing="false" />
+                                    <MenuItem mnemonicParsing="false" onAction="#handleSourceUp" text="Move up" />
+                                    <MenuItem mnemonicParsing="false" onAction="#handleSourceDown" text="Move down" />
+                                    <SeparatorMenuItem mnemonicParsing="false" />
+                                    <MenuItem mnemonicParsing="false" onAction="#handleLoadProgram" text="Load to CPU" />
                                  </items>
                               </ContextMenu>
                            </contextMenu>

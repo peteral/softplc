@@ -6,6 +6,7 @@ import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.nio.file.Files;
+import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -241,9 +242,20 @@ public class PlcFactory {
 		List<ScriptFile> result = new ArrayList<>();
 		List<Element> sourceElements = getChildrenByName(programElement, "file");
 		for (Element e : sourceElements) {
-			URI file = new File(path).getParentFile().toURI()
-					.resolve(e.getTextContent());
-			byte[] bytes = Files.readAllBytes(Paths.get(file));
+			File f = new File(e.getTextContent());
+			if (!f.isAbsolute()) {
+				try {
+					Path pathBase = Paths.get(path);
+					Path pathRelative = Paths.get(f.getPath());
+					Path pathAbsolute = pathBase.resolve(pathRelative);
+					f = new File(pathAbsolute.toString());
+				} catch (Exception ex) {
+					// TODO Auto-generated catch block
+					ex.printStackTrace();
+				}
+			}
+
+			byte[] bytes = Files.readAllBytes(Paths.get(f.getCanonicalPath()));
 			result.add(new ScriptFile(e.getTextContent(), new String(bytes)));
 		}
 

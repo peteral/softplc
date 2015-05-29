@@ -82,7 +82,7 @@ public class CpuImpl implements Cpu, ProgramCycleObserver {
 	// TODO possibly we need warm and cold restart
 	@Override
 	public void start() {
-		if (getStatus() == CpuStatus.ERROR) {
+		if (getStatus() == CpuStatus.RUN) {
 			return;
 		}
 

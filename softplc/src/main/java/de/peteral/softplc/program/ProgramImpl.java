@@ -2,6 +2,8 @@ package de.peteral.softplc.program;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import javafx.beans.property.LongProperty;
 import javafx.beans.property.SimpleLongProperty;
@@ -108,6 +110,7 @@ public class ProgramImpl implements Program {
 
 	@Override
 	public boolean compile() {
+		String currentStep = "start";
 		try {
 			ScriptEngine engine = scriptEngineManager
 					.getEngineByMimeType(JAVASCRIPT);
@@ -119,17 +122,21 @@ public class ProgramImpl implements Program {
 			bindings.put("logger", cpu.getLogger());
 
 			for (ScriptFile file : getScriptFiles()) {
+				currentStep = "File: " + file.getFileName().get();
 				String precompiled = precompiler.translate(file.getSource()
 						.get());
 				CompiledScript compiledScript = compiler.compile(precompiled);
 				compiledScript.eval(context);
 			}
+			currentStep = "main()";
 			compiled = compiler.compile(MAIN);
 
 			return true;
 		} catch (ScriptException e) {
+			Logger.getLogger("compiler").log(Level.SEVERE,
+					"Compiler error during [" + currentStep + "]", e);
 			for (ProgramCycleObserver observer : observers) {
-				observer.onError("Compilation error: ", e);
+				observer.onError("Compilation error [" + currentStep + "]: ", e);
 			}
 			return false;
 		}
