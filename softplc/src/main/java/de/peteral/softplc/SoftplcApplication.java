@@ -27,8 +27,8 @@ import de.peteral.softplc.model.Plc;
 import de.peteral.softplc.plc.PlcFactory;
 import de.peteral.softplc.plc.PlcFactoryException;
 import de.peteral.softplc.plc.PlcTransformer;
-import de.peteral.softplc.view.ActualViewController;
-import de.peteral.softplc.view.RootPanelController;
+import de.peteral.softplc.view.ApplicationController;
+import de.peteral.softplc.view.CpuTableViewController;
 
 /**
  * Java FX application entry point.
@@ -39,10 +39,10 @@ import de.peteral.softplc.view.RootPanelController;
 public class SoftplcApplication extends Application {
 
 	private Stage primaryStage;
-	private BorderPane rootLayout;
-	private ActualViewController actualViewController;
+	private BorderPane applicationPane;
+	private CpuTableViewController cpuTableViewController;
 	private Plc plc;
-	private RootPanelController rootPanelController;
+	private ApplicationController applicationController;
 
 	@Override
 	public void start(Stage primaryStage) throws Exception {
@@ -55,9 +55,9 @@ public class SoftplcApplication extends Application {
 
 		this.primaryStage.setOnCloseRequest(event -> System.exit(0));
 
-		initRootPanel();
+		initApplicationPane();
 
-		showActualView();
+		showCpuTableView();
 
 		loadLastFile();
 
@@ -78,18 +78,18 @@ public class SoftplcApplication extends Application {
 		}
 	}
 
-	private void initRootPanel() {
+	private void initApplicationPane() {
 		try {
 			FXMLLoader loader = new FXMLLoader();
 			loader.setLocation(SoftplcApplication.class
-					.getResource("view/RootPanel.fxml"));
-			rootLayout = loader.load();
+					.getResource("view/Application.fxml"));
+			applicationPane = loader.load();
 
-			Scene scene = new Scene(rootLayout);
+			Scene scene = new Scene(applicationPane);
 			primaryStage.setScene(scene);
 
-			rootPanelController = loader.getController();
-			rootPanelController.setMainApp(this);
+			applicationController = loader.getController();
+			applicationController.setApplication(this);
 
 			primaryStage.show();
 		} catch (IOException e) {
@@ -137,17 +137,17 @@ public class SoftplcApplication extends Application {
 		launch(args);
 	}
 
-	private void showActualView() {
+	private void showCpuTableView() {
 		try {
 			FXMLLoader loader = new FXMLLoader();
 			loader.setLocation(SoftplcApplication.class
-					.getResource("view/ActualView.fxml"));
+					.getResource("view/CpuTableView.fxml"));
 
 			AnchorPane actualView = loader.load();
-			rootLayout.setCenter(actualView);
+			applicationPane.setCenter(actualView);
 
-			actualViewController = loader.getController();
-			actualViewController.setPrimaryStage(primaryStage);
+			cpuTableViewController = loader.getController();
+			cpuTableViewController.setPrimaryStage(primaryStage);
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
@@ -192,7 +192,7 @@ public class SoftplcApplication extends Application {
 	 */
 	public void setPlc(Plc plc) {
 		this.plc = plc;
-		actualViewController.setPlc(getPlc());
+		cpuTableViewController.setPlc(getPlc());
 	}
 
 	/**

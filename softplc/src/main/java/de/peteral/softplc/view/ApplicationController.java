@@ -14,17 +14,17 @@ import de.peteral.softplc.SoftplcApplication;
  * @author peteral
  *
  */
-public class RootPanelController {
+public class ApplicationController {
 
-	private SoftplcApplication mainApp;
+	private SoftplcApplication application;
 
 	/**
 	 * Initializes the controller with main app reference.
 	 *
-	 * @param mainApp
+	 * @param application
 	 */
-	public void setMainApp(SoftplcApplication mainApp) {
-		this.mainApp = mainApp;
+	public void setApplication(SoftplcApplication application) {
+		this.application = application;
 	}
 
 	/**
@@ -53,18 +53,18 @@ public class RootPanelController {
 		fileChooser.getExtensionFilters().add(extFilter);
 
 		// Show open file dialog
-		File file = fileChooser.showOpenDialog(mainApp.getPrimaryStage());
+		File file = fileChooser.showOpenDialog(application.getPrimaryStage());
 
 		if (file != null) {
-			mainApp.loadPlcFromFile(file);
+			application.loadPlcFromFile(file);
 		}
 	}
 
 	@FXML
 	private void handleSave() {
-		File currentFile = mainApp.getLastOpenedFilePath();
+		File currentFile = application.getLastOpenedFilePath();
 		if (currentFile != null) {
-			mainApp.save(currentFile);
+			application.save(currentFile);
 		} else {
 			handleSaveAs();
 		}
@@ -80,20 +80,20 @@ public class RootPanelController {
 		fileChooser.getExtensionFilters().add(extFilter);
 
 		// Show save file dialog
-		File file = fileChooser.showSaveDialog(mainApp.getPrimaryStage());
+		File file = fileChooser.showSaveDialog(application.getPrimaryStage());
 
 		if (file != null) {
 			// Make sure it has the correct extension
 			if (!file.getPath().endsWith(".xml")) {
 				file = new File(file.getPath() + ".xml");
 			}
-			mainApp.save(file);
+			application.save(file);
 		}
 	}
 
 	@FXML
 	private void handleNew() {
-		mainApp.newPlc();
+		application.newPlc();
 	}
 
 	@FXML

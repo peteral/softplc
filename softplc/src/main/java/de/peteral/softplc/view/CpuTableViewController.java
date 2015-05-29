@@ -21,7 +21,7 @@ import de.peteral.softplc.plc.PlcFactory;
  * @author peteral
  *
  */
-public class ActualViewController {
+public class CpuTableViewController {
 
 	@FXML
 	private TableView<Cpu> cpuTable;
@@ -43,7 +43,7 @@ public class ActualViewController {
 	private TableColumn<Cpu, Number> cpuMaxBlockSizeColumn;
 	@FXML
 	private AnchorPane cpuDetailPane;
-	private CpuViewController cpuDetailController;
+	private CpuDetailViewController cpuDetailController;
 
 	private Plc plc;
 	private Stage primaryStage;
@@ -101,8 +101,8 @@ public class ActualViewController {
 	private void initCpuDetailScene() {
 		try {
 			FXMLLoader loader = new FXMLLoader();
-			loader.setLocation(ActualViewController.class
-					.getResource("CpuView.fxml"));
+			loader.setLocation(CpuTableViewController.class
+					.getResource("CpuDetailView.fxml"));
 			AnchorPane layout = loader.load();
 
 			cpuDetailPane.getChildren().add(layout);

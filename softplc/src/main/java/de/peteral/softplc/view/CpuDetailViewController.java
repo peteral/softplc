@@ -38,7 +38,7 @@ import de.peteral.softplc.program.ScriptFile;
  * @author peteral
  *
  */
-public class CpuViewController {
+public class CpuDetailViewController {
 	private static final long OBSERVE_PERIOD = 100L;
 	private static final long FORCE_PERIOD = 100L;
 	@FXML
