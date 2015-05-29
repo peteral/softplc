@@ -40,7 +40,7 @@ public class PlcImplTest {
 		when(cpu1.getSlot()).thenReturn(new SimpleIntegerProperty(3));
 		Cpu[] cpus = { cpu1, cpu2 };
 
-		plc = new PlcImpl(server, cpus);
+		plc = new PlcImpl(null, server, cpus);
 	}
 
 	@Test(expected = ArrayIndexOutOfBoundsException.class)

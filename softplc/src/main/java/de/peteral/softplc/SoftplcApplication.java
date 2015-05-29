@@ -147,6 +147,7 @@ public class SoftplcApplication extends Application {
 			rootLayout.setCenter(actualView);
 
 			actualViewController = loader.getController();
+			actualViewController.setPrimaryStage(primaryStage);
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
@@ -213,6 +214,7 @@ public class SoftplcApplication extends Application {
 			transformer.transform(new DOMSource(doc), new StreamResult(writer));
 
 			setLastOpenedFilePath(file);
+			plc.setPath(file);
 
 			// TODO handling for script files - do we copy them?
 		} catch (ParserConfigurationException | IOException

@@ -161,8 +161,10 @@ public class PlcFactory {
 			cpus.add(createCpu(cpuElement, path));
 		}
 
-		return new PlcImpl(new PutGetServerImpl(PORT),
+		PlcImpl result = new PlcImpl(path, new PutGetServerImpl(PORT),
 				cpus.toArray(new Cpu[cpus.size()]));
+		result.getCpus().forEach(cpu -> ((CpuImpl) cpu).setPlc(result));
+		return result;
 	}
 
 	private Cpu createCpu(Element cpuElement, String path) throws IOException,
@@ -303,7 +305,7 @@ public class PlcFactory {
 	 * @return new empty PLC instance
 	 */
 	public Plc createNew() {
-		return new PlcImpl(new PutGetServerImpl(PORT));
+		return new PlcImpl(null, new PutGetServerImpl(PORT));
 	}
 
 	/**

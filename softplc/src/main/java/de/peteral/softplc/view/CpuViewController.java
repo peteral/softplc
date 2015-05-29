@@ -1,5 +1,11 @@
 package de.peteral.softplc.view;
 
+import java.io.File;
+import java.io.IOException;
+import java.net.URI;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
@@ -11,6 +17,8 @@ import javafx.scene.control.CheckMenuItem;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.cell.TextFieldTableCell;
+import javafx.stage.FileChooser;
+import javafx.stage.Stage;
 import javafx.util.converter.NumberStringConverter;
 import de.peteral.softplc.cpu.ErrorLogEntry;
 import de.peteral.softplc.memorytables.MemoryTable;
@@ -78,6 +86,7 @@ public class CpuViewController {
 	private TimerTask updateMemoryTableTask;
 	private Timer timer;
 	private TimerTask forceMemoryTableTask;
+	private Stage primaryStage;
 
 	/**
 	 * Initializes the controller class. This method is automatically called
@@ -300,7 +309,29 @@ public class CpuViewController {
 
 	@FXML
 	private void handleAddSourceFile() {
-		// TODO implement
+		FileChooser fileChooser = new FileChooser();
+
+		// Set extension filter
+		FileChooser.ExtensionFilter extFilter = new FileChooser.ExtensionFilter(
+				"JavaScript files (*.js)", "*.js");
+		fileChooser.getExtensionFilters().add(extFilter);
+
+		// Show open file dialog
+		File file = fileChooser.showOpenDialog(primaryStage);
+
+		try {
+			URI uri = file.toURI();
+			byte[] bytes = Files.readAllBytes(Paths.get(uri));
+			currentCpu
+					.getProgram()
+					.getScriptFiles()
+					.add(new ScriptFile(file.getAbsolutePath(), new String(
+							bytes)));
+			currentCpu.loadProgram(currentCpu.getProgram());
+		} catch (IOException e) {
+			// TODO error dialog
+			e.printStackTrace();
+		}
 	}
 
 	@FXML
@@ -332,4 +363,67 @@ public class CpuViewController {
 		}
 	}
 
+	/**
+	 * assigns current stage
+	 *
+	 * @param primaryStage
+	 */
+	public void setPrimaryStage(Stage primaryStage) {
+		this.primaryStage = primaryStage;
+	}
+
+	@FXML
+	private void handleToAbsolutePath() {
+		programTable
+				.getSelectionModel()
+				.getSelectedItems()
+				.forEach(
+						scriptFile -> {
+							File f = new File(scriptFile.getFileName().get());
+							if (!f.isAbsolute()) {
+								try {
+									Path pathBase = Paths.get(currentCpu
+											.getPlc().getPath().getParentFile()
+											.getCanonicalPath());
+									Path pathRelative = Paths.get(f.getPath());
+									Path pathAbsolute = pathBase
+											.resolve(pathRelative);
+									scriptFile.getFileName().set(
+											pathAbsolute.toString());
+								} catch (Exception e) {
+									// TODO Auto-generated catch block
+									e.printStackTrace();
+								}
+							}
+						});
+	}
+
+	@FXML
+	private void handleToRelativePath() {
+		programTable
+				.getSelectionModel()
+				.getSelectedItems()
+				.forEach(
+						scriptFile -> {
+							File f = new File(scriptFile.getFileName().get());
+							if (f.isAbsolute()
+									&& (currentCpu.getPlc().getPath() != null)) {
+								try {
+									Path pathAbsolute = Paths.get(f
+											.getCanonicalPath());
+									Path pathBase = Paths.get(currentCpu
+											.getPlc().getPath().getParentFile()
+											.getCanonicalPath());
+									Path pathRelative = pathBase
+											.relativize(pathAbsolute);
+
+									scriptFile.getFileName().set(
+											pathRelative.toString());
+								} catch (Exception e) {
+									// TODO Auto-generated catch block
+									e.printStackTrace();
+								}
+							}
+						});
+	}
 }

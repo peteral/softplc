@@ -1,5 +1,6 @@
 package de.peteral.softplc.plc;
 
+import java.io.File;
 import java.io.IOException;
 
 import javafx.collections.FXCollections;
@@ -17,16 +18,21 @@ public class PlcImpl implements Plc {
 
 	private final ObservableList<Cpu> cpus;
 	private final PutGetServer server;
+	private File path;
 
 	/**
 	 * Default constructor.
+	 *
+	 * @param path
+	 *            configuration file path
 	 *
 	 * @param server
 	 *            {@link PutGetServer} implementation instance
 	 * @param cpus
 	 *            list of {@link Cpu} units managed by this PLC.
 	 */
-	public PlcImpl(PutGetServer server, Cpu... cpus) {
+	public PlcImpl(String path, PutGetServer server, Cpu... cpus) {
+		this.setPath(new File(path));
 		this.server = server;
 		this.cpus = FXCollections.observableArrayList(cpus);
 	}
@@ -85,6 +91,16 @@ public class PlcImpl implements Plc {
 	@Override
 	public ObservableList<Cpu> getCpus() {
 		return cpus;
+	}
+
+	@Override
+	public File getPath() {
+		return path;
+	}
+
+	@Override
+	public void setPath(File path) {
+		this.path = path;
 	}
 
 }

@@ -1,5 +1,7 @@
 package de.peteral.softplc.model;
 
+import java.io.File;
+
 import javafx.collections.ObservableList;
 
 /**
@@ -52,4 +54,17 @@ public interface Plc {
 	 * @return all CPUs of this PLC as array
 	 */
 	ObservableList<Cpu> getCpus();
+
+	/**
+	 *
+	 * @return current configuration file path
+	 */
+	File getPath();
+
+	/**
+	 * sets current configuration file path
+	 *
+	 * @param path
+	 */
+	void setPath(File path);
 }

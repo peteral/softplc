@@ -17,6 +17,7 @@ import de.peteral.softplc.model.Cpu;
 import de.peteral.softplc.model.CpuStatus;
 import de.peteral.softplc.model.ErrorLog;
 import de.peteral.softplc.model.Memory;
+import de.peteral.softplc.model.Plc;
 import de.peteral.softplc.model.Program;
 import de.peteral.softplc.model.ProgramCycleObserver;
 
@@ -40,6 +41,7 @@ public class CpuImpl implements Cpu, ProgramCycleObserver {
 	private final IntegerProperty maxConnections = new SimpleIntegerProperty();
 	private final StringProperty name = new SimpleStringProperty();
 	private final IntegerProperty currentConnections = new SimpleIntegerProperty();
+	private Plc plc;
 
 	/**
 	 * Creates a new instance.
@@ -62,6 +64,7 @@ public class CpuImpl implements Cpu, ProgramCycleObserver {
 	public CpuImpl(String name, int slot, ErrorLog errorlog,
 			ScheduledThreadPoolExecutorFactory executorFactory, Memory memory,
 			int maxBlockSize, int maxConnections) {
+		this.setPlc(plc);
 		this.executorFactory = executorFactory;
 		this.slot = new SimpleIntegerProperty(slot);
 		this.errorlog = errorlog;
@@ -217,5 +220,18 @@ public class CpuImpl implements Cpu, ProgramCycleObserver {
 	@Override
 	public IntegerProperty getCurrentConnections() {
 		return currentConnections;
+	}
+
+	@Override
+	public Plc getPlc() {
+		return plc;
+	}
+
+	/**
+	 * @param plc
+	 *            the plc to set
+	 */
+	public void setPlc(Plc plc) {
+		this.plc = plc;
 	}
 }

@@ -133,4 +133,10 @@ public interface Cpu {
 	 * @return current active connection count
 	 */
 	IntegerProperty getCurrentConnections();
+
+	/**
+	 *
+	 * @return plc this cpu belongs to
+	 */
+	Plc getPlc();
 }

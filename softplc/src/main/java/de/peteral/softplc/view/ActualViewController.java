@@ -9,6 +9,7 @@ import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.cell.TextFieldTableCell;
 import javafx.scene.layout.AnchorPane;
+import javafx.stage.Stage;
 import javafx.util.converter.NumberStringConverter;
 import de.peteral.softplc.model.Cpu;
 import de.peteral.softplc.model.Plc;
@@ -45,6 +46,7 @@ public class ActualViewController {
 	private CpuViewController cpuDetailController;
 
 	private Plc plc;
+	private Stage primaryStage;
 
 	/**
 	 * Initializes the controller class. This method is automatically called
@@ -106,6 +108,7 @@ public class ActualViewController {
 			cpuDetailPane.getChildren().add(layout);
 
 			cpuDetailController = loader.getController();
+			cpuDetailController.setPrimaryStage(primaryStage);
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
@@ -155,5 +158,14 @@ public class ActualViewController {
 	private void handleDelete() {
 		handleStop();
 		plc.getCpus().removeAll(getSelectedCpus());
+	}
+
+	/**
+	 * Assigns current stage
+	 *
+	 * @param primaryStage
+	 */
+	public void setPrimaryStage(Stage primaryStage) {
+		this.primaryStage = primaryStage;
 	}
 }

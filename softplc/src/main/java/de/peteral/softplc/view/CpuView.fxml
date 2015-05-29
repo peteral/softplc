@@ -130,8 +130,11 @@
                            <contextMenu>
                               <ContextMenu>
                                  <items>
-                                    <MenuItem mnemonicParsing="false" onAction="#handleAddSourceFile" text="Add" />
+                                    <MenuItem mnemonicParsing="false" onAction="#handleAddSourceFile" text="Add..." />
                                     <MenuItem mnemonicParsing="false" onAction="#handleDeleteSourceFile" text="Remove" />
+                                    <SeparatorMenuItem mnemonicParsing="false" />
+                                    <MenuItem mnemonicParsing="false" onAction="#handleToAbsolutePath" text="To absolute path" />
+                                    <MenuItem mnemonicParsing="false" onAction="#handleToRelativePath" text="To relative path" />
                                  </items>
                               </ContextMenu>
                            </contextMenu>
