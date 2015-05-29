@@ -245,7 +245,9 @@ public class PlcFactory {
 			File f = new File(e.getTextContent());
 			if (!f.isAbsolute()) {
 				try {
-					Path pathBase = Paths.get(path);
+					File baseFile = new File(path);
+					Path pathBase = Paths.get(baseFile.getParentFile()
+							.getCanonicalPath());
 					Path pathRelative = Paths.get(f.getPath());
 					Path pathAbsolute = pathBase.resolve(pathRelative);
 					f = new File(pathAbsolute.toString());

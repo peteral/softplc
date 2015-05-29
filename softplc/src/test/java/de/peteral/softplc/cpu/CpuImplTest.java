@@ -2,8 +2,6 @@ package de.peteral.softplc.cpu;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertSame;
-import static org.mockito.Matchers.any;
-import static org.mockito.Matchers.anyLong;
 import static org.mockito.Matchers.anyString;
 import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.never;
@@ -89,19 +87,6 @@ public class CpuImplTest {
 		cpu.loadProgram(program);
 
 		assertEquals(CpuStatus.ERROR, cpu.getStatus());
-	}
-
-	@Test
-	public void start_StateError_RemainsInErrorNoExecutionScheduled() {
-		when(program.compile()).thenReturn(false);
-		cpu.loadProgram(program);
-
-		cpu.start();
-
-		assertEquals(CpuStatus.ERROR, cpu.getStatus());
-
-		verify(executor, never()).scheduleAtFixedRate(any(Runnable.class),
-				anyLong(), anyLong(), any(TimeUnit.class));
 	}
 
 	@Test
