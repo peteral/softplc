@@ -5,21 +5,14 @@ Simulation of a PLC for integration testing of SCADA systems. Originally planned
 
 S7 protocol was implemented by my company bus is closed source. I plan to implement some simple protocol like MODBUS TCP when I have some time to get complete open source reference. However concentrating on other features first.
 
-Target functionality:
+Current functionality:
 - multiple configurable CPUs per PLC
 - each CPU executes a JavaScript program
 - serves pluggable network protocols
-- network communication monitoring
 - manual access to memory via "variable tables"
-- save / load memory snapshots
 - GUI
 
-GUI features:
-- display actual status
-- start / stop
-- monitor communication
-- manage variable tables
-- manage memory snapshots
+See wiki for more information and docs: https://github.com/peteral/softplc/wiki
 
 Licence: http://opensource.org/licenses/MIT
 
