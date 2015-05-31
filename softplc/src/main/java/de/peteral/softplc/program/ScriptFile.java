@@ -1,5 +1,10 @@
 package de.peteral.softplc.program;
 
+import java.io.File;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Paths;
+
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 
@@ -12,17 +17,18 @@ import javafx.beans.property.StringProperty;
 public class ScriptFile {
 	private final StringProperty fileName;
 	private final StringProperty source;
+	private final File file;
 
 	/**
 	 * Creates a new instance.
 	 *
 	 * @param fileName
 	 *            file name
-	 * @param source
-	 *            file content
+	 * @param file
 	 */
-	public ScriptFile(String fileName, String source) {
-		this.source = new SimpleStringProperty(source);
+	public ScriptFile(String fileName, File file) {
+		this.file = file;
+		this.source = new SimpleStringProperty();
 		this.fileName = new SimpleStringProperty(fileName);
 	}
 
@@ -38,6 +44,16 @@ public class ScriptFile {
 	 */
 	public StringProperty getFileName() {
 		return fileName;
+	}
+
+	/**
+	 * Loads contents from disk.
+	 *
+	 * @throws IOException
+	 */
+	public void reload() throws IOException {
+		byte[] bytes = Files.readAllBytes(Paths.get(file.getCanonicalPath()));
+		source.set(new String(bytes));
 	}
 
 }

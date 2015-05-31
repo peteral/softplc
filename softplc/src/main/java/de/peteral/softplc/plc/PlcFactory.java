@@ -257,8 +257,9 @@ public class PlcFactory {
 				}
 			}
 
-			byte[] bytes = Files.readAllBytes(Paths.get(f.getCanonicalPath()));
-			result.add(new ScriptFile(e.getTextContent(), new String(bytes)));
+			ScriptFile scriptFile = new ScriptFile(e.getTextContent(), f);
+			scriptFile.reload();
+			result.add(scriptFile);
 		}
 
 		return result.toArray(new ScriptFile[result.size()]);

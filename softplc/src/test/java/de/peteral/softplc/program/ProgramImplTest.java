@@ -8,6 +8,9 @@ import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
+import java.io.File;
+import java.io.IOException;
+import java.net.URISyntaxException;
 import java.util.logging.Logger;
 
 import javax.script.ScriptEngineManager;
@@ -26,12 +29,6 @@ import de.peteral.softplc.model.ProgramCycleObserver;
 @SuppressWarnings("javadoc")
 public class ProgramImplTest {
 	private static final int CYCLE_TIME = 50;
-	/* @formatter:off */
-	private static final String SOURCE =
-			"function main() {\n" +
-					"	${\"M,W100\"} = 10;\n" +
-					"}";
-	/* @formatter:on */
 	private Program program;
 	@Mock
 	private ProgramCycleObserver observer;
@@ -43,14 +40,17 @@ public class ProgramImplTest {
 	private Logger logger;
 
 	@Before
-	public void setup() {
+	public void setup() throws URISyntaxException, IOException {
 		MockitoAnnotations.initMocks(this);
 
 		when(cpu.getMemory()).thenReturn(memory);
 		when(cpu.getLogger()).thenReturn(logger);
 
+		ScriptFile scriptFile = new ScriptFile("test", new File(
+				ProgramImplTest.class.getResource("/program/valid.js").toURI()));
+		scriptFile.reload();
 		program = new ProgramImpl(cpu, new ScriptEngineManager(),
-				new Precompiler(), CYCLE_TIME, new ScriptFile("test", SOURCE));
+				new Precompiler(), CYCLE_TIME, scriptFile);
 	}
 
 	@Test
@@ -101,10 +101,14 @@ public class ProgramImplTest {
 	}
 
 	@Test
-	public void compile_InvalidScript_RegisteredObserverNotified() {
+	public void compile_InvalidScript_RegisteredObserverNotified()
+			throws URISyntaxException, IOException {
+		ScriptFile scriptFile = new ScriptFile("test", new File(
+				ProgramImplTest.class.getResource("/program/invalid.js")
+						.toURI()));
+		scriptFile.reload();
 		program = new ProgramImpl(cpu, new ScriptEngineManager(),
-				new Precompiler(), CYCLE_TIME, new ScriptFile("test",
-						"+ü31ü+13ü"));
+				new Precompiler(), CYCLE_TIME, scriptFile);
 
 		program.addObserver(observer);
 
@@ -114,11 +118,15 @@ public class ProgramImplTest {
 	}
 
 	@Test
-	public void run_ProgramThrowsException_RegisteredObserverNotified() {
+	public void run_ProgramThrowsException_RegisteredObserverNotified()
+			throws URISyntaxException, IOException {
 		doThrow(new MemoryAccessViolationException("")).when(memory).write(
 				anyString(), anyObject());
+		ScriptFile scriptFile = new ScriptFile("test", new File(
+				ProgramImplTest.class.getResource("/program/valid.js").toURI()));
+		scriptFile.reload();
 		program = new ProgramImpl(cpu, new ScriptEngineManager(),
-				new Precompiler(), CYCLE_TIME, new ScriptFile("test", SOURCE));
+				new Precompiler(), CYCLE_TIME, scriptFile);
 
 		program.addObserver(observer);
 

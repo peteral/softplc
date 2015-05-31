@@ -27,7 +27,6 @@ import de.peteral.softplc.model.Plc;
 import de.peteral.softplc.plc.PlcFactory;
 import de.peteral.softplc.plc.PlcFactoryException;
 import de.peteral.softplc.plc.PlcTransformer;
-import de.peteral.softplc.version.JavaVersion;
 import de.peteral.softplc.view.ApplicationController;
 import de.peteral.softplc.view.CpuTableViewController;
 
@@ -44,8 +43,6 @@ public class SoftplcApplication extends Application {
 	private CpuTableViewController cpuTableViewController;
 	private Plc plc;
 	private ApplicationController applicationController;
-	private static final JavaVersion MINIMUM_JAVA_VERSION = new JavaVersion(
-			"1.8.0_45");
 
 	@Override
 	public void start(Stage primaryStage) throws Exception {

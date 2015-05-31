@@ -2,8 +2,6 @@ package de.peteral.softplc.view;
 
 import java.io.File;
 import java.io.IOException;
-import java.net.URI;
-import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.time.LocalDate;
@@ -326,13 +324,11 @@ public class CpuDetailViewController {
 
 		files.forEach(file -> {
 			try {
-				URI uri = file.toURI();
-				byte[] bytes = Files.readAllBytes(Paths.get(uri));
-				currentCpu
-						.getProgram()
-						.getScriptFiles()
-						.add(new ScriptFile(file.getAbsolutePath(), new String(
-								bytes)));
+				ScriptFile scriptFile = new ScriptFile(file.getAbsolutePath(),
+						file);
+				scriptFile.reload();
+
+				currentCpu.getProgram().getScriptFiles().add(scriptFile);
 			} catch (IOException e) {
 				// TODO error dialog
 				e.printStackTrace();
@@ -452,6 +448,7 @@ public class CpuDetailViewController {
 
 	@FXML
 	private void handleLoadProgram() {
+		currentCpu.getProgram().reloadFromDisk();
 		currentCpu.loadProgram(currentCpu.getProgram());
 	}
 

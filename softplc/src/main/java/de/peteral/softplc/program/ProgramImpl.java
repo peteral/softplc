@@ -175,4 +175,16 @@ public class ProgramImpl implements Program {
 		currentCycleTime.set(0L);
 	}
 
+	@Override
+	public void reloadFromDisk() {
+		getScriptFiles().forEach(file -> {
+			try {
+				file.reload();
+			} catch (Exception e) {
+				// TODO handle exception properly
+				e.printStackTrace();
+			}
+		});
+	}
+
 }

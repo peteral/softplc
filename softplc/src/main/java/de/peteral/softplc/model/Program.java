@@ -61,4 +61,9 @@ public interface Program extends Runnable {
 	 * stopped.
 	 */
 	void resetCycleTime();
+
+	/**
+	 * Reloads all source files from disk.
+	 */
+	void reloadFromDisk();
 }
