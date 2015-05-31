@@ -39,7 +39,7 @@ import de.peteral.softplc.view.ErrorDialog;
  */
 public class SoftplcApplication extends Application {
 
-	private static final String VERSION = "1.2.1";
+	private static final String VERSION = "1.2.2";
 	private Stage primaryStage;
 	private BorderPane applicationPane;
 	private CpuTableViewController cpuTableViewController;
