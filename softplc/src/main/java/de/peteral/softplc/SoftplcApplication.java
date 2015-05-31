@@ -170,9 +170,14 @@ public class SoftplcApplication extends Application {
 	 */
 	public void loadPlcFromFile(File file) {
 		try {
+			if (plc != null) {
+				plc.stop();
+			}
+
 			Plc newPlc = new PlcFactory().create(file.getAbsolutePath());
 			setPlc(newPlc);
 			setLastOpenedFilePath(file);
+			plc.start();
 		} catch (PlcFactoryException e) {
 			ErrorDialog.show("Failed loading configuration [" + file.getPath()
 					+ "]", e);
@@ -228,8 +233,13 @@ public class SoftplcApplication extends Application {
 	 * creates new empty configuration
 	 */
 	public void newPlc() {
+		if (plc != null) {
+			plc.stop();
+		}
+
 		Plc newPlc = new PlcFactory().createNew();
 		setPlc(newPlc);
 		setLastOpenedFilePath(null);
+		plc.start();
 	}
 }
