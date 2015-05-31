@@ -29,6 +29,7 @@ import de.peteral.softplc.plc.PlcFactoryException;
 import de.peteral.softplc.plc.PlcTransformer;
 import de.peteral.softplc.view.ApplicationController;
 import de.peteral.softplc.view.CpuTableViewController;
+import de.peteral.softplc.view.ErrorDialog;
 
 /**
  * Java FX application entry point.
@@ -174,8 +175,8 @@ public class SoftplcApplication extends Application {
 			setPlc(newPlc);
 			setLastOpenedFilePath(file);
 		} catch (PlcFactoryException e) {
-			e.printStackTrace();
-			// TODO error dialog
+			ErrorDialog.show("Failed loading configuration [" + file.getPath()
+					+ "]", e);
 		}
 	}
 
@@ -219,8 +220,8 @@ public class SoftplcApplication extends Application {
 			// TODO handling for script files - do we copy them?
 		} catch (ParserConfigurationException | IOException
 				| TransformerException e) {
-			// TODO - error dialog
-			e.printStackTrace();
+
+			ErrorDialog.show("Failed saving file", e);
 		}
 	}
 

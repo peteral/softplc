@@ -8,6 +8,7 @@ import javafx.collections.ObservableList;
 import de.peteral.softplc.model.Cpu;
 import de.peteral.softplc.model.Plc;
 import de.peteral.softplc.model.PutGetServer;
+import de.peteral.softplc.view.ErrorDialog;
 
 /**
  * {@link Plc} implementation.
@@ -60,8 +61,7 @@ public class PlcImpl implements Plc {
 		try {
 			server.start(this);
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			ErrorDialog.show("Failed starting server", e);
 		}
 	}
 
@@ -70,8 +70,7 @@ public class PlcImpl implements Plc {
 		try {
 			server.stop();
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			ErrorDialog.show("Failed stopping server", e);
 		}
 
 		cpus.forEach(cpu -> cpu.stop());

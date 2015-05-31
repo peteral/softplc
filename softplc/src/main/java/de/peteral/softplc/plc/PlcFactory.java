@@ -47,6 +47,7 @@ import de.peteral.softplc.model.Program;
 import de.peteral.softplc.program.Precompiler;
 import de.peteral.softplc.program.ProgramImpl;
 import de.peteral.softplc.program.ScriptFile;
+import de.peteral.softplc.view.ErrorDialog;
 
 /**
  * Creates a {@link Plc} instance from configuration file.
@@ -252,8 +253,9 @@ public class PlcFactory {
 					Path pathAbsolute = pathBase.resolve(pathRelative);
 					f = new File(pathAbsolute.toString());
 				} catch (Exception ex) {
-					// TODO Auto-generated catch block
-					ex.printStackTrace();
+					ErrorDialog.show(
+							"Failed reaing script file [" + f.getPath() + "]",
+							ex);
 				}
 			}
 

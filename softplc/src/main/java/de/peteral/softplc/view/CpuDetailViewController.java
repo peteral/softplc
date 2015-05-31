@@ -302,12 +302,12 @@ public class CpuDetailViewController {
 
 	@FXML
 	private void handleSaveSnapshot() {
-		// TODO implement
+		// TODO implement save snapshot
 	}
 
 	@FXML
 	private void handleLoadSnapshot() {
-		// TODO implement
+		// TODO implement load snapshot
 	}
 
 	@FXML
@@ -330,8 +330,8 @@ public class CpuDetailViewController {
 
 				currentCpu.getProgram().getScriptFiles().add(scriptFile);
 			} catch (IOException e) {
-				// TODO error dialog
-				e.printStackTrace();
+				ErrorDialog.show("Failed adding file [" + file.getPath() + "]",
+						e);
 			}
 		});
 	}
@@ -392,8 +392,8 @@ public class CpuDetailViewController {
 									scriptFile.getFileName().set(
 											pathAbsolute.toString());
 								} catch (Exception e) {
-									// TODO Auto-generated catch block
-									e.printStackTrace();
+									ErrorDialog.show(
+											"Failed converting to absolute", e);
 								}
 							}
 						});
@@ -421,8 +421,8 @@ public class CpuDetailViewController {
 									scriptFile.getFileName().set(
 											pathRelative.toString());
 								} catch (Exception e) {
-									// TODO Auto-generated catch block
-									e.printStackTrace();
+									ErrorDialog.show(
+											"Failed converting to relative", e);
 								}
 							}
 						});
@@ -482,8 +482,7 @@ public class CpuDetailViewController {
 						area -> currentCpu.getMemory().addMemoryArea(area));
 			}
 		} catch (IOException e) {
-			// TODO error handling
-			e.printStackTrace();
+			ErrorDialog.show("Failed loading dialog", e);
 		}
 	}
 }

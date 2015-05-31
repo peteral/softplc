@@ -97,8 +97,6 @@ public class RequestWorker implements Runnable {
 									.toString() + " , data "
 							+ Arrays.toString(dataEvent.getData()));
 				} catch (IOException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
 				}
 			}
 

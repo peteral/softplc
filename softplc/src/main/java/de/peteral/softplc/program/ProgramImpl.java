@@ -22,6 +22,7 @@ import javax.script.SimpleScriptContext;
 import de.peteral.softplc.model.Cpu;
 import de.peteral.softplc.model.Program;
 import de.peteral.softplc.model.ProgramCycleObserver;
+import de.peteral.softplc.view.ErrorDialog;
 
 /**
  * Default {@link Program} implementation.
@@ -177,14 +178,15 @@ public class ProgramImpl implements Program {
 
 	@Override
 	public void reloadFromDisk() {
-		getScriptFiles().forEach(file -> {
-			try {
-				file.reload();
-			} catch (Exception e) {
-				// TODO handle exception properly
-				e.printStackTrace();
-			}
-		});
+		getScriptFiles().forEach(
+				file -> {
+					try {
+						file.reload();
+					} catch (Exception e) {
+						ErrorDialog.show("Failed loading file ["
+								+ file.getFileName().get() + "]", e);
+					}
+				});
 	}
 
 }
