@@ -146,7 +146,7 @@
 		<fx:application id="fxApplication"
 			name="Softplc"
 			mainClass="de.peteral.softplc.SoftplcApplication"
-			version="1.2.0"
+			version="1.2.1"
 		/>
 
 		<mkdir dir="build/classes/META-INF" />

@@ -39,6 +39,7 @@ import de.peteral.softplc.view.ErrorDialog;
  */
 public class SoftplcApplication extends Application {
 
+	private static final String VERSION = "1.2.1";
 	private Stage primaryStage;
 	private BorderPane applicationPane;
 	private CpuTableViewController cpuTableViewController;
@@ -65,9 +66,7 @@ public class SoftplcApplication extends Application {
 	}
 
 	private void setTitle(String appendix) {
-		primaryStage.setTitle("Softplc ["
-				+ SoftplcApplication.class.getPackage()
-						.getImplementationVersion() + "] " + appendix);
+		primaryStage.setTitle("Softplc [" + VERSION + "] " + appendix);
 	}
 
 	private void loadLastFile() {
