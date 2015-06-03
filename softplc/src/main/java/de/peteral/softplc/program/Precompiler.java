@@ -9,11 +9,9 @@ import java.util.function.Function;
  *
  * @author peteral
  */
-public class Precompiler
-{
-    private static final List<Function<String, String>> OPERATIONS =
-        new ArrayList<>();
-    /* @formatter:off */
+public class Precompiler {
+	private static final List<Function<String, String>> OPERATIONS = new ArrayList<>();
+	/* @formatter:off */
     static
     {
 		// first replace all write accesses (start of line) before assignment
@@ -23,20 +21,18 @@ public class Precompiler
 	}
 	/* @formatter:on */
 
-    /**
-     * Translates program with memory access tags into executable javascript.
-     *
-     * @param input
-     * @return translated script.
-     */
-    public String translate(String input)
-    {
-        String result = input;
+	/**
+	 * Translates program with memory access tags into executable javascript.
+	 *
+	 * @param input
+	 * @return translated script.
+	 */
+	public String translate(String input) {
+		String result = input;
 
-        for ( Function<String, String> operation : OPERATIONS )
-        {
-            result = operation.apply(result);
-        }
-        return result;
-    }
+		for (Function<String, String> operation : OPERATIONS) {
+			result = operation.apply(result);
+		}
+		return result;
+	}
 }

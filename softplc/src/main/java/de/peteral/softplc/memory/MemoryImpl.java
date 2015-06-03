@@ -22,6 +22,7 @@ import de.peteral.softplc.model.MemoryTable;
  */
 public class MemoryImpl implements Memory {
 
+	private static final String BOOL_PREFIX = "X";
 	private final ObservableList<MemoryArea> memoryAreas = FXCollections
 			.observableArrayList();
 	private final ObservableList<MemoryTable> memoryTables = FXCollections
@@ -75,7 +76,7 @@ public class MemoryImpl implements Memory {
 	public Object read(String address) {
 		ParsedAddress parsedAddress = addressParserFactory.parse(address);
 
-		if (parsedAddress.getTypeName().equals("X")) {
+		if (BOOL_PREFIX.equals(parsedAddress.getTypeName())) {
 			return getBit(address);
 		}
 
@@ -98,7 +99,7 @@ public class MemoryImpl implements Memory {
 	public void write(String address, Object value) {
 		ParsedAddress parser = addressParserFactory.parse(address);
 
-		if (parser.getTypeName().equals("X")) {
+		if (BOOL_PREFIX.equals(parser.getTypeName())) {
 			setBit(address, (Boolean) value);
 			return;
 		}
@@ -167,7 +168,7 @@ public class MemoryImpl implements Memory {
 	public void parse(String address, String value) {
 		ParsedAddress parser = addressParserFactory.parse(address);
 
-		if (parser.getTypeName().equals("X")) {
+		if (BOOL_PREFIX.equals(parser.getTypeName())) {
 			setBit(address, Boolean.parseBoolean(value));
 			return;
 		}

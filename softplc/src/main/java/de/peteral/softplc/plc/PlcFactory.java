@@ -55,7 +55,7 @@ import de.peteral.softplc.view.error.ErrorDialog;
  * @author peteral
  */
 public class PlcFactory {
-	private final Logger logger = Logger.getLogger("PlcFactory");
+	private static final Logger LOGGER = Logger.getLogger("PlcFactory");
 
 	private static final int PORT = 102;
 	private static final int DEFAULT_MAX_CONNECTIONS = 16;
@@ -133,7 +133,7 @@ public class PlcFactory {
 	private Plc createFromDocument(Document doc, String path)
 			throws IOException, ParserConfigurationException, SAXException,
 			URISyntaxException {
-		logger.info("Parsing file: " + path);
+		LOGGER.info("Parsing file: " + path);
 		List<Cpu> cpus = new ArrayList<>();
 
 		// process includes

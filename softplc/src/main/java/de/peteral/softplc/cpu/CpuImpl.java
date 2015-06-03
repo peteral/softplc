@@ -139,11 +139,14 @@ public class CpuImpl implements Cpu, ProgramCycleObserver {
 	@Override
 	public void afterCycleEnd() {
 		synchronized (pendingTasks) {
-			try {
-				pendingTasks.forEach(task -> task.execute(this));
-			} catch (Exception e) {
-				e.printStackTrace();
-			}
+			pendingTasks.forEach(task -> {
+				try {
+					task.execute(this);
+				} catch (Exception e) {
+					errorlog.log(Level.SEVERE, "cpu",
+							"Failed processing task: " + task);
+				}
+			});
 
 			pendingTasks.clear();
 		}

@@ -1,6 +1,8 @@
 package de.peteral.softplc.view;
 
 import java.io.IOException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
@@ -48,6 +50,7 @@ public class CpuTableViewController {
 
 	private Plc plc;
 	private Stage primaryStage;
+	private static final Logger LOGGER = Logger.getLogger("application");
 
 	/**
 	 * Initializes the controller class. This method is automatically called
@@ -113,7 +116,7 @@ public class CpuTableViewController {
 			cpuDetailController = loader.getController();
 			cpuDetailController.setPrimaryStage(primaryStage);
 		} catch (IOException e) {
-			e.printStackTrace();
+			LOGGER.log(Level.SEVERE, "Failed reading CpuDetailView.fxml", e);
 		}
 	}
 
