@@ -5,6 +5,7 @@ import java.io.IOException;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
+import javafx.scene.control.SelectionMode;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.cell.TextFieldTableCell;
@@ -89,6 +90,8 @@ public class CpuTableViewController {
 		initCpuDetailScene();
 
 		cpuDetailController.update(null);
+
+		cpuTable.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
 
 		cpuTable.getSelectionModel()
 				.selectedItemProperty()

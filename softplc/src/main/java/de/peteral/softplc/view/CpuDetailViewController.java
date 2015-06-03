@@ -11,10 +11,12 @@ import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
 
+import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 import javafx.scene.control.CheckMenuItem;
+import javafx.scene.control.SelectionMode;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.cell.TextFieldTableCell;
@@ -139,6 +141,15 @@ public class CpuDetailViewController {
 
 		update(null);
 
+		memoryTable.getSelectionModel()
+				.setSelectionMode(SelectionMode.MULTIPLE);
+		memoryTableTable.getSelectionModel().setSelectionMode(
+				SelectionMode.MULTIPLE);
+		programTable.getSelectionModel().setSelectionMode(
+				SelectionMode.MULTIPLE);
+		memoryTableVariableTable.getSelectionModel().setSelectionMode(
+				SelectionMode.MULTIPLE);
+
 		memoryTableTable
 				.getSelectionModel()
 				.selectedItemProperty()
@@ -188,7 +199,11 @@ public class CpuDetailViewController {
 
 	@FXML
 	private void handleDeleteMemoryTable() {
-		currentCpu.getMemory().getMemoryTables().remove(currentMemoryTable);
+		currentCpu
+				.getMemory()
+				.getMemoryTables()
+				.removeAll(
+						memoryTableTable.getSelectionModel().getSelectedItems());
 	}
 
 	@FXML
@@ -212,9 +227,13 @@ public class CpuDetailViewController {
 
 	@FXML
 	private void handleWriteMemoryTable() {
+		writeVariables(currentMemoryTable.getVariables());
+	}
+
+	private void writeVariables(ObservableList<MemoryTableVariable> vars) {
 		List<MemoryTableVariable> variables = new ArrayList<>();
 
-		currentMemoryTable.getVariables().forEach(variable -> {
+		vars.forEach(variable -> {
 			String value = variable.getNewValue().get().trim();
 
 			if (!value.isEmpty() && !value.startsWith("//")) {
@@ -230,18 +249,8 @@ public class CpuDetailViewController {
 
 	@FXML
 	private void handleWriteMemoryTableVariable() {
-		MemoryTableVariable variable = memoryTableVariableTable
-				.getSelectionModel().getSelectedItem();
-
-		if (variable == null) {
-			return;
-		}
-
-		String value = variable.getNewValue().get().trim();
-
-		if (!value.isEmpty() && !value.startsWith("//")) {
-			currentCpu.addCommunicationTask(new MemoryTableWriteTask(variable));
-		}
+		writeVariables(memoryTableVariableTable.getSelectionModel()
+				.getSelectedItems());
 	}
 
 	@FXML
@@ -344,24 +353,25 @@ public class CpuDetailViewController {
 
 	@FXML
 	private void handleToggleCommentVariable() {
-		MemoryTableVariable variable = memoryTableVariableTable
-				.getSelectionModel().getSelectedItem();
+		memoryTableVariableTable.getSelectionModel().getSelectedItems()
+				.forEach(variable -> {
 
-		if (variable == null) {
-			return;
-		}
+					if (variable == null) {
+						return;
+					}
 
-		String value = variable.getNewValue().get().trim();
+					String value = variable.getNewValue().get().trim();
 
-		if (value.isEmpty()) {
-			return;
-		}
+					if (value.isEmpty()) {
+						return;
+					}
 
-		if (value.startsWith("//")) {
-			variable.getNewValue().set(value.substring(2));
-		} else {
-			variable.getNewValue().set("//" + value);
-		}
+					if (value.startsWith("//")) {
+						variable.getNewValue().set(value.substring(2));
+					} else {
+						variable.getNewValue().set("//" + value);
+					}
+				});
 	}
 
 	/**
