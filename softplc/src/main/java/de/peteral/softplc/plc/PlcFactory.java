@@ -55,7 +55,7 @@ import de.peteral.softplc.view.error.ErrorDialog;
  * @author peteral
  */
 public class PlcFactory {
-	private final Logger logger = Logger.getLogger("PlcFactory");
+	private static final Logger LOGGER = Logger.getLogger("PlcFactory");
 
 	private static final int PORT = 102;
 	private static final int DEFAULT_MAX_CONNECTIONS = 16;
@@ -133,7 +133,7 @@ public class PlcFactory {
 	private Plc createFromDocument(Document doc, String path)
 			throws IOException, ParserConfigurationException, SAXException,
 			URISyntaxException {
-		logger.info("Parsing file: " + path);
+		LOGGER.info("Parsing file: " + path);
 		List<Cpu> cpus = new ArrayList<>();
 
 		// process includes
@@ -194,7 +194,7 @@ public class PlcFactory {
 
 	private void createTables(Cpu cpu, Element cpuElement) {
 		List<Element> tablesElements = getChildrenByName(cpuElement, "tables");
-		if (tablesElements.size() == 0) {
+		if (tablesElements.isEmpty()) {
 			return;
 		}
 
@@ -232,7 +232,7 @@ public class PlcFactory {
 		long targetCycleTime = Integer.parseInt(programElement
 				.getAttribute("cycleTime"));
 
-		ScriptFile scriptFiles[] = getScriptFiles(programElement, path);
+		ScriptFile[] scriptFiles = getScriptFiles(programElement, path);
 
 		return new ProgramImpl(cpu, new ScriptEngineManager(),
 				new Precompiler(), targetCycleTime, scriptFiles);
@@ -272,11 +272,11 @@ public class PlcFactory {
 
 		// create memory areas configured in configuration file
 		List<Element> memoryElements = getChildrenByName(cpuElement, "memory");
-		memoryElements.forEach((memoryElement) -> {
+		memoryElements.forEach(memoryElement -> {
 			List<Element> areaElements = getChildrenByName(memoryElement,
 					"area");
 
-			areaElements.forEach((areaElement) -> {
+			areaElements.forEach(areaElement -> {
 				String name = areaElement.getAttribute("name");
 				int size = Integer.parseInt(areaElement.getAttribute("size"));
 
@@ -286,7 +286,7 @@ public class PlcFactory {
 
 		// create default memory areas not redefined in configuration file
 		DEFAULT_MEMORY_AREAS.entrySet().forEach(
-				(entry) -> {
+				entry -> {
 					if (!areas.containsKey(entry.getKey())) {
 						areas.put(
 								entry.getKey(),

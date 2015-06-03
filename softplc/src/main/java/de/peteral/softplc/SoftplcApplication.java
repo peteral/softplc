@@ -1,6 +1,8 @@
 package de.peteral.softplc;
 
 import java.io.IOException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
@@ -35,6 +37,7 @@ public class SoftplcApplication extends Application {
 			setTitle("");
 		}
 	}, plc -> cpuTableViewController.setPlc(plc));
+	private static final Logger LOGGER = Logger.getLogger("application");
 
 	@Override
 	public void start(Stage primaryStage) throws Exception {
@@ -75,7 +78,7 @@ public class SoftplcApplication extends Application {
 
 			primaryStage.show();
 		} catch (IOException e) {
-			e.printStackTrace();
+			LOGGER.log(Level.SEVERE, "Failed loading Application.fxml:", e);
 		}
 	}
 
@@ -100,7 +103,7 @@ public class SoftplcApplication extends Application {
 			cpuTableViewController = loader.getController();
 			cpuTableViewController.setPrimaryStage(primaryStage);
 		} catch (IOException e) {
-			e.printStackTrace();
+			LOGGER.log(Level.SEVERE, "Failed loading CpuTableView.fxml:", e);
 		}
 
 	}

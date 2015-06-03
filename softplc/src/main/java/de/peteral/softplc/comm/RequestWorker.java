@@ -24,7 +24,7 @@ public class RequestWorker implements Runnable {
 	private boolean running;
 	private final CommunicationTaskFactory communicationTaskFactory;
 	private final Plc plc;
-	private final Logger LOGGER = Logger.getLogger("communication");
+	private static final Logger LOGGER = Logger.getLogger("communication");
 
 	/**
 	 * Creates a new instance.
@@ -67,6 +67,7 @@ public class RequestWorker implements Runnable {
 					try {
 						queue.wait();
 					} catch (InterruptedException e) {
+						// no need for handling here
 					}
 				}
 				dataEvent = queue.remove(0);
@@ -97,6 +98,7 @@ public class RequestWorker implements Runnable {
 									.toString() + " , data "
 							+ Arrays.toString(dataEvent.getData()));
 				} catch (IOException e) {
+					// no handling necessary, logging only
 				}
 			}
 

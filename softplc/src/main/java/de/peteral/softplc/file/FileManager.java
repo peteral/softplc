@@ -29,6 +29,7 @@ import de.peteral.softplc.view.error.ErrorDialog;
  *
  */
 public class FileManager {
+	private static final String FILE_PATH = "filePath";
 	private Plc plc;
 	private final Consumer<File> fileConsumer;
 	private final Consumer<Plc> plcConsumer;
@@ -51,7 +52,7 @@ public class FileManager {
 	 */
 	public File getLastOpenedFilePath() {
 		Preferences prefs = Preferences.userNodeForPackage(FileManager.class);
-		String filePath = prefs.get("filePath", null);
+		String filePath = prefs.get(FILE_PATH, null);
 		if (filePath != null) {
 			return new File(filePath);
 		} else {
@@ -127,9 +128,9 @@ public class FileManager {
 	private void setLastOpenedFilePath(File file) {
 		Preferences prefs = Preferences.userNodeForPackage(FileManager.class);
 		if (file != null) {
-			prefs.put("filePath", file.getPath());
+			prefs.put(FILE_PATH, file.getPath());
 		} else {
-			prefs.remove("filePath");
+			prefs.remove(FILE_PATH);
 		}
 
 		fileConsumer.accept(file);

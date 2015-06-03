@@ -32,7 +32,7 @@ import de.peteral.softplc.model.ResponseFactory;
  */
 public class AnnotationProcessor<T> {
 
-	private final Logger logger = Logger.getLogger("reflection");
+	private static final Logger LOGGER = Logger.getLogger("reflection");
 	private final Class<? extends Annotation> annotation;
 	private final URL[] url;
 
@@ -72,16 +72,16 @@ public class AnnotationProcessor<T> {
 		for (Class<?> clazz : sorted) {
 			try {
 				result.add((T) clazz.newInstance());
-				logger.config("Loaded factory: " + clazz.getName());
+				LOGGER.config("Loaded factory: " + clazz.getName());
 
 			} catch (InstantiationException | IllegalAccessException e) {
-				logger.log(Level.SEVERE,
+				LOGGER.log(Level.SEVERE,
 						"Failed creating factory [" + clazz.getName() + "]: ",
 						e);
 			}
 		}
 
-		logger.info("Found " + result.size() + " @"
+		LOGGER.info("Found " + result.size() + " @"
 				+ annotation.getSimpleName());
 	}
 

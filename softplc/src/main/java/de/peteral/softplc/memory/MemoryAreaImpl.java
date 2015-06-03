@@ -37,10 +37,14 @@ public class MemoryAreaImpl implements MemoryArea {
 		this.defaultArea = defaultArea;
 		this.areaCode = new SimpleStringProperty(areaCode);
 		this.size = new SimpleIntegerProperty(size);
-		buffer = new byte[size];
+		createBuffer();
 		logger = Logger.getLogger("memory." + areaCode);
 
-		this.size.addListener(event -> buffer = new byte[this.size.get()]);
+		this.size.addListener(event -> createBuffer());
+	}
+
+	private byte[] createBuffer() {
+		return buffer = new byte[this.size.get()];
 	}
 
 	@Override

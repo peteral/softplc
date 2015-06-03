@@ -49,13 +49,11 @@ public class ClientChannelCache {
 			lock.readLock().unlock();
 		}
 	}
-	
+
 	private String getSocketAddress(SocketChannel socket) {
 		try {
-		String remAdr = socket.getRemoteAddress().toString();
-			return remAdr;
+			return socket.getRemoteAddress().toString();
 		} catch (IOException e) {
-			e.printStackTrace();
 			return null;
 		}
 	}

@@ -12,7 +12,11 @@ import javafx.scene.control.Alert.AlertType;
  * @author peteral
  *
  */
-public class ErrorDialog {
+public final class ErrorDialog {
+
+	private ErrorDialog() {
+	}
+
 	/**
 	 * Shows the error dialog
 	 *
