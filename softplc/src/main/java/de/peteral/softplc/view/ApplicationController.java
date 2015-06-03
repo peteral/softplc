@@ -6,8 +6,9 @@ import javafx.fxml.FXML;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
 import javafx.stage.FileChooser;
-import de.peteral.softplc.SoftplcApplication;
+import javafx.stage.Stage;
 import de.peteral.softplc.comm.tasks.CommunicationTaskFactory;
+import de.peteral.softplc.file.FileManager;
 
 /**
  * Root panel Java FX controller.
@@ -17,15 +18,26 @@ import de.peteral.softplc.comm.tasks.CommunicationTaskFactory;
  */
 public class ApplicationController {
 
-	private SoftplcApplication application;
+	private FileManager fileManager;
+	private Stage stage;
 
 	/**
-	 * Initializes the controller with main app reference.
+	 * Initializes the controller with file manager reference.
 	 *
-	 * @param application
+	 * @param fileManager
 	 */
-	public void setApplication(SoftplcApplication application) {
-		this.application = application;
+	public void setFileManager(FileManager fileManager) {
+		this.fileManager = fileManager;
+	}
+
+	/**
+	 * Assigns current stage
+	 *
+	 * @param stage
+	 */
+	public void setStage(Stage stage) {
+		this.stage = stage;
+
 	}
 
 	/**
@@ -58,18 +70,18 @@ public class ApplicationController {
 		fileChooser.getExtensionFilters().add(extFilter);
 
 		// Show open file dialog
-		File file = fileChooser.showOpenDialog(application.getPrimaryStage());
+		File file = fileChooser.showOpenDialog(stage);
 
 		if (file != null) {
-			application.loadPlcFromFile(file);
+			fileManager.loadPlcFromFile(file);
 		}
 	}
 
 	@FXML
 	private void handleSave() {
-		File currentFile = application.getLastOpenedFilePath();
+		File currentFile = fileManager.getLastOpenedFilePath();
 		if (currentFile != null) {
-			application.save(currentFile);
+			fileManager.save(currentFile);
 		} else {
 			handleSaveAs();
 		}
@@ -85,20 +97,20 @@ public class ApplicationController {
 		fileChooser.getExtensionFilters().add(extFilter);
 
 		// Show save file dialog
-		File file = fileChooser.showSaveDialog(application.getPrimaryStage());
+		File file = fileChooser.showSaveDialog(stage);
 
 		if (file != null) {
 			// Make sure it has the correct extension
 			if (!file.getPath().endsWith(".xml")) {
 				file = new File(file.getPath() + ".xml");
 			}
-			application.save(file);
+			fileManager.save(file);
 		}
 	}
 
 	@FXML
 	private void handleNew() {
-		application.newPlc();
+		fileManager.newPlc();
 	}
 
 	@FXML

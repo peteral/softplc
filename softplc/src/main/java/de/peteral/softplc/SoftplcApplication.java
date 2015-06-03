@@ -1,9 +1,6 @@
 package de.peteral.softplc;
 
-import java.io.File;
-import java.io.FileWriter;
 import java.io.IOException;
-import java.util.prefs.Preferences;
 
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
@@ -12,24 +9,9 @@ import javafx.scene.image.Image;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.BorderPane;
 import javafx.stage.Stage;
-
-import javax.xml.parsers.ParserConfigurationException;
-import javax.xml.transform.OutputKeys;
-import javax.xml.transform.Transformer;
-import javax.xml.transform.TransformerException;
-import javax.xml.transform.TransformerFactory;
-import javax.xml.transform.dom.DOMSource;
-import javax.xml.transform.stream.StreamResult;
-
-import org.w3c.dom.Document;
-
-import de.peteral.softplc.model.Plc;
-import de.peteral.softplc.plc.PlcFactory;
-import de.peteral.softplc.plc.PlcFactoryException;
-import de.peteral.softplc.plc.PlcTransformer;
+import de.peteral.softplc.file.FileManager;
 import de.peteral.softplc.view.ApplicationController;
 import de.peteral.softplc.view.CpuTableViewController;
-import de.peteral.softplc.view.ErrorDialog;
 
 /**
  * Java FX application entry point.
@@ -43,8 +25,16 @@ public class SoftplcApplication extends Application {
 	private Stage primaryStage;
 	private BorderPane applicationPane;
 	private CpuTableViewController cpuTableViewController;
-	private Plc plc;
 	private ApplicationController applicationController;
+	private final FileManager fileManager = new FileManager(file -> {
+		if (file != null) {
+			// Update the stage title.
+			setTitle(" - " + file.getName());
+		} else {
+			// Update the stage title.
+			setTitle("");
+		}
+	}, plc -> cpuTableViewController.setPlc(plc));
 
 	@Override
 	public void start(Stage primaryStage) throws Exception {
@@ -61,21 +51,12 @@ public class SoftplcApplication extends Application {
 
 		showCpuTableView();
 
-		loadLastFile();
+		fileManager.loadLastFile();
 
 	}
 
 	private void setTitle(String appendix) {
 		primaryStage.setTitle("Softplc [" + VERSION + "] " + appendix);
-	}
-
-	private void loadLastFile() {
-		File file = getLastOpenedFilePath();
-		if (file != null) {
-			loadPlcFromFile(file);
-		} else {
-			newPlc();
-		}
 	}
 
 	private void initApplicationPane() {
@@ -89,42 +70,12 @@ public class SoftplcApplication extends Application {
 			primaryStage.setScene(scene);
 
 			applicationController = loader.getController();
-			applicationController.setApplication(this);
+			applicationController.setFileManager(fileManager);
+			applicationController.setStage(primaryStage);
 
 			primaryStage.show();
 		} catch (IOException e) {
 			e.printStackTrace();
-		}
-	}
-
-	/**
-	 *
-	 * @return last opened / saved file
-	 */
-	public File getLastOpenedFilePath() {
-		Preferences prefs = Preferences
-				.userNodeForPackage(SoftplcApplication.class);
-		String filePath = prefs.get("filePath", null);
-		if (filePath != null) {
-			return new File(filePath);
-		} else {
-			return null;
-		}
-	}
-
-	private void setLastOpenedFilePath(File file) {
-		Preferences prefs = Preferences
-				.userNodeForPackage(SoftplcApplication.class);
-		if (file != null) {
-			prefs.put("filePath", file.getPath());
-
-			// Update the stage title.
-			setTitle(" - " + file.getName());
-		} else {
-			prefs.remove("filePath");
-
-			// Update the stage title.
-			setTitle("");
 		}
 	}
 
@@ -154,92 +105,4 @@ public class SoftplcApplication extends Application {
 
 	}
 
-	/**
-	 *
-	 * @return Java FX primary stage reference
-	 */
-	public Stage getPrimaryStage() {
-		return primaryStage;
-	}
-
-	/**
-	 * Loads PLC configuration from a file.
-	 *
-	 * @param file
-	 *            file name
-	 */
-	public void loadPlcFromFile(File file) {
-		try {
-			if (plc != null) {
-				plc.stop();
-			}
-
-			Plc newPlc = new PlcFactory().create(file.getAbsolutePath());
-			setPlc(newPlc);
-			setLastOpenedFilePath(file);
-			plc.start();
-		} catch (PlcFactoryException e) {
-			ErrorDialog.show("Failed loading configuration [" + file.getPath()
-					+ "]", e);
-		}
-	}
-
-	/**
-	 * @return the plc
-	 */
-	public Plc getPlc() {
-		return plc;
-	}
-
-	/**
-	 * @param plc
-	 *            the plc to set
-	 */
-	public void setPlc(Plc plc) {
-		this.plc = plc;
-		cpuTableViewController.setPlc(getPlc());
-	}
-
-	/**
-	 * Saves current configuration to a file
-	 *
-	 * @param file
-	 */
-	public void save(File file) {
-		try {
-			Document doc = new PlcTransformer().transform(getPlc());
-			TransformerFactory tf = TransformerFactory.newInstance();
-			Transformer transformer = tf.newTransformer();
-			transformer.setOutputProperty(OutputKeys.DOCTYPE_SYSTEM,
-					"softplc.dtd");
-			transformer.setOutputProperty(OutputKeys.INDENT, "yes");
-			transformer.setOutputProperty(
-					"{http://xml.apache.org/xslt}indent-amount", "4");
-			FileWriter writer = new FileWriter(file);
-			transformer.transform(new DOMSource(doc), new StreamResult(writer));
-
-			setLastOpenedFilePath(file);
-			plc.setPath(file);
-
-			// TODO handling for script files - do we copy them?
-		} catch (ParserConfigurationException | IOException
-				| TransformerException e) {
-
-			ErrorDialog.show("Failed saving file", e);
-		}
-	}
-
-	/**
-	 * creates new empty configuration
-	 */
-	public void newPlc() {
-		if (plc != null) {
-			plc.stop();
-		}
-
-		Plc newPlc = new PlcFactory().createNew();
-		setPlc(newPlc);
-		setLastOpenedFilePath(null);
-		plc.start();
-	}
 }
