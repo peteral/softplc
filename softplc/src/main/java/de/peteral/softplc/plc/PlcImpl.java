@@ -8,7 +8,7 @@ import javafx.collections.ObservableList;
 import de.peteral.softplc.model.Cpu;
 import de.peteral.softplc.model.Plc;
 import de.peteral.softplc.model.PutGetServer;
-import de.peteral.softplc.view.ErrorDialog;
+import de.peteral.softplc.view.error.ErrorDialog;
 
 /**
  * {@link Plc} implementation.

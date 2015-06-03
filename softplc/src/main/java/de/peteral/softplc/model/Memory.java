@@ -2,7 +2,6 @@ package de.peteral.softplc.model;
 
 import javafx.collections.ObservableList;
 import de.peteral.softplc.address.ParsedAddress;
-import de.peteral.softplc.memorytables.MemoryTable;
 
 /**
  * This interface provides access to the memory of a {@link Cpu}.

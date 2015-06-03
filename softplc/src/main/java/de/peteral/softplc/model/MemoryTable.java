@@ -1,4 +1,4 @@
-package de.peteral.softplc.memorytables;
+package de.peteral.softplc.model;
 
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;

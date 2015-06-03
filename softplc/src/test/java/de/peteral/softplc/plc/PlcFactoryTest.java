@@ -7,9 +7,9 @@ import org.junit.Before;
 import org.junit.Test;
 import org.mockito.MockitoAnnotations;
 
-import de.peteral.softplc.memorytables.MemoryTable;
 import de.peteral.softplc.model.Cpu;
 import de.peteral.softplc.model.Memory;
+import de.peteral.softplc.model.MemoryTable;
 import de.peteral.softplc.model.Plc;
 
 @SuppressWarnings("javadoc")

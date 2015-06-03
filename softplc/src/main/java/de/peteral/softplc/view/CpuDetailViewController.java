@@ -25,16 +25,17 @@ import javafx.stage.FileChooser;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.util.converter.NumberStringConverter;
-import de.peteral.softplc.cpu.ErrorLogEntry;
-import de.peteral.softplc.memorytables.MemoryTable;
 import de.peteral.softplc.memorytables.MemoryTableUpdateTask;
-import de.peteral.softplc.memorytables.MemoryTableVariable;
 import de.peteral.softplc.memorytables.MemoryTableWriteTask;
 import de.peteral.softplc.model.Cpu;
 import de.peteral.softplc.model.CpuStatus;
+import de.peteral.softplc.model.ErrorLogEntry;
 import de.peteral.softplc.model.MemoryArea;
+import de.peteral.softplc.model.MemoryTable;
+import de.peteral.softplc.model.MemoryTableVariable;
+import de.peteral.softplc.model.ScriptFile;
 import de.peteral.softplc.plc.PlcFactory;
-import de.peteral.softplc.program.ScriptFile;
+import de.peteral.softplc.view.error.ErrorDialog;
 
 /**
  * Controller for CPU status display.

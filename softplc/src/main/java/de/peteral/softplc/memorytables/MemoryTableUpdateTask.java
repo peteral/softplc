@@ -4,6 +4,7 @@ import java.util.Arrays;
 
 import de.peteral.softplc.model.CommunicationTask;
 import de.peteral.softplc.model.Cpu;
+import de.peteral.softplc.model.MemoryTable;
 
 /**
  * Virtual communication task used to update a memory table

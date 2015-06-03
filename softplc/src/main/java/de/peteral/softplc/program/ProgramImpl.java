@@ -22,7 +22,8 @@ import javax.script.SimpleScriptContext;
 import de.peteral.softplc.model.Cpu;
 import de.peteral.softplc.model.Program;
 import de.peteral.softplc.model.ProgramCycleObserver;
-import de.peteral.softplc.view.ErrorDialog;
+import de.peteral.softplc.model.ScriptFile;
+import de.peteral.softplc.view.error.ErrorDialog;
 
 /**
  * Default {@link Program} implementation.

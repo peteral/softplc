@@ -25,6 +25,7 @@ import de.peteral.softplc.model.Memory;
 import de.peteral.softplc.model.MemoryAccessViolationException;
 import de.peteral.softplc.model.Program;
 import de.peteral.softplc.model.ProgramCycleObserver;
+import de.peteral.softplc.model.ScriptFile;
 
 @SuppressWarnings("javadoc")
 public class ProgramImplTest {

@@ -20,7 +20,7 @@ import de.peteral.softplc.model.Plc;
 import de.peteral.softplc.plc.PlcFactory;
 import de.peteral.softplc.plc.PlcFactoryException;
 import de.peteral.softplc.plc.PlcTransformer;
-import de.peteral.softplc.view.ErrorDialog;
+import de.peteral.softplc.view.error.ErrorDialog;
 
 /**
  * Abstraction for file operations

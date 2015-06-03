@@ -1,4 +1,4 @@
-package de.peteral.softplc.view;
+package de.peteral.softplc.view.error;
 
 import java.util.logging.Level;
 import java.util.logging.Logger;

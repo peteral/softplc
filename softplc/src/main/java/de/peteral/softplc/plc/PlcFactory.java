@@ -37,17 +37,17 @@ import de.peteral.softplc.datatype.DataTypeFactory;
 import de.peteral.softplc.executor.ScheduledThreadPoolExecutorFactory;
 import de.peteral.softplc.memory.MemoryAreaImpl;
 import de.peteral.softplc.memory.MemoryImpl;
-import de.peteral.softplc.memorytables.MemoryTable;
-import de.peteral.softplc.memorytables.MemoryTableVariable;
 import de.peteral.softplc.model.Cpu;
 import de.peteral.softplc.model.Memory;
 import de.peteral.softplc.model.MemoryArea;
+import de.peteral.softplc.model.MemoryTable;
+import de.peteral.softplc.model.MemoryTableVariable;
 import de.peteral.softplc.model.Plc;
 import de.peteral.softplc.model.Program;
+import de.peteral.softplc.model.ScriptFile;
 import de.peteral.softplc.program.Precompiler;
 import de.peteral.softplc.program.ProgramImpl;
-import de.peteral.softplc.program.ScriptFile;
-import de.peteral.softplc.view.ErrorDialog;
+import de.peteral.softplc.view.error.ErrorDialog;
 
 /**
  * Creates a {@link Plc} instance from configuration file.

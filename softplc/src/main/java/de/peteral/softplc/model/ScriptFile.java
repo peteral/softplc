@@ -1,4 +1,4 @@
-package de.peteral.softplc.program;
+package de.peteral.softplc.model;
 
 import java.io.File;
 import java.io.IOException;

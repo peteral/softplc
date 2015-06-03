@@ -1,4 +1,4 @@
-package de.peteral.softplc.cpu;
+package de.peteral.softplc.model;
 
 import java.time.LocalDate;
 import java.util.logging.Level;

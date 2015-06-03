@@ -7,11 +7,11 @@ import javax.xml.parsers.ParserConfigurationException;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
-import de.peteral.softplc.memorytables.MemoryTable;
 import de.peteral.softplc.model.Cpu;
 import de.peteral.softplc.model.MemoryArea;
+import de.peteral.softplc.model.MemoryTable;
 import de.peteral.softplc.model.Plc;
-import de.peteral.softplc.program.ScriptFile;
+import de.peteral.softplc.model.ScriptFile;
 
 /**
  * Transforms current model to DOM document.

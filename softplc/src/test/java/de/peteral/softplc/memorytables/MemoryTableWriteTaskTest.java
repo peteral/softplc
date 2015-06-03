@@ -10,6 +10,7 @@ import org.mockito.MockitoAnnotations;
 
 import de.peteral.softplc.model.Cpu;
 import de.peteral.softplc.model.Memory;
+import de.peteral.softplc.model.MemoryTableVariable;
 
 @SuppressWarnings("javadoc")
 public class MemoryTableWriteTaskTest {

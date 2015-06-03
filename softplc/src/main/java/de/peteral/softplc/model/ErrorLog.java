@@ -3,7 +3,6 @@ package de.peteral.softplc.model;
 import java.util.logging.Level;
 
 import javafx.collections.ObservableList;
-import de.peteral.softplc.cpu.ErrorLogEntry;
 
 /**
  * Each {@link Cpu} posesses an {@link ErrorLog} instance. This is used by

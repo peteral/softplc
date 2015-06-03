@@ -8,10 +8,10 @@ import de.peteral.softplc.address.AddressParserFactory;
 import de.peteral.softplc.address.ParsedAddress;
 import de.peteral.softplc.datatype.DataTypeFactory;
 import de.peteral.softplc.datatype.DataTypeUtils;
-import de.peteral.softplc.memorytables.MemoryTable;
 import de.peteral.softplc.model.Memory;
 import de.peteral.softplc.model.MemoryAccessViolationException;
 import de.peteral.softplc.model.MemoryArea;
+import de.peteral.softplc.model.MemoryTable;
 
 /**
  * Default {@link Memory} implementation.

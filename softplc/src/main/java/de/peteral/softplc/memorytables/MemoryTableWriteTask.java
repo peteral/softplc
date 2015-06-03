@@ -4,6 +4,7 @@ import java.util.Arrays;
 
 import de.peteral.softplc.model.CommunicationTask;
 import de.peteral.softplc.model.Cpu;
+import de.peteral.softplc.model.MemoryTableVariable;
 
 /**
  * Writes memory table variables to memory.
