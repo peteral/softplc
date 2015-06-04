@@ -23,7 +23,7 @@ import de.peteral.softplc.view.CpuTableViewController;
  */
 public class SoftplcApplication extends Application {
 
-	private static final String VERSION = "1.2.2";
+	private static final String VERSION = "1.2.3";
 	private Stage primaryStage;
 	private BorderPane applicationPane;
 	private CpuTableViewController cpuTableViewController;
