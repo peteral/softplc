@@ -55,16 +55,19 @@ import de.peteral.softplc.view.error.ErrorDialog;
  * @author peteral
  */
 public class PlcFactory {
+	static final String NEW_CPU_NAME = "New CPU";
+
 	private static final Logger LOGGER = Logger.getLogger("PlcFactory");
 
 	private static final int PORT = 102;
 	private static final int DEFAULT_MAX_CONNECTIONS = 16;
 	private static final int DEFAULT_MAX_BLOCK_SIZE = 222;
-	private static final Map<String, Integer> DEFAULT_MEMORY_AREAS = new HashMap<>();
+	static final Map<String, Integer> DEFAULT_MEMORY_AREAS = new HashMap<>();
 
 	private static final long DEFAULT_CYCLE_TIME = 50;
 
-	private static final int DEFAULT_SIZE = 65535;
+	static final int DEFAULT_SIZE = 65535;
+	static final String NEW_AREA_CODE = "New";
 
 	static {
 		DEFAULT_MEMORY_AREAS.put("M", DEFAULT_SIZE);
@@ -107,12 +110,14 @@ public class PlcFactory {
 				entry -> memoryAreas.add(new MemoryAreaImpl(entry.getKey(),
 						entry.getValue(), true)));
 
-		Cpu result = new CpuImpl("New PLC", getFreeSlot(plc),
+		CpuImpl result = new CpuImpl(NEW_CPU_NAME, getFreeSlot(plc),
 				new ErrorLogImpl(), new ScheduledThreadPoolExecutorFactory(),
 				new MemoryImpl(new AddressParserFactory(),
 						new DataTypeFactory(), memoryAreas
 								.toArray(new MemoryArea[memoryAreas.size()])),
 				DEFAULT_MAX_BLOCK_SIZE, DEFAULT_MAX_CONNECTIONS);
+
+		result.setPlc(plc);
 
 		result.loadProgram(new ProgramImpl(result, new ScriptEngineManager(),
 				new Precompiler(), DEFAULT_CYCLE_TIME));
@@ -330,6 +335,6 @@ public class PlcFactory {
 	 * @return new default memory area instance
 	 */
 	public MemoryArea createMemoryArea() {
-		return new MemoryAreaImpl("New", DEFAULT_SIZE, false);
+		return new MemoryAreaImpl(NEW_AREA_CODE, DEFAULT_SIZE, false);
 	}
 }

@@ -28,19 +28,14 @@ public class AddMemoryAreaRangeDialogController {
 	private boolean okClicked;
 
 	@FXML
-	private void initialize() {
-
-	}
-
-	@FXML
-	private void handleOk() {
+	void handleOk() {
 		// TODO add input validation
 		okClicked = true;
 		dialogStage.close();
 	}
 
 	@FXML
-	private void handleCancel() {
+	void handleCancel() {
 		dialogStage.close();
 	}
 

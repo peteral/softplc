@@ -99,7 +99,7 @@ public class CpuDetailViewController {
 	 * after the fxml file has been loaded.
 	 */
 	@FXML
-	private void initialize() {
+	void initialize() {
 		memoryAreaColumn.setCellValueFactory(cellData -> cellData.getValue()
 				.getAreaCode());
 		memoryAreaColumn.setCellFactory(TextFieldTableCell.forTableColumn());
@@ -194,12 +194,12 @@ public class CpuDetailViewController {
 	}
 
 	@FXML
-	private void handleAddMemoryTable() {
+	void handleAddMemoryTable() {
 		currentCpu.getMemory().getMemoryTables().add(new MemoryTable());
 	}
 
 	@FXML
-	private void handleDeleteMemoryTable() {
+	void handleDeleteMemoryTable() {
 		currentCpu
 				.getMemory()
 				.getMemoryTables()
@@ -208,12 +208,12 @@ public class CpuDetailViewController {
 	}
 
 	@FXML
-	private void handleAddMemoryTableVariable() {
+	void handleAddMemoryTableVariable() {
 		currentMemoryTable.getVariables().add(new MemoryTableVariable());
 	}
 
 	@FXML
-	private void handleDeleteMemoryTableVariable() {
+	void handleDeleteMemoryTableVariable() {
 		currentMemoryTable.getVariables()
 				.removeAll(
 						memoryTableVariableTable.getSelectionModel()
@@ -221,13 +221,13 @@ public class CpuDetailViewController {
 	}
 
 	@FXML
-	private void handleReadMemoryTable() {
+	void handleReadMemoryTable() {
 		currentCpu.addCommunicationTask(new MemoryTableUpdateTask(
 				currentMemoryTable));
 	}
 
 	@FXML
-	private void handleWriteMemoryTable() {
+	void handleWriteMemoryTable() {
 		writeVariables(currentMemoryTable.getVariables());
 	}
 
@@ -249,13 +249,13 @@ public class CpuDetailViewController {
 	}
 
 	@FXML
-	private void handleWriteMemoryTableVariable() {
+	void handleWriteMemoryTableVariable() {
 		writeVariables(memoryTableVariableTable.getSelectionModel()
 				.getSelectedItems());
 	}
 
 	@FXML
-	private void handleObserveMemoryTable() {
+	void handleObserveMemoryTable() {
 		if (observeMemoryTableItem.isSelected()) {
 			// start background task
 			updateMemoryTableTask = new TimerTask() {
@@ -277,7 +277,7 @@ public class CpuDetailViewController {
 	}
 
 	@FXML
-	private void handleForceMemoryTable() {
+	void handleForceMemoryTable() {
 		if (forceMemoryTableItem.isSelected()) {
 			// start background task
 			forceMemoryTableTask = new TimerTask() {
@@ -299,29 +299,29 @@ public class CpuDetailViewController {
 	}
 
 	@FXML
-	private void handleAddMemoryArea() {
+	void handleAddMemoryArea() {
 		currentCpu.getMemory().addMemoryArea(
 				new PlcFactory().createMemoryArea());
 	}
 
 	@FXML
-	private void handleDeleteMemoryArea() {
+	void handleDeleteMemoryArea() {
 		currentCpu.getMemory().removeMemoryAreas(
 				memoryTable.getSelectionModel().getSelectedItems());
 	}
 
 	@FXML
-	private void handleSaveSnapshot() {
+	void handleSaveSnapshot() {
 		// TODO implement save snapshot
 	}
 
 	@FXML
-	private void handleLoadSnapshot() {
+	void handleLoadSnapshot() {
 		// TODO implement load snapshot
 	}
 
 	@FXML
-	private void handleAddSourceFile() {
+	void handleAddSourceFile() {
 		FileChooser fileChooser = new FileChooser();
 
 		// Set extension filter
@@ -347,13 +347,13 @@ public class CpuDetailViewController {
 	}
 
 	@FXML
-	private void handleDeleteSourceFile() {
+	void handleDeleteSourceFile() {
 		currentCpu.getProgram().getScriptFiles()
 				.removeAll(programTable.getSelectionModel().getSelectedItems());
 	}
 
 	@FXML
-	private void handleToggleCommentVariable() {
+	void handleToggleCommentVariable() {
 		memoryTableVariableTable.getSelectionModel().getSelectedItems()
 				.forEach(variable -> {
 
@@ -385,7 +385,7 @@ public class CpuDetailViewController {
 	}
 
 	@FXML
-	private void handleToAbsolutePath() {
+	void handleToAbsolutePath() {
 		programTable
 				.getSelectionModel()
 				.getSelectedItems()
@@ -411,7 +411,7 @@ public class CpuDetailViewController {
 	}
 
 	@FXML
-	private void handleToRelativePath() {
+	void handleToRelativePath() {
 		programTable
 				.getSelectionModel()
 				.getSelectedItems()
@@ -440,7 +440,7 @@ public class CpuDetailViewController {
 	}
 
 	@FXML
-	private void handleSourceUp() {
+	void handleSourceUp() {
 		int selected = programTable.getSelectionModel().getSelectedIndex();
 		if (selected > 0) {
 			Collections.swap(currentCpu.getProgram().getScriptFiles(),
@@ -449,7 +449,7 @@ public class CpuDetailViewController {
 	}
 
 	@FXML
-	private void handleSourceDown() {
+	void handleSourceDown() {
 		int selected = programTable.getSelectionModel().getSelectedIndex();
 		if (selected < (currentCpu.getProgram().getScriptFiles().size() - 1)) {
 			Collections.swap(currentCpu.getProgram().getScriptFiles(),
@@ -458,13 +458,13 @@ public class CpuDetailViewController {
 	}
 
 	@FXML
-	private void handleLoadProgram() {
+	void handleLoadProgram() {
 		currentCpu.getProgram().reloadFromDisk();
 		currentCpu.loadProgram(currentCpu.getProgram());
 	}
 
 	@FXML
-	private void handleAddMemoryAreaRange() {
+	void handleAddMemoryAreaRange() {
 		try {
 			// Load the fxml file and create a new stage for the popup dialog.
 			FXMLLoader loader = new FXMLLoader();

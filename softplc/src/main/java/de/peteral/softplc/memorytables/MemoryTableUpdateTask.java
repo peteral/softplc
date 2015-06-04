@@ -44,6 +44,7 @@ public class MemoryTableUpdateTask implements CommunicationTask {
 
 	@Override
 	public void onInvalidCpu(int slot) {
+		// nothing to do here
 	}
 
 }

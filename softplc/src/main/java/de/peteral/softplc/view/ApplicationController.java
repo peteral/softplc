@@ -44,7 +44,7 @@ public class ApplicationController {
 	 * Opens an about dialog.
 	 */
 	@FXML
-	private void handleAbout() {
+	void handleAbout() {
 		// TODO use proper about dialog
 		Alert alert = new Alert(AlertType.INFORMATION);
 		alert.setTitle("Softplc");
@@ -61,7 +61,7 @@ public class ApplicationController {
 	 * Opens a FileChooser to let the user select an address book to load.
 	 */
 	@FXML
-	private void handleOpen() {
+	void handleOpen() {
 		FileChooser fileChooser = new FileChooser();
 
 		// Set extension filter
@@ -78,7 +78,7 @@ public class ApplicationController {
 	}
 
 	@FXML
-	private void handleSave() {
+	void handleSave() {
 		File currentFile = fileManager.getLastOpenedFilePath();
 		if (currentFile != null) {
 			fileManager.save(currentFile);
@@ -88,7 +88,7 @@ public class ApplicationController {
 	}
 
 	@FXML
-	private void handleSaveAs() {
+	void handleSaveAs() {
 		FileChooser fileChooser = new FileChooser();
 
 		// Set extension filter
@@ -109,12 +109,12 @@ public class ApplicationController {
 	}
 
 	@FXML
-	private void handleNew() {
+	void handleNew() {
 		fileManager.newPlc();
 	}
 
 	@FXML
-	private void handleExit() {
+	void handleExit() {
 		System.exit(0);
 	}
 }

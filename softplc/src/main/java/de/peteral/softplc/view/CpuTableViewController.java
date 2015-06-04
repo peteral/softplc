@@ -57,7 +57,7 @@ public class CpuTableViewController {
 	 * after the fxml file has been loaded.
 	 */
 	@FXML
-	private void initialize() {
+	void initialize() {
 		cpuSlotColumn.setCellValueFactory(cellData -> cellData.getValue()
 				.getSlot());
 		cpuSlotColumn.setCellFactory(TextFieldTableCell
@@ -136,32 +136,32 @@ public class CpuTableViewController {
 	}
 
 	@FXML
-	private void handleStart() {
+	void handleStart() {
 		getSelectedCpus().forEach(cpu -> cpu.start());
 	}
 
 	@FXML
-	private void handleStop() {
+	void handleStop() {
 		getSelectedCpus().forEach(cpu -> cpu.stop());
 	}
 
 	@FXML
-	private void handleStartAll() {
+	void handleStartAll() {
 		plc.getCpus().forEach(cpu -> cpu.start());
 	}
 
 	@FXML
-	private void handleStopAll() {
+	void handleStopAll() {
 		plc.getCpus().forEach(cpu -> cpu.stop());
 	}
 
 	@FXML
-	private void handleAdd() {
+	void handleAdd() {
 		plc.getCpus().add(new PlcFactory().createCpu(plc));
 	}
 
 	@FXML
-	private void handleDelete() {
+	void handleDelete() {
 		handleStop();
 		plc.getCpus().removeAll(getSelectedCpus());
 	}
