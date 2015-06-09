@@ -2,8 +2,12 @@ package de.peteral.softplc.view;
 
 import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
+import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.nio.file.StandardOpenOption;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -494,6 +498,52 @@ public class CpuDetailViewController {
 			}
 		} catch (IOException e) {
 			ErrorDialog.show("Failed loading dialog", e);
+		}
+	}
+
+	@FXML
+	void handleCreateMain() {
+		FileChooser fileChooser = new FileChooser();
+
+		// Set extension filter
+		FileChooser.ExtensionFilter extFilter = new FileChooser.ExtensionFilter(
+				"JavaScript files (*.js)", "*.js");
+		fileChooser.getExtensionFilters().add(extFilter);
+		fileChooser.setInitialFileName("main.js");
+
+		// Show open file dialog
+		File file = fileChooser.showSaveDialog(primaryStage);
+
+		try {
+
+			deployResource("/script/main.js", file);
+
+			ScriptFile scriptFile = new ScriptFile(file.getAbsolutePath(), file);
+			scriptFile.reload();
+
+			currentCpu.getProgram().getScriptFiles().add(scriptFile);
+		} catch (IOException e) {
+			ErrorDialog.show("Failed creating main file", e);
+		}
+	}
+
+	private void deployResource(String resourceName, File file)
+			throws IOException {
+
+		if (file.exists()) {
+			file.delete();
+		}
+
+		try (InputStream inputStream = CpuDetailViewController.class
+				.getResourceAsStream(resourceName)) {
+
+			try (OutputStream outputStream = Files.newOutputStream(
+					Paths.get(file.toURI()), StandardOpenOption.CREATE_NEW)) {
+
+				byte[] buffer = new byte[inputStream.available()];
+				inputStream.read(buffer);
+				outputStream.write(buffer);
+			}
 		}
 	}
 }
