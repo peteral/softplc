@@ -65,8 +65,9 @@ public class FileManager {
 	 *
 	 * @param file
 	 *            file name
+	 * @return true - configuration loaded successfully
 	 */
-	public void loadPlcFromFile(File file) {
+	public boolean loadPlcFromFile(File file) {
 		try {
 			if (plc != null) {
 				plc.stop();
@@ -76,10 +77,13 @@ public class FileManager {
 			setPlc(newPlc);
 			setLastOpenedFilePath(file);
 			plc.start();
+
+			return true;
 		} catch (PlcFactoryException e) {
 			ErrorDialog.show("Failed loading configuration [" + file.getPath()
 					+ "]", e);
 		}
+		return false;
 	}
 
 	/**
@@ -142,10 +146,13 @@ public class FileManager {
 	public void loadLastFile() {
 		File file = getLastOpenedFilePath();
 		if (file != null) {
-			loadPlcFromFile(file);
-		} else {
-			newPlc();
+			if (loadPlcFromFile(file)) {
+				return;
+			}
 		}
+
+		newPlc();
+
 	}
 
 	/**
