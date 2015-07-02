@@ -239,7 +239,8 @@ public class CpuDetailViewController {
 		List<MemoryTableVariable> variables = new ArrayList<>();
 
 		vars.forEach(variable -> {
-			String value = variable.getNewValue().get().trim();
+			String value = variable.getNewValue().get();
+			value = (value == null) ? "" : value.trim();
 
 			if (!value.isEmpty() && !value.startsWith("//")) {
 				variables.add(variable);
