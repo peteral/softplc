@@ -139,4 +139,9 @@ public interface Cpu {
 	 * @return plc this cpu belongs to
 	 */
 	Plc getPlc();
+
+	/**
+	 * @return the initialStatus
+	 */
+	CpuStatus getInitialStatus();
 }

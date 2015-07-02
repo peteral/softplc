@@ -6,6 +6,7 @@ import java.io.IOException;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import de.peteral.softplc.model.Cpu;
+import de.peteral.softplc.model.CpuStatus;
 import de.peteral.softplc.model.Plc;
 import de.peteral.softplc.model.PutGetServer;
 import de.peteral.softplc.view.error.ErrorDialog;
@@ -56,7 +57,11 @@ public class PlcImpl implements Plc {
 
 	@Override
 	public void start() {
-		cpus.forEach(cpu -> cpu.start());
+		cpus.forEach(cpu -> {
+			if (cpu.getInitialStatus() == CpuStatus.RUN) {
+				cpu.start();
+			}
+		});
 
 		try {
 			server.start(this);

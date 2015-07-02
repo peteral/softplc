@@ -58,7 +58,7 @@ public class CpuImplTest {
 				new SimpleLongProperty(TARGET_CYCLE_TIME));
 
 		cpu = new CpuImpl("", 0, errorlog, executorFactory, memory,
-				MAX_BLOCK_SIZE, MAX_CONNECTIONS);
+				MAX_BLOCK_SIZE, MAX_CONNECTIONS, CpuStatus.STOP);
 	}
 
 	@Test

@@ -50,6 +50,7 @@ public class PlcTransformer {
 				+ cpu.getMaxConnections().get());
 		cpuElement
 				.setAttribute("maxBlockSize", "" + cpu.getMaxDataSize().get());
+		cpuElement.setAttribute("status", "" + cpu.getStatus().toString());
 		doc.getDocumentElement().appendChild(cpuElement);
 
 		Element memoryElement = doc.createElement("memory");

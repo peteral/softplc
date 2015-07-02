@@ -38,6 +38,7 @@ import de.peteral.softplc.executor.ScheduledThreadPoolExecutorFactory;
 import de.peteral.softplc.memory.MemoryAreaImpl;
 import de.peteral.softplc.memory.MemoryImpl;
 import de.peteral.softplc.model.Cpu;
+import de.peteral.softplc.model.CpuStatus;
 import de.peteral.softplc.model.Memory;
 import de.peteral.softplc.model.MemoryArea;
 import de.peteral.softplc.model.MemoryTable;
@@ -115,7 +116,7 @@ public class PlcFactory {
 				new MemoryImpl(new AddressParserFactory(),
 						new DataTypeFactory(), memoryAreas
 								.toArray(new MemoryArea[memoryAreas.size()])),
-				DEFAULT_MAX_BLOCK_SIZE, DEFAULT_MAX_CONNECTIONS);
+				DEFAULT_MAX_BLOCK_SIZE, DEFAULT_MAX_CONNECTIONS, CpuStatus.STOP);
 
 		result.setPlc(plc);
 
@@ -183,10 +184,15 @@ public class PlcFactory {
 				.getAttribute("maxBlockSize"));
 		int maxConnections = Integer.parseInt(cpuElement
 				.getAttribute("connections"));
+		CpuStatus status = CpuStatus.STOP;
+		try {
+			status = CpuStatus.valueOf(cpuElement.getAttribute("status"));
+		} catch (Exception e) {
+		}
 
 		Cpu cpu = new CpuImpl(cpuElement.getAttribute("name"), slot,
 				new ErrorLogImpl(), new ScheduledThreadPoolExecutorFactory(),
-				memory, maxBlockSize, maxConnections);
+				memory, maxBlockSize, maxConnections, status);
 
 		createTables(cpu, cpuElement);
 
