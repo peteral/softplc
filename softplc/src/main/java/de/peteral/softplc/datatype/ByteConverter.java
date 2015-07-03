@@ -31,7 +31,7 @@ public class ByteConverter implements Converter<Number> {
 	public void parseToBytes(String value, ParsedAddress address,
 			byte[] buffer, int offset) {
 
-		toBytes(Byte.parseByte(value), address, buffer, offset);
+		toBytes(Integer.parseInt(value), address, buffer, offset);
 	}
 
 }
