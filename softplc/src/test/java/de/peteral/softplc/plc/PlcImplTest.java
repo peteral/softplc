@@ -17,6 +17,7 @@ import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 
 import de.peteral.softplc.model.Cpu;
+import de.peteral.softplc.model.CpuStatus;
 import de.peteral.softplc.model.Plc;
 import de.peteral.softplc.model.PutGetServer;
 
@@ -38,6 +39,7 @@ public class PlcImplTest {
 
 		when(cpu2.getSlot()).thenReturn(new SimpleIntegerProperty(1));
 		when(cpu1.getSlot()).thenReturn(new SimpleIntegerProperty(3));
+		when(cpu1.getInitialStatus()).thenReturn(CpuStatus.RUN);
 		Cpu[] cpus = { cpu1, cpu2 };
 
 		plc = new PlcImpl(null, server, cpus);
@@ -69,11 +71,10 @@ public class PlcImplTest {
 	}
 
 	@Test
-	public void start_None_StartsAllCpus() {
+	public void start_None_StartsAllCpusWithStatusRun() {
 		plc.start();
 
 		verify(cpu1).start();
-		verify(cpu2).start();
 	}
 
 	@Test

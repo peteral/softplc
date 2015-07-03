@@ -28,7 +28,7 @@ public class ClientChannelCacheTest {
 		MockitoAnnotations.initMocks(this);
 
 		when(socket.getRemoteAddress()).thenReturn(address);
-		
+
 		ClientChannelCache.getInstance().clear();
 	}
 
@@ -49,6 +49,14 @@ public class ClientChannelCacheTest {
 
 		assertEquals(SLOT,
 				(int) ClientChannelCache.getInstance().getSlot(socket));
+	}
+
+	@Test
+	public void getClientCount_OneChannel_ReturnsOne() {
+		ClientChannelCache.getInstance().addChannel(socket, SLOT);
+
+		assertEquals(1,
+				ClientChannelCache.getInstance().getConnectionCount(SLOT));
 	}
 
 	@Test

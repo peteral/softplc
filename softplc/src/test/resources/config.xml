@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <!DOCTYPE softplc SYSTEM "softplc.dtd">
 <softplc>
-	<cpu slot="1" connections="64">
+	<cpu slot="1" connections="64" status="STOP">
 		<memory>
 			<area name="DB100" size="2000" />
 			<area name="DB101" size="1000" />
@@ -10,7 +10,7 @@
 			<file>./program/main.js</file>
 		</program>
 	</cpu>
-	<cpu slot="2" maxBlockSize="400">
+	<cpu slot="2" maxBlockSize="400" status="STOP">
 		<memory>
 			<area name="DB100" size="2000" />
 			<area name="DB101" size="1000" />

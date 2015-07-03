@@ -107,4 +107,26 @@ public class ClientChannelCache {
 	public static void installMock(ClientChannelCache mock) {
 		instance = mock;
 	}
+
+	/**
+	 * Returns current client count.
+	 *
+	 * @param slot
+	 * @return number of currently connected clients
+	 */
+	public int getConnectionCount(int slot) {
+		int result = 0;
+		lock.readLock().lock();
+		try {
+			for (Integer s : cache.values()) {
+				if (s.intValue() == slot) {
+					result++;
+				}
+			}
+		} finally {
+			lock.readLock().unlock();
+		}
+
+		return result;
+	}
 }

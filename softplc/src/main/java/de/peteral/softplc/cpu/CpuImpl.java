@@ -11,6 +11,7 @@ import javafx.beans.property.IntegerProperty;
 import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
+import de.peteral.softplc.comm.common.ClientChannelCache;
 import de.peteral.softplc.executor.ScheduledThreadPoolExecutorFactory;
 import de.peteral.softplc.model.CommunicationTask;
 import de.peteral.softplc.model.Cpu;
@@ -141,6 +142,7 @@ public class CpuImpl implements Cpu, ProgramCycleObserver {
 
 	@Override
 	public void afterCycleEnd() {
+		// process communication tasks
 		synchronized (pendingTasks) {
 			pendingTasks.forEach(task -> {
 				try {
@@ -153,6 +155,10 @@ public class CpuImpl implements Cpu, ProgramCycleObserver {
 
 			pendingTasks.clear();
 		}
+
+		// update current connection count
+		currentConnections.set(ClientChannelCache.getInstance()
+				.getConnectionCount(slot.get()));
 	}
 
 	@Override
