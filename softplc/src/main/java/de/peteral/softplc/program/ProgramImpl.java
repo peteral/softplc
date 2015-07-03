@@ -124,6 +124,8 @@ public class ProgramImpl implements Program {
 			bindings.put("logger", cpu.getLogger());
 
 			for (ScriptFile file : getScriptFiles()) {
+				Logger.getLogger("compiler").log(Level.FINE,
+						"Compiling source  [" + file.getFileName().get() + "]");
 				currentStep = "File: " + file.getFileName().get();
 				String precompiled = precompiler.translate(file.getSource()
 						.get());
@@ -131,6 +133,7 @@ public class ProgramImpl implements Program {
 				compiledScript.eval(context);
 			}
 			currentStep = "main()";
+			Logger.getLogger("compiler").log(Level.FINE, "Compiling main()");
 			compiled = compiler.compile(MAIN);
 
 			return true;
