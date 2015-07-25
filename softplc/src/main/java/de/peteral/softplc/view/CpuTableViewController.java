@@ -4,6 +4,10 @@ import java.io.IOException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import de.peteral.softplc.file.FileManager;
+import de.peteral.softplc.model.Cpu;
+import de.peteral.softplc.model.Plc;
+import de.peteral.softplc.plc.PlcFactory;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -14,9 +18,6 @@ import javafx.scene.control.cell.TextFieldTableCell;
 import javafx.scene.layout.AnchorPane;
 import javafx.stage.Stage;
 import javafx.util.converter.NumberStringConverter;
-import de.peteral.softplc.model.Cpu;
-import de.peteral.softplc.model.Plc;
-import de.peteral.softplc.plc.PlcFactory;
 
 /**
  * Actual PLC view controller.
@@ -50,6 +51,7 @@ public class CpuTableViewController {
 
 	private Plc plc;
 	private Stage primaryStage;
+	private FileManager fileManager;
 	private static final Logger LOGGER = Logger.getLogger("application");
 
 	/**
@@ -58,34 +60,23 @@ public class CpuTableViewController {
 	 */
 	@FXML
 	void initialize() {
-		cpuSlotColumn.setCellValueFactory(cellData -> cellData.getValue()
-				.getSlot());
-		cpuSlotColumn.setCellFactory(TextFieldTableCell
-				.forTableColumn(new NumberStringConverter()));
+		cpuSlotColumn.setCellValueFactory(cellData -> cellData.getValue().getSlot());
+		cpuSlotColumn.setCellFactory(TextFieldTableCell.forTableColumn(new NumberStringConverter()));
 
-		cpuModeColumn.setCellValueFactory(cellData -> cellData.getValue()
-				.getStatusProperty());
+		cpuModeColumn.setCellValueFactory(cellData -> cellData.getValue().getStatusProperty());
 
-		cpuCycleTarColumn.setCellValueFactory(cellData -> cellData.getValue()
-				.getProgram().getTargetCycleTime());
-		cpuCycleTarColumn.setCellFactory(TextFieldTableCell
-				.forTableColumn(new NumberStringConverter()));
+		cpuCycleTarColumn.setCellValueFactory(cellData -> cellData.getValue().getProgram().getTargetCycleTime());
+		cpuCycleTarColumn.setCellFactory(TextFieldTableCell.forTableColumn(new NumberStringConverter()));
 
-		cpuCycleActColumn.setCellValueFactory(cellData -> cellData.getValue()
-				.getProgram().getCurrentCycleTime());
+		cpuCycleActColumn.setCellValueFactory(cellData -> cellData.getValue().getProgram().getCurrentCycleTime());
 
-		cpuActualConnectionsColumn.setCellValueFactory(cellData -> cellData
-				.getValue().getCurrentConnections());
+		cpuActualConnectionsColumn.setCellValueFactory(cellData -> cellData.getValue().getCurrentConnections());
 
-		cpuMaxConnectionsColumn.setCellValueFactory(cellData -> cellData
-				.getValue().getMaxConnections());
-		cpuMaxConnectionsColumn.setCellFactory(TextFieldTableCell
-				.forTableColumn(new NumberStringConverter()));
+		cpuMaxConnectionsColumn.setCellValueFactory(cellData -> cellData.getValue().getMaxConnections());
+		cpuMaxConnectionsColumn.setCellFactory(TextFieldTableCell.forTableColumn(new NumberStringConverter()));
 
-		cpuMaxBlockSizeColumn.setCellValueFactory(cellData -> cellData
-				.getValue().getMaxDataSize());
-		cpuMaxBlockSizeColumn.setCellFactory(TextFieldTableCell
-				.forTableColumn(new NumberStringConverter()));
+		cpuMaxBlockSizeColumn.setCellValueFactory(cellData -> cellData.getValue().getMaxDataSize());
+		cpuMaxBlockSizeColumn.setCellFactory(TextFieldTableCell.forTableColumn(new NumberStringConverter()));
 
 		cpuNameColumn.setCellValueFactory(data -> data.getValue().getName());
 		cpuNameColumn.setCellFactory(TextFieldTableCell.forTableColumn());
@@ -96,28 +87,36 @@ public class CpuTableViewController {
 
 		cpuTable.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
 
-		cpuTable.getSelectionModel()
-				.selectedItemProperty()
-				.addListener(
-						(observable, oldValue, newValue) -> cpuDetailController
-								.update(newValue));
+		cpuTable.getSelectionModel().selectedItemProperty()
+				.addListener((observable, oldValue, newValue) -> cpuDetailController.update(newValue));
 
 	}
 
 	private void initCpuDetailScene() {
 		try {
 			FXMLLoader loader = new FXMLLoader();
-			loader.setLocation(CpuTableViewController.class
-					.getResource("CpuDetailView.fxml"));
+			loader.setLocation(CpuTableViewController.class.getResource("CpuDetailView.fxml"));
 			AnchorPane layout = loader.load();
 
 			cpuDetailPane.getChildren().add(layout);
 
 			cpuDetailController = loader.getController();
 			cpuDetailController.setPrimaryStage(primaryStage);
+			cpuDetailController.setFileManager(fileManager);
 		} catch (IOException e) {
 			LOGGER.log(Level.SEVERE, "Failed reading CpuDetailView.fxml", e);
 		}
+	}
+
+	/**
+	 * Initializes the controller with file manager reference.
+	 *
+	 * @param fileManager
+	 */
+	public void setFileManager(FileManager fileManager) {
+		this.fileManager = fileManager;
+
+		cpuDetailController.setFileManager(fileManager);
 	}
 
 	/**

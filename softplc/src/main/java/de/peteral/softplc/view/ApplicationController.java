@@ -2,13 +2,13 @@ package de.peteral.softplc.view;
 
 import java.io.File;
 
+import de.peteral.softplc.comm.tasks.CommunicationTaskFactory;
+import de.peteral.softplc.file.FileManager;
 import javafx.fxml.FXML;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
-import de.peteral.softplc.comm.tasks.CommunicationTaskFactory;
-import de.peteral.softplc.file.FileManager;
 
 /**
  * Root panel Java FX controller.
@@ -49,8 +49,7 @@ public class ApplicationController {
 		Alert alert = new Alert(AlertType.INFORMATION);
 		alert.setTitle("Softplc");
 		alert.setHeaderText("About");
-		StringBuilder builder = new StringBuilder(
-				"Author: Ladislav Petera, 2014-2015\n");
+		StringBuilder builder = new StringBuilder("Author: Ladislav Petera, 2014-2015\n");
 		new CommunicationTaskFactory().logContents(builder);
 		alert.setContentText(builder.toString());
 
@@ -65,9 +64,9 @@ public class ApplicationController {
 		FileChooser fileChooser = new FileChooser();
 
 		// Set extension filter
-		FileChooser.ExtensionFilter extFilter = new FileChooser.ExtensionFilter(
-				"XML files (*.xml)", "*.xml");
+		FileChooser.ExtensionFilter extFilter = new FileChooser.ExtensionFilter("XML files (*.xml)", "*.xml");
 		fileChooser.getExtensionFilters().add(extFilter);
+		fileManager.setLastFolder(fileChooser);
 
 		// Show open file dialog
 		File file = fileChooser.showOpenDialog(stage);
@@ -92,9 +91,9 @@ public class ApplicationController {
 		FileChooser fileChooser = new FileChooser();
 
 		// Set extension filter
-		FileChooser.ExtensionFilter extFilter = new FileChooser.ExtensionFilter(
-				"XML files (*.xml)", "*.xml");
+		FileChooser.ExtensionFilter extFilter = new FileChooser.ExtensionFilter("XML files (*.xml)", "*.xml");
 		fileChooser.getExtensionFilters().add(extFilter);
+		fileManager.setLastFolder(fileChooser);
 
 		// Show save file dialog
 		File file = fileChooser.showSaveDialog(stage);

@@ -15,6 +15,18 @@ import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
 
+import de.peteral.softplc.file.FileManager;
+import de.peteral.softplc.memorytables.MemoryTableUpdateTask;
+import de.peteral.softplc.memorytables.MemoryTableWriteTask;
+import de.peteral.softplc.model.Cpu;
+import de.peteral.softplc.model.CpuStatus;
+import de.peteral.softplc.model.ErrorLogEntry;
+import de.peteral.softplc.model.MemoryArea;
+import de.peteral.softplc.model.MemoryTable;
+import de.peteral.softplc.model.MemoryTableVariable;
+import de.peteral.softplc.model.ScriptFile;
+import de.peteral.softplc.plc.PlcFactory;
+import de.peteral.softplc.view.error.ErrorDialog;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -29,17 +41,6 @@ import javafx.stage.FileChooser;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.util.converter.NumberStringConverter;
-import de.peteral.softplc.memorytables.MemoryTableUpdateTask;
-import de.peteral.softplc.memorytables.MemoryTableWriteTask;
-import de.peteral.softplc.model.Cpu;
-import de.peteral.softplc.model.CpuStatus;
-import de.peteral.softplc.model.ErrorLogEntry;
-import de.peteral.softplc.model.MemoryArea;
-import de.peteral.softplc.model.MemoryTable;
-import de.peteral.softplc.model.MemoryTableVariable;
-import de.peteral.softplc.model.ScriptFile;
-import de.peteral.softplc.plc.PlcFactory;
-import de.peteral.softplc.view.error.ErrorDialog;
 
 /**
  * Controller for CPU status display.
@@ -97,6 +98,7 @@ public class CpuDetailViewController {
 	private Timer timer;
 	private TimerTask forceMemoryTableTask;
 	private Stage primaryStage;
+	private FileManager fileManager;
 
 	/**
 	 * Initializes the controller class. This method is automatically called
@@ -104,62 +106,39 @@ public class CpuDetailViewController {
 	 */
 	@FXML
 	void initialize() {
-		memoryAreaColumn.setCellValueFactory(cellData -> cellData.getValue()
-				.getAreaCode());
+		memoryAreaColumn.setCellValueFactory(cellData -> cellData.getValue().getAreaCode());
 		memoryAreaColumn.setCellFactory(TextFieldTableCell.forTableColumn());
 
-		memorySizeColumn.setCellValueFactory(cellData -> cellData.getValue()
-				.getSize());
-		memorySizeColumn.setCellFactory(TextFieldTableCell
-				.forTableColumn(new NumberStringConverter()));
+		memorySizeColumn.setCellValueFactory(cellData -> cellData.getValue().getSize());
+		memorySizeColumn.setCellFactory(TextFieldTableCell.forTableColumn(new NumberStringConverter()));
 
-		memoryTableNameColumn.setCellValueFactory(cellData -> cellData
-				.getValue().getName());
-		memoryTableNameColumn.setCellFactory(TextFieldTableCell
-				.forTableColumn());
+		memoryTableNameColumn.setCellValueFactory(cellData -> cellData.getValue().getName());
+		memoryTableNameColumn.setCellFactory(TextFieldTableCell.forTableColumn());
 
-		memoryTableVariableNameColumn.setCellValueFactory(cellData -> cellData
-				.getValue().getVariable());
-		memoryTableVariableNameColumn.setCellFactory(TextFieldTableCell
-				.forTableColumn());
-		memoryTableVariableCurrentColumn
-				.setCellValueFactory(cellData -> cellData.getValue()
-						.getCurrentValue());
-		memoryTableVariableNewColumn.setCellValueFactory(cellData -> cellData
-				.getValue().getNewValue());
-		memoryTableVariableNewColumn.setCellFactory(TextFieldTableCell
-				.forTableColumn());
+		memoryTableVariableNameColumn.setCellValueFactory(cellData -> cellData.getValue().getVariable());
+		memoryTableVariableNameColumn.setCellFactory(TextFieldTableCell.forTableColumn());
+		memoryTableVariableCurrentColumn.setCellValueFactory(cellData -> cellData.getValue().getCurrentValue());
+		memoryTableVariableNewColumn.setCellValueFactory(cellData -> cellData.getValue().getNewValue());
+		memoryTableVariableNewColumn.setCellFactory(TextFieldTableCell.forTableColumn());
 
-		programNameColumn.setCellValueFactory(data -> data.getValue()
-				.getFileName());
+		programNameColumn.setCellValueFactory(data -> data.getValue().getFileName());
 
-		errorLogTimestampColumn.setCellValueFactory(data -> data.getValue()
-				.getTimestamp());
-		errorLogLevelColumn.setCellValueFactory(data -> data.getValue()
-				.getLevel());
-		errorLogModuleColumn.setCellValueFactory(data -> data.getValue()
-				.getModule());
-		errorLogMessageColumn.setCellValueFactory(data -> data.getValue()
-				.getMessage());
+		errorLogTimestampColumn.setCellValueFactory(data -> data.getValue().getTimestamp());
+		errorLogLevelColumn.setCellValueFactory(data -> data.getValue().getLevel());
+		errorLogModuleColumn.setCellValueFactory(data -> data.getValue().getModule());
+		errorLogMessageColumn.setCellValueFactory(data -> data.getValue().getMessage());
 
 		timer = new Timer();
 
 		update(null);
 
-		memoryTable.getSelectionModel()
-				.setSelectionMode(SelectionMode.MULTIPLE);
-		memoryTableTable.getSelectionModel().setSelectionMode(
-				SelectionMode.MULTIPLE);
-		programTable.getSelectionModel().setSelectionMode(
-				SelectionMode.MULTIPLE);
-		memoryTableVariableTable.getSelectionModel().setSelectionMode(
-				SelectionMode.MULTIPLE);
+		memoryTable.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
+		memoryTableTable.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
+		programTable.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
+		memoryTableVariableTable.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
 
-		memoryTableTable
-				.getSelectionModel()
-				.selectedItemProperty()
-				.addListener(
-						(observable, oldValue, newValue) -> showMemoryTable(newValue));
+		memoryTableTable.getSelectionModel().selectedItemProperty()
+				.addListener((observable, oldValue, newValue) -> showMemoryTable(newValue));
 	}
 
 	/**
@@ -191,8 +170,7 @@ public class CpuDetailViewController {
 		if (newValue == null) {
 			memoryTableVariableTable.setItems(null);
 		} else {
-			memoryTableVariableTable
-					.setItems(currentMemoryTable.getVariables());
+			memoryTableVariableTable.setItems(currentMemoryTable.getVariables());
 		}
 
 	}
@@ -204,11 +182,7 @@ public class CpuDetailViewController {
 
 	@FXML
 	void handleDeleteMemoryTable() {
-		currentCpu
-				.getMemory()
-				.getMemoryTables()
-				.removeAll(
-						memoryTableTable.getSelectionModel().getSelectedItems());
+		currentCpu.getMemory().getMemoryTables().removeAll(memoryTableTable.getSelectionModel().getSelectedItems());
 	}
 
 	@FXML
@@ -218,16 +192,12 @@ public class CpuDetailViewController {
 
 	@FXML
 	void handleDeleteMemoryTableVariable() {
-		currentMemoryTable.getVariables()
-				.removeAll(
-						memoryTableVariableTable.getSelectionModel()
-								.getSelectedItems());
+		currentMemoryTable.getVariables().removeAll(memoryTableVariableTable.getSelectionModel().getSelectedItems());
 	}
 
 	@FXML
 	void handleReadMemoryTable() {
-		currentCpu.addCommunicationTask(new MemoryTableUpdateTask(
-				currentMemoryTable));
+		currentCpu.addCommunicationTask(new MemoryTableUpdateTask(currentMemoryTable));
 	}
 
 	@FXML
@@ -248,15 +218,14 @@ public class CpuDetailViewController {
 		});
 
 		if (!variables.isEmpty()) {
-			currentCpu.addCommunicationTask(new MemoryTableWriteTask(variables
-					.toArray(new MemoryTableVariable[variables.size()])));
+			currentCpu.addCommunicationTask(
+					new MemoryTableWriteTask(variables.toArray(new MemoryTableVariable[variables.size()])));
 		}
 	}
 
 	@FXML
 	void handleWriteMemoryTableVariable() {
-		writeVariables(memoryTableVariableTable.getSelectionModel()
-				.getSelectedItems());
+		writeVariables(memoryTableVariableTable.getSelectionModel().getSelectedItems());
 	}
 
 	@FXML
@@ -266,8 +235,7 @@ public class CpuDetailViewController {
 			updateMemoryTableTask = new TimerTask() {
 				@Override
 				public void run() {
-					if ((currentCpu.getStatus() == CpuStatus.RUN)
-							&& (currentMemoryTable != null)) {
+					if ((currentCpu.getStatus() == CpuStatus.RUN) && (currentMemoryTable != null)) {
 						handleReadMemoryTable();
 					}
 				}
@@ -288,8 +256,7 @@ public class CpuDetailViewController {
 			forceMemoryTableTask = new TimerTask() {
 				@Override
 				public void run() {
-					if ((currentCpu.getStatus() == CpuStatus.RUN)
-							&& (currentMemoryTable != null)) {
+					if ((currentCpu.getStatus() == CpuStatus.RUN) && (currentMemoryTable != null)) {
 						handleWriteMemoryTable();
 					}
 				}
@@ -305,14 +272,12 @@ public class CpuDetailViewController {
 
 	@FXML
 	void handleAddMemoryArea() {
-		currentCpu.getMemory().addMemoryArea(
-				new PlcFactory().createMemoryArea());
+		currentCpu.getMemory().addMemoryArea(new PlcFactory().createMemoryArea());
 	}
 
 	@FXML
 	void handleDeleteMemoryArea() {
-		currentCpu.getMemory().removeMemoryAreas(
-				memoryTable.getSelectionModel().getSelectedItems());
+		currentCpu.getMemory().removeMemoryAreas(memoryTable.getSelectionModel().getSelectedItems());
 	}
 
 	@FXML
@@ -330,54 +295,53 @@ public class CpuDetailViewController {
 		FileChooser fileChooser = new FileChooser();
 
 		// Set extension filter
-		FileChooser.ExtensionFilter extFilter = new FileChooser.ExtensionFilter(
-				"JavaScript files (*.js)", "*.js");
+		FileChooser.ExtensionFilter extFilter = new FileChooser.ExtensionFilter("JavaScript files (*.js)", "*.js");
 		fileChooser.getExtensionFilters().add(extFilter);
+		fileManager.setLastFolder(fileChooser);
 
 		// Show open file dialog
 		List<File> files = fileChooser.showOpenMultipleDialog(primaryStage);
+		if (files == null) {
+			return;
+		}
 
 		files.forEach(file -> {
 			try {
-				ScriptFile scriptFile = new ScriptFile(file.getAbsolutePath(),
-						file);
+				ScriptFile scriptFile = new ScriptFile(file.getAbsolutePath(), file);
 				scriptFile.reload();
 
 				currentCpu.getProgram().getScriptFiles().add(scriptFile);
 			} catch (IOException e) {
-				ErrorDialog.show("Failed adding file [" + file.getPath() + "]",
-						e);
+				ErrorDialog.show("Failed adding file [" + file.getPath() + "]", e);
 			}
 		});
 	}
 
 	@FXML
 	void handleDeleteSourceFile() {
-		currentCpu.getProgram().getScriptFiles()
-				.removeAll(programTable.getSelectionModel().getSelectedItems());
+		currentCpu.getProgram().getScriptFiles().removeAll(programTable.getSelectionModel().getSelectedItems());
 	}
 
 	@FXML
 	void handleToggleCommentVariable() {
-		memoryTableVariableTable.getSelectionModel().getSelectedItems()
-				.forEach(variable -> {
+		memoryTableVariableTable.getSelectionModel().getSelectedItems().forEach(variable -> {
 
-					if (variable == null) {
-						return;
-					}
+			if (variable == null) {
+				return;
+			}
 
-					String value = variable.getNewValue().get().trim();
+			String value = variable.getNewValue().get().trim();
 
-					if (value.isEmpty()) {
-						return;
-					}
+			if (value.isEmpty()) {
+				return;
+			}
 
-					if (value.startsWith("//")) {
-						variable.getNewValue().set(value.substring(2));
-					} else {
-						variable.getNewValue().set("//" + value);
-					}
-				});
+			if (value.startsWith("//")) {
+				variable.getNewValue().set(value.substring(2));
+			} else {
+				variable.getNewValue().set("//" + value);
+			}
+		});
 	}
 
 	/**
@@ -391,65 +355,44 @@ public class CpuDetailViewController {
 
 	@FXML
 	void handleToAbsolutePath() {
-		programTable
-				.getSelectionModel()
-				.getSelectedItems()
-				.forEach(
-						scriptFile -> {
-							File f = new File(scriptFile.getFileName().get());
-							if (!f.isAbsolute()) {
-								try {
-									Path pathBase = Paths.get(currentCpu
-											.getPlc().getPath().getParentFile()
-											.getCanonicalPath());
-									Path pathRelative = Paths.get(f.getPath());
-									Path pathAbsolute = pathBase
-											.resolve(pathRelative);
-									scriptFile.getFileName().set(
-											pathAbsolute.toString());
-								} catch (Exception e) {
-									ErrorDialog.show(
-											"Failed converting to absolute", e);
-								}
-							}
-						});
+		programTable.getSelectionModel().getSelectedItems().forEach(scriptFile -> {
+			File f = new File(scriptFile.getFileName().get());
+			if (!f.isAbsolute()) {
+				try {
+					Path pathBase = Paths.get(currentCpu.getPlc().getPath().getParentFile().getCanonicalPath());
+					Path pathRelative = Paths.get(f.getPath());
+					Path pathAbsolute = pathBase.resolve(pathRelative);
+					scriptFile.getFileName().set(pathAbsolute.toString());
+				} catch (Exception e) {
+					ErrorDialog.show("Failed converting to absolute", e);
+				}
+			}
+		});
 	}
 
 	@FXML
 	void handleToRelativePath() {
-		programTable
-				.getSelectionModel()
-				.getSelectedItems()
-				.forEach(
-						scriptFile -> {
-							File f = new File(scriptFile.getFileName().get());
-							if (f.isAbsolute()
-									&& (currentCpu.getPlc().getPath() != null)) {
-								try {
-									Path pathAbsolute = Paths.get(f
-											.getCanonicalPath());
-									Path pathBase = Paths.get(currentCpu
-											.getPlc().getPath().getParentFile()
-											.getCanonicalPath());
-									Path pathRelative = pathBase
-											.relativize(pathAbsolute);
+		programTable.getSelectionModel().getSelectedItems().forEach(scriptFile -> {
+			File f = new File(scriptFile.getFileName().get());
+			if (f.isAbsolute() && (currentCpu.getPlc().getPath() != null)) {
+				try {
+					Path pathAbsolute = Paths.get(f.getCanonicalPath());
+					Path pathBase = Paths.get(currentCpu.getPlc().getPath().getParentFile().getCanonicalPath());
+					Path pathRelative = pathBase.relativize(pathAbsolute);
 
-									scriptFile.getFileName().set(
-											pathRelative.toString());
-								} catch (Exception e) {
-									ErrorDialog.show(
-											"Failed converting to relative", e);
-								}
-							}
-						});
+					scriptFile.getFileName().set(pathRelative.toString());
+				} catch (Exception e) {
+					ErrorDialog.show("Failed converting to relative", e);
+				}
+			}
+		});
 	}
 
 	@FXML
 	void handleSourceUp() {
 		int selected = programTable.getSelectionModel().getSelectedIndex();
 		if (selected > 0) {
-			Collections.swap(currentCpu.getProgram().getScriptFiles(),
-					selected, selected - 1);
+			Collections.swap(currentCpu.getProgram().getScriptFiles(), selected, selected - 1);
 		}
 	}
 
@@ -457,8 +400,7 @@ public class CpuDetailViewController {
 	void handleSourceDown() {
 		int selected = programTable.getSelectionModel().getSelectedIndex();
 		if (selected < (currentCpu.getProgram().getScriptFiles().size() - 1)) {
-			Collections.swap(currentCpu.getProgram().getScriptFiles(),
-					selected, selected + 1);
+			Collections.swap(currentCpu.getProgram().getScriptFiles(), selected, selected + 1);
 		}
 	}
 
@@ -473,8 +415,7 @@ public class CpuDetailViewController {
 		try {
 			// Load the fxml file and create a new stage for the popup dialog.
 			FXMLLoader loader = new FXMLLoader();
-			loader.setLocation(CpuDetailViewController.class
-					.getResource("AddMemoryAreaRangeDialog.fxml"));
+			loader.setLocation(CpuDetailViewController.class.getResource("AddMemoryAreaRangeDialog.fxml"));
 			AnchorPane page = (AnchorPane) loader.load();
 
 			// Create the dialog Stage.
@@ -486,16 +427,14 @@ public class CpuDetailViewController {
 			dialogStage.setScene(scene);
 
 			// Set the person into the controller.
-			AddMemoryAreaRangeDialogController controller = loader
-					.getController();
+			AddMemoryAreaRangeDialogController controller = loader.getController();
 			controller.setDialogStage(dialogStage);
 
 			// Show the dialog and wait until the user closes it
 			dialogStage.showAndWait();
 
 			if (controller.isOkClicked()) {
-				controller.createMemoryAreas().forEach(
-						area -> currentCpu.getMemory().addMemoryArea(area));
+				controller.createMemoryAreas().forEach(area -> currentCpu.getMemory().addMemoryArea(area));
 			}
 		} catch (IOException e) {
 			ErrorDialog.show("Failed loading dialog", e);
@@ -507,13 +446,16 @@ public class CpuDetailViewController {
 		FileChooser fileChooser = new FileChooser();
 
 		// Set extension filter
-		FileChooser.ExtensionFilter extFilter = new FileChooser.ExtensionFilter(
-				"JavaScript files (*.js)", "*.js");
+		FileChooser.ExtensionFilter extFilter = new FileChooser.ExtensionFilter("JavaScript files (*.js)", "*.js");
 		fileChooser.getExtensionFilters().add(extFilter);
+		fileManager.setLastFolder(fileChooser);
 		fileChooser.setInitialFileName("main.js");
 
 		// Show open file dialog
 		File file = fileChooser.showSaveDialog(primaryStage);
+		if (file == null) {
+			return;
+		}
 
 		try {
 
@@ -528,23 +470,30 @@ public class CpuDetailViewController {
 		}
 	}
 
-	private void deployResource(String resourceName, File file)
-			throws IOException {
+	private void deployResource(String resourceName, File file) throws IOException {
 
 		if (file.exists()) {
 			file.delete();
 		}
 
-		try (InputStream inputStream = CpuDetailViewController.class
-				.getResourceAsStream(resourceName)) {
+		try (InputStream inputStream = CpuDetailViewController.class.getResourceAsStream(resourceName)) {
 
-			try (OutputStream outputStream = Files.newOutputStream(
-					Paths.get(file.toURI()), StandardOpenOption.CREATE_NEW)) {
+			try (OutputStream outputStream = Files.newOutputStream(Paths.get(file.toURI()),
+					StandardOpenOption.CREATE_NEW)) {
 
 				byte[] buffer = new byte[inputStream.available()];
 				inputStream.read(buffer);
 				outputStream.write(buffer);
 			}
 		}
+	}
+
+	/**
+	 * Initializes the controller with file manager reference.
+	 *
+	 * @param fileManager
+	 */
+	public void setFileManager(FileManager fileManager) {
+		this.fileManager = fileManager;
 	}
 }

@@ -21,6 +21,7 @@ import de.peteral.softplc.plc.PlcFactory;
 import de.peteral.softplc.plc.PlcFactoryException;
 import de.peteral.softplc.plc.PlcTransformer;
 import de.peteral.softplc.view.error.ErrorDialog;
+import javafx.stage.FileChooser;
 
 /**
  * Abstraction for file operations
@@ -80,8 +81,7 @@ public class FileManager {
 
 			return true;
 		} catch (PlcFactoryException e) {
-			ErrorDialog.show("Failed loading configuration [" + file.getPath()
-					+ "]", e);
+			ErrorDialog.show("Failed loading configuration [" + file.getPath() + "]", e);
 		}
 		return false;
 	}
@@ -96,11 +96,9 @@ public class FileManager {
 			Document doc = new PlcTransformer().transform(getPlc());
 			TransformerFactory tf = TransformerFactory.newInstance();
 			Transformer transformer = tf.newTransformer();
-			transformer.setOutputProperty(OutputKeys.DOCTYPE_SYSTEM,
-					"softplc.dtd");
+			transformer.setOutputProperty(OutputKeys.DOCTYPE_SYSTEM, "softplc.dtd");
 			transformer.setOutputProperty(OutputKeys.INDENT, "yes");
-			transformer.setOutputProperty(
-					"{http://xml.apache.org/xslt}indent-amount", "4");
+			transformer.setOutputProperty("{http://xml.apache.org/xslt}indent-amount", "4");
 			FileWriter writer = new FileWriter(file);
 			transformer.transform(new DOMSource(doc), new StreamResult(writer));
 
@@ -108,8 +106,7 @@ public class FileManager {
 			plc.setPath(file);
 
 			// TODO handling for script files - do we copy them?
-		} catch (ParserConfigurationException | IOException
-				| TransformerException e) {
+		} catch (ParserConfigurationException | IOException | TransformerException e) {
 
 			ErrorDialog.show("Failed saving file", e);
 		}
@@ -169,6 +166,15 @@ public class FileManager {
 	public void setPlc(Plc plc) {
 		this.plc = plc;
 		plcConsumer.accept(plc);
+	}
+
+	public void setLastFolder(FileChooser fileChooser) {
+		File path = getLastOpenedFilePath();
+		if (path == null) {
+			return;
+		}
+
+		fileChooser.setInitialDirectory(path.getParentFile());
 	}
 
 }

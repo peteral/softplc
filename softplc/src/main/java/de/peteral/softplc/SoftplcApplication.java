@@ -4,6 +4,9 @@ import java.io.IOException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import de.peteral.softplc.file.FileManager;
+import de.peteral.softplc.view.ApplicationController;
+import de.peteral.softplc.view.CpuTableViewController;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
@@ -11,9 +14,6 @@ import javafx.scene.image.Image;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.BorderPane;
 import javafx.stage.Stage;
-import de.peteral.softplc.file.FileManager;
-import de.peteral.softplc.view.ApplicationController;
-import de.peteral.softplc.view.CpuTableViewController;
 
 /**
  * Java FX application entry point.
@@ -36,7 +36,7 @@ public class SoftplcApplication extends Application {
 			// Update the stage title.
 			setTitle("");
 		}
-	}, plc -> cpuTableViewController.setPlc(plc));
+	} , plc -> cpuTableViewController.setPlc(plc));
 	private static final Logger LOGGER = Logger.getLogger("application");
 
 	@Override
@@ -44,9 +44,8 @@ public class SoftplcApplication extends Application {
 		this.primaryStage = primaryStage;
 		setTitle("");
 
-		this.primaryStage.getIcons().add(
-				new Image(SoftplcApplication.class
-						.getResourceAsStream("/images/softplc_32.png")));
+		this.primaryStage.getIcons()
+				.add(new Image(SoftplcApplication.class.getResourceAsStream("/images/softplc_32.png")));
 
 		this.primaryStage.setOnCloseRequest(event -> System.exit(0));
 
@@ -65,8 +64,7 @@ public class SoftplcApplication extends Application {
 	private void initApplicationPane() {
 		try {
 			FXMLLoader loader = new FXMLLoader();
-			loader.setLocation(SoftplcApplication.class
-					.getResource("view/Application.fxml"));
+			loader.setLocation(SoftplcApplication.class.getResource("view/Application.fxml"));
 			applicationPane = loader.load();
 
 			Scene scene = new Scene(applicationPane);
@@ -94,14 +92,14 @@ public class SoftplcApplication extends Application {
 	private void showCpuTableView() {
 		try {
 			FXMLLoader loader = new FXMLLoader();
-			loader.setLocation(SoftplcApplication.class
-					.getResource("view/CpuTableView.fxml"));
+			loader.setLocation(SoftplcApplication.class.getResource("view/CpuTableView.fxml"));
 
 			AnchorPane actualView = loader.load();
 			applicationPane.setCenter(actualView);
 
 			cpuTableViewController = loader.getController();
 			cpuTableViewController.setPrimaryStage(primaryStage);
+			cpuTableViewController.setFileManager(fileManager);
 		} catch (IOException e) {
 			LOGGER.log(Level.SEVERE, "Failed loading CpuTableView.fxml:", e);
 		}
