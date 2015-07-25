@@ -62,6 +62,16 @@
                                                       <KeyCodeCombination alt="UP" code="W" control="DOWN" meta="UP" shift="UP" shortcut="UP" />
                                                    </accelerator></MenuItem>
                                                 <MenuItem mnemonicParsing="false" onAction="#handleWriteMemoryTable" text="Write all" />
+                                                <MenuItem mnemonicParsing="false" onAction="#handleWrite1" text="Set to 1">
+                                                   <accelerator>
+                                                      <KeyCodeCombination alt="UP" code="DIGIT1" control="DOWN" meta="UP" shift="UP" shortcut="UP" />
+                                                   </accelerator>
+                                                </MenuItem>
+                                                <MenuItem mnemonicParsing="false" onAction="#handleWrite0" text="Set to 0">
+                                                   <accelerator>
+                                                      <KeyCodeCombination alt="UP" code="DIGIT0" control="DOWN" meta="UP" shift="UP" shortcut="UP" />
+                                                   </accelerator>
+                                                </MenuItem>
                                                 <SeparatorMenuItem mnemonicParsing="false" />
                                                 <MenuItem mnemonicParsing="false" onAction="#handleToggleCommentVariable" text="Toggle Comment">
                                                    <accelerator>

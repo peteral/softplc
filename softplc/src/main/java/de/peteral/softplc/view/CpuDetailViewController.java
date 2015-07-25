@@ -206,14 +206,22 @@ public class CpuDetailViewController {
 	}
 
 	private void writeVariables(ObservableList<MemoryTableVariable> vars) {
+		writeVariables(vars, null);
+	}
+
+	private void writeVariables(ObservableList<MemoryTableVariable> vars, String val) {
 		List<MemoryTableVariable> variables = new ArrayList<>();
 
 		vars.forEach(variable -> {
-			String value = variable.getNewValue().get();
-			value = (value == null) ? "" : value.trim();
+			if (val == null) {
+				String value = variable.getNewValue().get();
+				value = (value == null) ? "" : value.trim();
 
-			if (!value.isEmpty() && !value.startsWith("//")) {
-				variables.add(variable);
+				if (!value.isEmpty() && !value.startsWith("//")) {
+					variables.add(variable);
+				}
+			} else {
+				variables.add(new MemoryTableVariable(variable.getVariable().get(), val));
 			}
 		});
 
@@ -495,5 +503,15 @@ public class CpuDetailViewController {
 	 */
 	public void setFileManager(FileManager fileManager) {
 		this.fileManager = fileManager;
+	}
+
+	@FXML
+	void handleWrite1() {
+		writeVariables(memoryTableVariableTable.getSelectionModel().getSelectedItems(), "1");
+	}
+
+	@FXML
+	void handleWrite0() {
+		writeVariables(memoryTableVariableTable.getSelectionModel().getSelectedItems(), "0");
 	}
 }

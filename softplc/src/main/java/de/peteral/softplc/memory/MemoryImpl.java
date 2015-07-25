@@ -2,8 +2,6 @@ package de.peteral.softplc.memory;
 
 import java.util.logging.Level;
 
-import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;
 import de.peteral.softplc.address.AddressParserFactory;
 import de.peteral.softplc.address.ParsedAddress;
 import de.peteral.softplc.datatype.DataTypeFactory;
@@ -12,6 +10,8 @@ import de.peteral.softplc.model.Memory;
 import de.peteral.softplc.model.MemoryAccessViolationException;
 import de.peteral.softplc.model.MemoryArea;
 import de.peteral.softplc.model.MemoryTable;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 
 /**
  * Default {@link Memory} implementation.
@@ -23,10 +23,8 @@ import de.peteral.softplc.model.MemoryTable;
 public class MemoryImpl implements Memory {
 
 	private static final String BOOL_PREFIX = "X";
-	private final ObservableList<MemoryArea> memoryAreas = FXCollections
-			.observableArrayList();
-	private final ObservableList<MemoryTable> memoryTables = FXCollections
-			.observableArrayList();
+	private final ObservableList<MemoryArea> memoryAreas = FXCollections.observableArrayList();
+	private final ObservableList<MemoryTable> memoryTables = FXCollections.observableArrayList();
 	private final AddressParserFactory addressParserFactory;
 	private final DataTypeFactory dataTypeFactory;
 
@@ -41,8 +39,7 @@ public class MemoryImpl implements Memory {
 	 * @param areas
 	 *            set of {@link MemoryArea} managed within this {@link Memory}
 	 */
-	public MemoryImpl(AddressParserFactory addressParserFactory,
-			DataTypeFactory dataTypeFactory, MemoryArea... areas) {
+	public MemoryImpl(AddressParserFactory addressParserFactory, DataTypeFactory dataTypeFactory, MemoryArea... areas) {
 		this.addressParserFactory = addressParserFactory;
 		this.dataTypeFactory = dataTypeFactory;
 		for (MemoryArea memoryArea : areas) {
@@ -58,8 +55,7 @@ public class MemoryImpl implements Memory {
 			}
 		}
 
-		throw new MemoryAccessViolationException("Invalid memory area [" + key
-				+ "]");
+		throw new MemoryAccessViolationException("Invalid memory area [" + key + "]");
 	}
 
 	@Override
@@ -82,13 +78,11 @@ public class MemoryImpl implements Memory {
 
 		MemoryArea memoryArea = getMemoryArea(parsedAddress.getAreaCode());
 
-		byte[] bytes = memoryArea.readBytes(parsedAddress.getOffset(),
-				dataTypeFactory.getTotalSize(parsedAddress));
+		byte[] bytes = memoryArea.readBytes(parsedAddress.getOffset(), dataTypeFactory.getTotalSize(parsedAddress));
 
 		Object result = dataTypeFactory.fromBytes(bytes, parsedAddress);
 
-		if ((memoryArea.getLogger() != null)
-				&& memoryArea.getLogger().isLoggable(Level.FINER)) {
+		if ((memoryArea.getLogger() != null) && memoryArea.getLogger().isLoggable(Level.FINER)) {
 			memoryArea.getLogger().finer("Read: " + address + " = " + result);
 		}
 
@@ -106,11 +100,9 @@ public class MemoryImpl implements Memory {
 
 		MemoryArea memoryArea = getMemoryArea(parser.getAreaCode());
 
-		memoryArea.writeBytes(parser.getOffset(),
-				dataTypeFactory.toBytes(value, parser));
+		memoryArea.writeBytes(parser.getOffset(), dataTypeFactory.toBytes(value, parser));
 
-		if ((memoryArea.getLogger() != null)
-				&& memoryArea.getLogger().isLoggable(Level.FINE)) {
+		if ((memoryArea.getLogger() != null) && memoryArea.getLogger().isLoggable(Level.FINE)) {
 			memoryArea.getLogger().fine("Write: " + address + " = " + value);
 		}
 	}
@@ -121,8 +113,7 @@ public class MemoryImpl implements Memory {
 
 		MemoryArea memoryArea = getMemoryArea(parser.getAreaCode());
 
-		int byteValue = DataTypeUtils.byteToInt(memoryArea.readBytes(
-				parser.getOffset(), 1)[0]);
+		int byteValue = DataTypeUtils.byteToInt(memoryArea.readBytes(parser.getOffset(), 1)[0]);
 		int mask = 1 << parser.getBitNumber();
 
 		return (byteValue & mask) == mask;
@@ -134,13 +125,11 @@ public class MemoryImpl implements Memory {
 
 		MemoryArea memoryArea = getMemoryArea(parser.getAreaCode());
 
-		if ((memoryArea.getLogger() != null)
-				&& memoryArea.getLogger().isLoggable(Level.FINE)) {
+		if ((memoryArea.getLogger() != null) && memoryArea.getLogger().isLoggable(Level.FINE)) {
 			memoryArea.getLogger().fine("setBit: " + address + " = " + value);
 		}
 
-		int byteValue = DataTypeUtils.byteToInt(memoryArea.readBytes(
-				parser.getOffset(), 1)[0]);
+		int byteValue = DataTypeUtils.byteToInt(memoryArea.readBytes(parser.getOffset(), 1)[0]);
 
 		if (value) {
 			int mask = 1 << parser.getBitNumber();
@@ -150,8 +139,7 @@ public class MemoryImpl implements Memory {
 			mask = ~mask;
 			byteValue = byteValue & mask;
 		}
-		memoryArea.writeBytes(parser.getOffset(),
-				new byte[] { (byte) byteValue });
+		memoryArea.writeBytes(parser.getOffset(), new byte[] { (byte) byteValue });
 	}
 
 	@Override
@@ -164,22 +152,29 @@ public class MemoryImpl implements Memory {
 		return memoryTables;
 	}
 
+	private boolean parseBoolean(String value) {
+		// check 1 first
+		if (value.trim().equals("1")) {
+			return true;
+		}
+
+		return Boolean.parseBoolean(value);
+	}
+
 	@Override
 	public void parse(String address, String value) {
 		ParsedAddress parser = addressParserFactory.parse(address);
 
 		if (BOOL_PREFIX.equals(parser.getTypeName())) {
-			setBit(address, Boolean.parseBoolean(value));
+			setBit(address, parseBoolean(value));
 			return;
 		}
 
 		MemoryArea memoryArea = getMemoryArea(parser.getAreaCode());
 
-		memoryArea.writeBytes(parser.getOffset(),
-				dataTypeFactory.parseToBytes(value, parser));
+		memoryArea.writeBytes(parser.getOffset(), dataTypeFactory.parseToBytes(value, parser));
 
-		if ((memoryArea.getLogger() != null)
-				&& memoryArea.getLogger().isLoggable(Level.FINE)) {
+		if ((memoryArea.getLogger() != null) && memoryArea.getLogger().isLoggable(Level.FINE)) {
 			memoryArea.getLogger().fine("Parse: " + address + " = " + value);
 		}
 	}
@@ -193,7 +188,6 @@ public class MemoryImpl implements Memory {
 	public void addMemoryArea(MemoryArea memoryArea) {
 		memoryAreas.add(memoryArea);
 
-		memoryAreas.sort((m1, m2) -> m1.getAreaCode().get()
-				.compareTo(m2.getAreaCode().get()));
+		memoryAreas.sort((m1, m2) -> m1.getAreaCode().get().compareTo(m2.getAreaCode().get()));
 	}
 }
