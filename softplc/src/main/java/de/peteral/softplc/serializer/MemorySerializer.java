@@ -37,7 +37,7 @@ public class MemorySerializer {
 			os.flush();
 
 		} catch (Exception e) {
-			ErrorDialog.show("Failed serializing data", e);
+			ErrorDialog.show("Failed serializing snapshot", e);
 		}
 
 	}
@@ -79,7 +79,7 @@ public class MemorySerializer {
 				ErrorDialog.show("There were warnings - check log file", null);
 			}
 		} catch (Exception e) {
-			ErrorDialog.show("Failed serializing data", e);
+			ErrorDialog.show("Failed loading snapshot", e);
 		}
 
 	}

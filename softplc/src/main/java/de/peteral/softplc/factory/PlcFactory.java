@@ -47,6 +47,7 @@ import de.peteral.softplc.model.ScriptFile;
 import de.peteral.softplc.plc.PlcImpl;
 import de.peteral.softplc.program.Precompiler;
 import de.peteral.softplc.program.ProgramImpl;
+import de.peteral.softplc.serializer.MemorySerializer;
 import de.peteral.softplc.view.error.ErrorDialog;
 import javafx.beans.property.IntegerProperty;
 import javafx.beans.property.SimpleIntegerProperty;
@@ -182,11 +183,23 @@ public class PlcFactory {
 		createTables(cpu, cpuElement);
 		createSnapshots(cpu, cpuElement);
 
+		loadDefaultSnapshot(cpu, path);
+
 		Program program = createProgram(cpuElement, cpu, path);
 
 		cpu.loadProgram(program);
 
 		return cpu;
+	}
+
+	private void loadDefaultSnapshot(Cpu cpu, String path) {
+		for (MemorySnapshot snapshot : cpu.getSnapshots()) {
+			if (snapshot.isDefault().get()) {
+				MemorySerializer.load(snapshot.getFile(new File(path).getParentFile()), cpu.getMemory());
+
+				return;
+			}
+		}
 	}
 
 	private void createSnapshots(Cpu cpu, Element cpuElement) {

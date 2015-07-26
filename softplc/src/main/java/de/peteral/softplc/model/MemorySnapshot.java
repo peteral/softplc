@@ -1,5 +1,8 @@
 package de.peteral.softplc.model;
 
+import java.io.File;
+
+import de.peteral.softplc.file.FileUtil;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleStringProperty;
@@ -48,4 +51,21 @@ public class MemorySnapshot {
 	public StringProperty getFileName() {
 		return fileName;
 	}
+
+	/**
+	 * Returns addressed file as File
+	 *
+	 * @param baseFile
+	 *            base file for relative paths
+	 * @return File representation of the snapshot
+	 */
+	public File getFile(File baseFile) {
+		String res = FileUtil.toAbsolute(getFileName().get(), baseFile);
+		if (res == null) {
+			res = getFileName().get();
+		}
+
+		return new File(res);
+	}
+
 }

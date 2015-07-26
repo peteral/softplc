@@ -532,21 +532,12 @@ public class CpuDetailViewController {
 		try {
 			MemorySnapshot snapshot = new MemorySnapshot(false, file.getCanonicalPath());
 
-			MemorySerializer.save(getSnapshotFile(snapshot), currentCpu.getMemory());
+			MemorySerializer.save(snapshot.getFile(getBaseFile()), currentCpu.getMemory());
 			currentCpu.getSnapshots().add(snapshot);
 
 		} catch (Exception e) {
 			ErrorDialog.show("Failed creating snapshot file", e);
 		}
-	}
-
-	private File getSnapshotFile(MemorySnapshot snapshot) {
-		String res = FileUtil.toAbsolute(snapshot.getFileName().get(), getBaseFile());
-		if (res == null) {
-			res = snapshot.getFileName().get();
-		}
-
-		return new File(res);
 	}
 
 	@FXML
@@ -556,7 +547,7 @@ public class CpuDetailViewController {
 			return;
 		}
 
-		MemorySerializer.save(getSnapshotFile(snapshot), currentCpu.getMemory());
+		MemorySerializer.save(snapshot.getFile(getBaseFile()), currentCpu.getMemory());
 	}
 
 	@FXML
@@ -614,7 +605,7 @@ public class CpuDetailViewController {
 			return;
 		}
 
-		MemorySerializer.load(getSnapshotFile(snapshot), currentCpu.getMemory());
+		MemorySerializer.load(snapshot.getFile(getBaseFile()), currentCpu.getMemory());
 	}
 
 }
