@@ -128,10 +128,10 @@
               <content>
                 <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
                      <children>
-                        <TableView fx:id="snapshotTable" layoutX="164.0" layoutY="86.0" prefHeight="571.0" prefWidth="1024.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                        <TableView fx:id="snapshotTable" editable="true" layoutX="164.0" layoutY="86.0" prefHeight="571.0" prefWidth="1024.0" tableMenuButtonVisible="true" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
                           <columns>
-                            <TableColumn fx:id="snapshotDefaultColumn" prefWidth="75.0" text="Load on start" />
-                            <TableColumn fx:id="snapshotFileColumn" prefWidth="396.0" text="File" />
+                            <TableColumn fx:id="snapshotDefaultColumn" prefWidth="113.0" resizable="false" text="Load on start" />
+                            <TableColumn fx:id="snapshotFileColumn" editable="false" prefWidth="478.0" text="File" />
                           </columns>
                            <contextMenu>
                               <ContextMenu>
