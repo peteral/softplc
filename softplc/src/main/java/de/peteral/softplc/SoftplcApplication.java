@@ -23,7 +23,7 @@ import javafx.stage.Stage;
  */
 public class SoftplcApplication extends Application {
 
-	private static final String VERSION = "1.2.5";
+	private static final String VERSION = "1.2.6";
 	private Stage primaryStage;
 	private BorderPane applicationPane;
 	private CpuTableViewController cpuTableViewController;
