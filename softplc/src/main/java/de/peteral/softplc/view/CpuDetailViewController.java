@@ -16,6 +16,7 @@ import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
 
+import de.peteral.softplc.factory.PlcFactory;
 import de.peteral.softplc.file.FileManager;
 import de.peteral.softplc.file.FileUtil;
 import de.peteral.softplc.memorytables.MemoryTableUpdateTask;
@@ -28,7 +29,6 @@ import de.peteral.softplc.model.MemorySnapshot;
 import de.peteral.softplc.model.MemoryTable;
 import de.peteral.softplc.model.MemoryTableVariable;
 import de.peteral.softplc.model.ScriptFile;
-import de.peteral.softplc.plc.PlcFactory;
 import de.peteral.softplc.view.error.ErrorDialog;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;

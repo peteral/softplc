@@ -1,4 +1,4 @@
-package de.peteral.softplc.plc;
+package de.peteral.softplc.factory;
 
 import java.io.ByteArrayInputStream;
 import java.io.File;
@@ -13,9 +13,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.logging.Logger;
-
-import javafx.beans.property.IntegerProperty;
-import javafx.beans.property.SimpleIntegerProperty;
 
 import javax.script.ScriptEngineManager;
 import javax.xml.parsers.DocumentBuilder;
@@ -41,14 +38,18 @@ import de.peteral.softplc.model.Cpu;
 import de.peteral.softplc.model.CpuStatus;
 import de.peteral.softplc.model.Memory;
 import de.peteral.softplc.model.MemoryArea;
+import de.peteral.softplc.model.MemorySnapshot;
 import de.peteral.softplc.model.MemoryTable;
 import de.peteral.softplc.model.MemoryTableVariable;
 import de.peteral.softplc.model.Plc;
 import de.peteral.softplc.model.Program;
 import de.peteral.softplc.model.ScriptFile;
+import de.peteral.softplc.plc.PlcImpl;
 import de.peteral.softplc.program.Precompiler;
 import de.peteral.softplc.program.ProgramImpl;
 import de.peteral.softplc.view.error.ErrorDialog;
+import javafx.beans.property.IntegerProperty;
+import javafx.beans.property.SimpleIntegerProperty;
 
 /**
  * Creates a {@link Plc} instance from configuration file.
@@ -86,13 +87,11 @@ public class PlcFactory {
 	public Plc create(String path) {
 		try {
 			byte[] contents = Files.readAllBytes(Paths.get(path));
-			DocumentBuilder builder = DocumentBuilderFactory.newInstance()
-					.newDocumentBuilder();
+			DocumentBuilder builder = DocumentBuilderFactory.newInstance().newDocumentBuilder();
 			Document doc = builder.parse(new ByteArrayInputStream(contents));
 
 			return createFromDocument(doc, path);
-		} catch (IOException | ParserConfigurationException | SAXException
-				| URISyntaxException e) {
+		} catch (IOException | ParserConfigurationException | SAXException | URISyntaxException e) {
 			throw new PlcFactoryException(path, e);
 		}
 	}
@@ -107,21 +106,18 @@ public class PlcFactory {
 
 		final List<MemoryArea> memoryAreas = new ArrayList<>();
 
-		DEFAULT_MEMORY_AREAS.entrySet().forEach(
-				entry -> memoryAreas.add(new MemoryAreaImpl(entry.getKey(),
-						entry.getValue(), true)));
+		DEFAULT_MEMORY_AREAS.entrySet()
+				.forEach(entry -> memoryAreas.add(new MemoryAreaImpl(entry.getKey(), entry.getValue(), true)));
 
-		CpuImpl result = new CpuImpl(NEW_CPU_NAME, getFreeSlot(plc),
-				new ErrorLogImpl(), new ScheduledThreadPoolExecutorFactory(),
-				new MemoryImpl(new AddressParserFactory(),
-						new DataTypeFactory(), memoryAreas
-								.toArray(new MemoryArea[memoryAreas.size()])),
+		CpuImpl result = new CpuImpl(NEW_CPU_NAME, getFreeSlot(plc), new ErrorLogImpl(),
+				new ScheduledThreadPoolExecutorFactory(),
+				new MemoryImpl(new AddressParserFactory(), new DataTypeFactory(),
+						memoryAreas.toArray(new MemoryArea[memoryAreas.size()])),
 				DEFAULT_MAX_BLOCK_SIZE, DEFAULT_MAX_CONNECTIONS, CpuStatus.STOP);
 
 		result.setPlc(plc);
 
-		result.loadProgram(new ProgramImpl(result, new ScriptEngineManager(),
-				new Precompiler(), DEFAULT_CYCLE_TIME));
+		result.loadProgram(new ProgramImpl(result, new ScriptEngineManager(), new Precompiler(), DEFAULT_CYCLE_TIME));
 
 		return result;
 	}
@@ -129,16 +125,13 @@ public class PlcFactory {
 	private int getFreeSlot(Plc plc) {
 		final IntegerProperty highestSlot = new SimpleIntegerProperty();
 
-		plc.getCpus().forEach(
-				cpu -> highestSlot.set(Math.max(highestSlot.get(), cpu
-						.getSlot().get())));
+		plc.getCpus().forEach(cpu -> highestSlot.set(Math.max(highestSlot.get(), cpu.getSlot().get())));
 
 		return highestSlot.get() + 1;
 	}
 
 	private Plc createFromDocument(Document doc, String path)
-			throws IOException, ParserConfigurationException, SAXException,
-			URISyntaxException {
+			throws IOException, ParserConfigurationException, SAXException, URISyntaxException {
 		LOGGER.info("Parsing file: " + path);
 		List<Cpu> cpus = new ArrayList<>();
 
@@ -146,14 +139,11 @@ public class PlcFactory {
 		NodeList includeElements = doc.getElementsByTagName("includes");
 		for (int i = 0; i < includeElements.getLength(); i++) {
 			Element includeElement = (Element) includeElements.item(i);
-			URI includeUri = new File(path).getParentFile().toURI()
-					.resolve(includeElement.getAttribute("file"));
+			URI includeUri = new File(path).getParentFile().toURI().resolve(includeElement.getAttribute("file"));
 			String includePath = new File(includeUri).getAbsolutePath();
 			byte[] contents = Files.readAllBytes(Paths.get(includePath));
-			DocumentBuilder builder = DocumentBuilderFactory.newInstance()
-					.newDocumentBuilder();
-			Document includeDoc = builder.parse(new ByteArrayInputStream(
-					contents));
+			DocumentBuilder builder = DocumentBuilderFactory.newInstance().newDocumentBuilder();
+			Document includeDoc = builder.parse(new ByteArrayInputStream(contents));
 
 			Plc plc = createFromDocument(includeDoc, includePath);
 
@@ -169,38 +159,52 @@ public class PlcFactory {
 			cpus.add(createCpu(cpuElement, path));
 		}
 
-		PlcImpl result = new PlcImpl(path, new PutGetServerImpl(PORT),
-				cpus.toArray(new Cpu[cpus.size()]));
+		PlcImpl result = new PlcImpl(path, new PutGetServerImpl(PORT), cpus.toArray(new Cpu[cpus.size()]));
 		result.getCpus().forEach(cpu -> ((CpuImpl) cpu).setPlc(result));
 		return result;
 	}
 
-	private Cpu createCpu(Element cpuElement, String path) throws IOException,
-			DOMException, URISyntaxException {
+	private Cpu createCpu(Element cpuElement, String path) throws IOException, DOMException, URISyntaxException {
 		int slot = Integer.parseInt(cpuElement.getAttribute("slot"));
 
 		Memory memory = createMemory(cpuElement);
-		int maxBlockSize = Integer.parseInt(cpuElement
-				.getAttribute("maxBlockSize"));
-		int maxConnections = Integer.parseInt(cpuElement
-				.getAttribute("connections"));
+		int maxBlockSize = Integer.parseInt(cpuElement.getAttribute("maxBlockSize"));
+		int maxConnections = Integer.parseInt(cpuElement.getAttribute("connections"));
 		CpuStatus status = CpuStatus.STOP;
 		try {
 			status = CpuStatus.valueOf(cpuElement.getAttribute("status"));
 		} catch (Exception e) {
 		}
 
-		Cpu cpu = new CpuImpl(cpuElement.getAttribute("name"), slot,
-				new ErrorLogImpl(), new ScheduledThreadPoolExecutorFactory(),
-				memory, maxBlockSize, maxConnections, status);
+		Cpu cpu = new CpuImpl(cpuElement.getAttribute("name"), slot, new ErrorLogImpl(),
+				new ScheduledThreadPoolExecutorFactory(), memory, maxBlockSize, maxConnections, status);
 
 		createTables(cpu, cpuElement);
+		createSnapshots(cpu, cpuElement);
 
 		Program program = createProgram(cpuElement, cpu, path);
 
 		cpu.loadProgram(program);
 
 		return cpu;
+	}
+
+	private void createSnapshots(Cpu cpu, Element cpuElement) {
+		List<Element> snapshotsElements = getChildrenByName(cpuElement, "snapshots");
+		if (snapshotsElements.isEmpty()) {
+			return;
+		}
+
+		snapshotsElements.forEach(snapshotsElement -> {
+			List<Element> snapshotElements = getChildrenByName(snapshotsElement, "snapshot");
+			snapshotElements.forEach(snapshotElement -> {
+				MemorySnapshot snapshot = new MemorySnapshot(
+						Boolean.parseBoolean(snapshotElement.getAttribute("default")),
+						snapshotElement.getAttribute("file"));
+				cpu.getSnapshots().add(snapshot);
+
+			});
+		});
 	}
 
 	private void createTables(Cpu cpu, Element cpuElement) {
@@ -210,10 +214,8 @@ public class PlcFactory {
 		}
 
 		tablesElements.forEach(tablesElement -> {
-			List<Element> tableElements = getChildrenByName(tablesElement,
-					"table");
-			tableElements
-					.forEach(tableElement -> createTable(tableElement, cpu));
+			List<Element> tableElements = getChildrenByName(tablesElement, "table");
+			tableElements.forEach(tableElement -> createTable(tableElement, cpu));
 		});
 	}
 
@@ -222,31 +224,25 @@ public class PlcFactory {
 		table.getName().set(tableElement.getAttribute("name"));
 		cpu.getMemory().getMemoryTables().add(table);
 
-		List<Element> variableElements = getChildrenByName(tableElement,
-				"variable");
-		variableElements.forEach(variableElement -> table.getVariables().add(
-				new MemoryTableVariable(variableElement
-						.getAttribute("variable"), variableElement
-						.getAttribute("newValue"))));
+		List<Element> variableElements = getChildrenByName(tableElement, "variable");
+		variableElements.forEach(variableElement -> table.getVariables().add(new MemoryTableVariable(
+				variableElement.getAttribute("variable"), variableElement.getAttribute("newValue"))));
 	}
 
 	private Program createProgram(Element cpuElement, Cpu cpu, String path)
 			throws IOException, DOMException, URISyntaxException {
 		List<Element> programElements = getChildrenByName(cpuElement, "program");
 		if (programElements.size() != 1) {
-			throw new PlcFactoryException(path,
-					"Exactly one program node is required; Cpu: " + cpu);
+			throw new PlcFactoryException(path, "Exactly one program node is required; Cpu: " + cpu);
 		}
 
 		Element programElement = programElements.get(0);
 
-		long targetCycleTime = Integer.parseInt(programElement
-				.getAttribute("cycleTime"));
+		long targetCycleTime = Integer.parseInt(programElement.getAttribute("cycleTime"));
 
 		ScriptFile[] scriptFiles = getScriptFiles(programElement, path);
 
-		return new ProgramImpl(cpu, new ScriptEngineManager(),
-				new Precompiler(), targetCycleTime, scriptFiles);
+		return new ProgramImpl(cpu, new ScriptEngineManager(), new Precompiler(), targetCycleTime, scriptFiles);
 	}
 
 	private ScriptFile[] getScriptFiles(Element programElement, String path)
@@ -258,15 +254,12 @@ public class PlcFactory {
 			if (!f.isAbsolute()) {
 				try {
 					File baseFile = new File(path);
-					Path pathBase = Paths.get(baseFile.getParentFile()
-							.getCanonicalPath());
+					Path pathBase = Paths.get(baseFile.getParentFile().getCanonicalPath());
 					Path pathRelative = Paths.get(f.getPath());
 					Path pathAbsolute = pathBase.resolve(pathRelative);
 					f = new File(pathAbsolute.toString());
 				} catch (Exception ex) {
-					ErrorDialog.show(
-							"Failed reaing script file [" + f.getPath() + "]",
-							ex);
+					ErrorDialog.show("Failed reaing script file [" + f.getPath() + "]", ex);
 				}
 			}
 
@@ -284,8 +277,7 @@ public class PlcFactory {
 		// create memory areas configured in configuration file
 		List<Element> memoryElements = getChildrenByName(cpuElement, "memory");
 		memoryElements.forEach(memoryElement -> {
-			List<Element> areaElements = getChildrenByName(memoryElement,
-					"area");
+			List<Element> areaElements = getChildrenByName(memoryElement, "area");
 
 			areaElements.forEach(areaElement -> {
 				String name = areaElement.getAttribute("name");
@@ -296,19 +288,14 @@ public class PlcFactory {
 		});
 
 		// create default memory areas not redefined in configuration file
-		DEFAULT_MEMORY_AREAS.entrySet().forEach(
-				entry -> {
-					if (!areas.containsKey(entry.getKey())) {
-						areas.put(
-								entry.getKey(),
-								new MemoryAreaImpl(entry.getKey(), entry
-										.getValue(), true));
-					}
-				});
+		DEFAULT_MEMORY_AREAS.entrySet().forEach(entry -> {
+			if (!areas.containsKey(entry.getKey())) {
+				areas.put(entry.getKey(), new MemoryAreaImpl(entry.getKey(), entry.getValue(), true));
+			}
+		});
 
-		return new MemoryImpl(new AddressParserFactory(),
-				new DataTypeFactory(), areas.values().toArray(
-						new MemoryArea[areas.size()]));
+		return new MemoryImpl(new AddressParserFactory(), new DataTypeFactory(),
+				areas.values().toArray(new MemoryArea[areas.size()]));
 	}
 
 	private List<Element> getChildrenByName(Element cpuElement, String name) {
@@ -319,8 +306,7 @@ public class PlcFactory {
 		List<Element> result = new ArrayList<>();
 		for (int i = 0; i < cpuElement.getChildNodes().getLength(); i++) {
 			Node node = cpuElement.getChildNodes().item(i);
-			if ((node instanceof Element)
-					&& node.getNodeName().equalsIgnoreCase(name)) {
+			if ((node instanceof Element) && node.getNodeName().equalsIgnoreCase(name)) {
 				result.add((Element) node);
 			}
 		}

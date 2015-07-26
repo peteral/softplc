@@ -1,4 +1,4 @@
-package de.peteral.softplc.plc;
+package de.peteral.softplc.factory;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
@@ -11,6 +11,7 @@ import org.junit.Before;
 import org.junit.Test;
 import org.mockito.MockitoAnnotations;
 
+import de.peteral.softplc.factory.PlcFactory;
 import de.peteral.softplc.model.Cpu;
 import de.peteral.softplc.model.Memory;
 import de.peteral.softplc.model.MemoryArea;

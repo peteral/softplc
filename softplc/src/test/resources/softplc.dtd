@@ -5,12 +5,21 @@
 	file	CDATA	#REQUIRED
 >
 
-<!ELEMENT cpu (memory | program | tables)*>
+<!ELEMENT cpu (memory | program | tables | snapshots)*>
 <!ATTLIST cpu
 	name		CDATA		""
 	slot		CDATA		#REQUIRED
 	connections	CDATA		"32"
 	maxBlockSize	CDATA	"222"
+	status		CDATA		"STOP"
+>
+
+<!ELEMENT snapshots (snapshot)*>
+
+<!ELEMENT snapshot EMPTY>
+<!ATTLIST snapshot
+	default	CDATA	"false"
+	file	CDATA	#REQUIRED
 >
 
 <!ELEMENT tables (table)*>

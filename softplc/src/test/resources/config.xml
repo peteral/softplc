@@ -25,5 +25,9 @@
 				<variable variable="DB100,W2" newValue="10"/>
 			</table>
 		</tables>
+		<snapshots>
+			<snapshot default="true" file="file1.snapshot"/>
+			<snapshot file="file2.snapshot"/>
+		</snapshots>
 	</cpu>
 </softplc>

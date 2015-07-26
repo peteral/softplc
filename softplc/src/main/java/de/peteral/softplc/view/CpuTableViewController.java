@@ -4,10 +4,10 @@ import java.io.IOException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import de.peteral.softplc.factory.PlcFactory;
 import de.peteral.softplc.file.FileManager;
 import de.peteral.softplc.model.Cpu;
 import de.peteral.softplc.model.Plc;
-import de.peteral.softplc.plc.PlcFactory;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;

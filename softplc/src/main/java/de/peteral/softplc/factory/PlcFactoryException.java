@@ -1,4 +1,4 @@
-package de.peteral.softplc.plc;
+package de.peteral.softplc.factory;
 
 /**
  * This exception is thrown by {@link PlcFactory} in case of an invalid
