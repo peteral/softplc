@@ -48,23 +48,4 @@ public class MemorySnapshot {
 	public StringProperty getFileName() {
 		return fileName;
 	}
-
-	/**
-	 * Loads memory snapshot into memory.
-	 *
-	 * @param memory
-	 */
-	public void load(Memory memory) {
-
-	}
-
-	/**
-	 * Saves memory snapshot from memory to a file.
-	 * 
-	 * @param memory
-	 */
-	public void save(Memory memory) {
-
-	}
-
 }

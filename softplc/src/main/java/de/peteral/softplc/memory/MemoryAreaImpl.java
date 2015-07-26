@@ -3,12 +3,12 @@ package de.peteral.softplc.memory;
 import java.util.Arrays;
 import java.util.logging.Logger;
 
+import de.peteral.softplc.model.MemoryAccessViolationException;
+import de.peteral.softplc.model.MemoryArea;
 import javafx.beans.property.IntegerProperty;
 import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
-import de.peteral.softplc.model.MemoryAccessViolationException;
-import de.peteral.softplc.model.MemoryArea;
 
 /**
  * {@link MemoryArea} implementation.
@@ -20,7 +20,7 @@ public class MemoryAreaImpl implements MemoryArea {
 	private final StringProperty areaCode;
 	private final IntegerProperty size;
 	private byte[] buffer;
-	private final Logger logger;
+	private transient final Logger logger;
 	private final boolean defaultArea;
 
 	/**
@@ -70,9 +70,8 @@ public class MemoryAreaImpl implements MemoryArea {
 
 	private void checkValid(int offset, int size, String method) {
 		if ((offset < 0) || ((offset + size) > buffer.length)) {
-			throw new MemoryAccessViolationException("Invalid " + method
-					+ " access areaCode = " + areaCode.get() + ", offset = "
-					+ offset + ", len = " + size);
+			throw new MemoryAccessViolationException("Invalid " + method + " access areaCode = " + areaCode.get()
+					+ ", offset = " + offset + ", len = " + size);
 		}
 	}
 

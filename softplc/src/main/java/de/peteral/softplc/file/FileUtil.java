@@ -6,8 +6,27 @@ import java.nio.file.Paths;
 
 import de.peteral.softplc.view.error.ErrorDialog;
 
-public class FileUtil {
+/**
+ * This utility class helps with conversion between relative and absolute file
+ * paths.
+ *
+ * @author peteral
+ *
+ */
+public final class FileUtil {
 
+	private FileUtil() {
+	}
+
+	/**
+	 * Translates path relative to basePath to absolute path
+	 *
+	 * @param file
+	 *            relative path
+	 * @param basePath
+	 *            base path (relative path is relative to this file)
+	 * @return absolute path, null on error
+	 */
 	public static String toAbsolute(String file, File basePath) {
 		File f = new File(file);
 		if ((basePath != null) && !f.isAbsolute()) {
@@ -24,6 +43,15 @@ public class FileUtil {
 		return null;
 	}
 
+	/**
+	 * Translates absolute path to path relative a base path.
+	 *
+	 * @param file
+	 *            absolute file path
+	 * @param basePath
+	 *            base path
+	 * @return path relative to base path, null on error
+	 */
 	public static String toRelative(String file, File basePath) {
 		File f = new File(file);
 		if (f.isAbsolute() && (basePath != null)) {

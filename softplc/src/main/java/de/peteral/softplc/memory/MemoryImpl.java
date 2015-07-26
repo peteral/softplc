@@ -22,11 +22,11 @@ import javafx.collections.ObservableList;
  */
 public class MemoryImpl implements Memory {
 
-	private static final String BOOL_PREFIX = "X";
+	private static final transient String BOOL_PREFIX = "X";
 	private final ObservableList<MemoryArea> memoryAreas = FXCollections.observableArrayList();
-	private final ObservableList<MemoryTable> memoryTables = FXCollections.observableArrayList();
-	private final AddressParserFactory addressParserFactory;
-	private final DataTypeFactory dataTypeFactory;
+	private final transient ObservableList<MemoryTable> memoryTables = FXCollections.observableArrayList();
+	private final transient AddressParserFactory addressParserFactory;
+	private final transient DataTypeFactory dataTypeFactory;
 
 	/**
 	 * Creates a new instance.

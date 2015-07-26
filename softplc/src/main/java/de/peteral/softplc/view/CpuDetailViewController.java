@@ -29,6 +29,7 @@ import de.peteral.softplc.model.MemorySnapshot;
 import de.peteral.softplc.model.MemoryTable;
 import de.peteral.softplc.model.MemoryTableVariable;
 import de.peteral.softplc.model.ScriptFile;
+import de.peteral.softplc.serializer.MemorySerializer;
 import de.peteral.softplc.view.error.ErrorDialog;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
@@ -530,12 +531,22 @@ public class CpuDetailViewController {
 
 		try {
 			MemorySnapshot snapshot = new MemorySnapshot(false, file.getCanonicalPath());
-			snapshot.save(currentCpu.getMemory());
+
+			MemorySerializer.save(getSnapshotFile(snapshot), currentCpu.getMemory());
 			currentCpu.getSnapshots().add(snapshot);
 
 		} catch (Exception e) {
 			ErrorDialog.show("Failed creating snapshot file", e);
 		}
+	}
+
+	private File getSnapshotFile(MemorySnapshot snapshot) {
+		String res = FileUtil.toAbsolute(snapshot.getFileName().get(), getBaseFile());
+		if (res == null) {
+			res = snapshot.getFileName().get();
+		}
+
+		return new File(res);
 	}
 
 	@FXML
@@ -545,7 +556,7 @@ public class CpuDetailViewController {
 			return;
 		}
 
-		snapshot.save(currentCpu.getMemory());
+		MemorySerializer.save(getSnapshotFile(snapshot), currentCpu.getMemory());
 	}
 
 	@FXML
@@ -603,7 +614,7 @@ public class CpuDetailViewController {
 			return;
 		}
 
-		snapshot.load(currentCpu.getMemory());
+		MemorySerializer.load(getSnapshotFile(snapshot), currentCpu.getMemory());
 	}
 
 }
