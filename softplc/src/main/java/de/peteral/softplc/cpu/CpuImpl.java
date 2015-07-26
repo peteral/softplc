@@ -7,10 +7,6 @@ import java.util.concurrent.TimeUnit;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import javafx.beans.property.IntegerProperty;
-import javafx.beans.property.SimpleIntegerProperty;
-import javafx.beans.property.SimpleStringProperty;
-import javafx.beans.property.StringProperty;
 import de.peteral.softplc.comm.common.ClientChannelCache;
 import de.peteral.softplc.executor.ScheduledThreadPoolExecutorFactory;
 import de.peteral.softplc.model.CommunicationTask;
@@ -18,9 +14,16 @@ import de.peteral.softplc.model.Cpu;
 import de.peteral.softplc.model.CpuStatus;
 import de.peteral.softplc.model.ErrorLog;
 import de.peteral.softplc.model.Memory;
+import de.peteral.softplc.model.MemorySnapshot;
 import de.peteral.softplc.model.Plc;
 import de.peteral.softplc.model.Program;
 import de.peteral.softplc.model.ProgramCycleObserver;
+import javafx.beans.property.IntegerProperty;
+import javafx.beans.property.SimpleIntegerProperty;
+import javafx.beans.property.SimpleStringProperty;
+import javafx.beans.property.StringProperty;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 
 /**
  * {@link Cpu} implementation.
@@ -29,8 +32,7 @@ import de.peteral.softplc.model.ProgramCycleObserver;
  */
 public class CpuImpl implements Cpu, ProgramCycleObserver {
 	private CpuStatus status = CpuStatus.STOP;
-	private final StringProperty statusProperty = new SimpleStringProperty(
-			status.toString());
+	private final StringProperty statusProperty = new SimpleStringProperty(status.toString());
 	private final ErrorLog errorlog;
 	private ScheduledThreadPoolExecutor executor;
 	private Program program;
@@ -44,6 +46,7 @@ public class CpuImpl implements Cpu, ProgramCycleObserver {
 	private final IntegerProperty currentConnections = new SimpleIntegerProperty();
 	private Plc plc;
 	private final CpuStatus initialStatus;
+	private final ObservableList<MemorySnapshot> snapshots = FXCollections.observableArrayList();
 
 	/**
 	 * Creates a new instance.
@@ -64,9 +67,8 @@ public class CpuImpl implements Cpu, ProgramCycleObserver {
 	 * @param maxConnections
 	 * @param initialStatus
 	 */
-	public CpuImpl(String name, int slot, ErrorLog errorlog,
-			ScheduledThreadPoolExecutorFactory executorFactory, Memory memory,
-			int maxBlockSize, int maxConnections, CpuStatus initialStatus) {
+	public CpuImpl(String name, int slot, ErrorLog errorlog, ScheduledThreadPoolExecutorFactory executorFactory,
+			Memory memory, int maxBlockSize, int maxConnections, CpuStatus initialStatus) {
 		this.initialStatus = initialStatus;
 		this.setPlc(plc);
 		this.executorFactory = executorFactory;
@@ -96,8 +98,7 @@ public class CpuImpl implements Cpu, ProgramCycleObserver {
 
 		program.addObserver(this);
 
-		executor.scheduleAtFixedRate(program, 0, getTargetCycleTime(),
-				TimeUnit.MILLISECONDS);
+		executor.scheduleAtFixedRate(program, 0, getTargetCycleTime(), TimeUnit.MILLISECONDS);
 	}
 
 	private void setStatus(CpuStatus status) {
@@ -148,8 +149,7 @@ public class CpuImpl implements Cpu, ProgramCycleObserver {
 				try {
 					task.execute(this);
 				} catch (Exception e) {
-					errorlog.log(Level.SEVERE, "cpu",
-							"Failed processing task: " + task);
+					errorlog.log(Level.SEVERE, "cpu", "Failed processing task: " + task);
 				}
 			});
 
@@ -157,8 +157,7 @@ public class CpuImpl implements Cpu, ProgramCycleObserver {
 		}
 
 		// update current connection count
-		currentConnections.set(ClientChannelCache.getInstance()
-				.getConnectionCount(slot.get()));
+		currentConnections.set(ClientChannelCache.getInstance().getConnectionCount(slot.get()));
 	}
 
 	@Override
@@ -175,8 +174,7 @@ public class CpuImpl implements Cpu, ProgramCycleObserver {
 
 	@Override
 	public boolean onError(String context, Throwable e) {
-		errorlog.log(Level.SEVERE, this.toString(), "Exception caught when "
-				+ context + " : " + e);
+		errorlog.log(Level.SEVERE, this.toString(), "Exception caught when " + context + " : " + e);
 		setStatus(CpuStatus.ERROR);
 
 		if (executor != null) {
@@ -250,5 +248,10 @@ public class CpuImpl implements Cpu, ProgramCycleObserver {
 	@Override
 	public CpuStatus getInitialStatus() {
 		return initialStatus;
+	}
+
+	@Override
+	public ObservableList<MemorySnapshot> getSnapshots() {
+		return snapshots;
 	}
 }

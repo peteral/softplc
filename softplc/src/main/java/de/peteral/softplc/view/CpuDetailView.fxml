@@ -116,9 +116,6 @@
                                     <MenuItem mnemonicParsing="false" onAction="#handleAddMemoryArea" text="Add" />
                                     <MenuItem mnemonicParsing="false" onAction="#handleAddMemoryAreaRange" text="Add range..." />
                                     <MenuItem mnemonicParsing="false" onAction="#handleDeleteMemoryArea" text="Remove" />
-                                    <SeparatorMenuItem mnemonicParsing="false" />
-                                    <MenuItem mnemonicParsing="false" onAction="#handleSaveSnapshot" text="Save snapshot" />
-                                    <MenuItem mnemonicParsing="false" onAction="#handleLoadSnapshot" text="Load snapshot" />
                                  </items>
                               </ContextMenu>
                            </contextMenu>
@@ -126,6 +123,34 @@
                      </children>
                   </AnchorPane>
                </content>
+            </Tab>
+            <Tab text="Snapshots">
+              <content>
+                <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
+                     <children>
+                        <TableView fx:id="snapshotTable" layoutX="164.0" layoutY="86.0" prefHeight="571.0" prefWidth="1024.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                          <columns>
+                            <TableColumn fx:id="snapshotDefaultColumn" prefWidth="75.0" text="Load on start" />
+                            <TableColumn fx:id="snapshotFileColumn" prefWidth="396.0" text="File" />
+                          </columns>
+                           <contextMenu>
+                              <ContextMenu>
+                                <items>
+                                  <MenuItem mnemonicParsing="false" onAction="#handleNewSnapshot" text="New..." />
+                                    <MenuItem mnemonicParsing="false" onAction="#handleOverwriteSnapshot" text="Overwrite" />
+                                    <MenuItem mnemonicParsing="false" onAction="#handleImportSnapshot" text="Import..." />
+                                    <MenuItem mnemonicParsing="false" onAction="#handleLoadSnapshot" text="Load" />
+                                    <MenuItem mnemonicParsing="false" onAction="#handleDeleteSnapshot" text="Delete" />
+                                    <SeparatorMenuItem mnemonicParsing="false" />
+                                    <MenuItem mnemonicParsing="false" onAction="#handleSnapshotToAbsolute" text="To absolute path" />
+                                    <MenuItem mnemonicParsing="false" onAction="#handleSnapshotToRelative" text="To relative path" />
+                                </items>
+                              </ContextMenu>
+                           </contextMenu>
+                        </TableView>
+                     </children>
+                  </AnchorPane>
+              </content>
             </Tab>
             <Tab text="Program">
                <content>

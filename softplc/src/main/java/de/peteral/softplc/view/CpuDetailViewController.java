@@ -5,10 +5,11 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.nio.file.Files;
-import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardOpenOption;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -16,12 +17,14 @@ import java.util.Timer;
 import java.util.TimerTask;
 
 import de.peteral.softplc.file.FileManager;
+import de.peteral.softplc.file.FileUtil;
 import de.peteral.softplc.memorytables.MemoryTableUpdateTask;
 import de.peteral.softplc.memorytables.MemoryTableWriteTask;
 import de.peteral.softplc.model.Cpu;
 import de.peteral.softplc.model.CpuStatus;
 import de.peteral.softplc.model.ErrorLogEntry;
 import de.peteral.softplc.model.MemoryArea;
+import de.peteral.softplc.model.MemorySnapshot;
 import de.peteral.softplc.model.MemoryTable;
 import de.peteral.softplc.model.MemoryTableVariable;
 import de.peteral.softplc.model.ScriptFile;
@@ -35,6 +38,7 @@ import javafx.scene.control.CheckMenuItem;
 import javafx.scene.control.SelectionMode;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
+import javafx.scene.control.cell.CheckBoxTableCell;
 import javafx.scene.control.cell.TextFieldTableCell;
 import javafx.scene.layout.AnchorPane;
 import javafx.stage.FileChooser;
@@ -92,6 +96,13 @@ public class CpuDetailViewController {
 	@FXML
 	private TableColumn<ErrorLogEntry, String> errorLogMessageColumn;
 
+	@FXML
+	private TableView<MemorySnapshot> snapshotTable;
+	@FXML
+	private TableColumn<MemorySnapshot, Boolean> snapshotDefaultColumn;
+	@FXML
+	private TableColumn<MemorySnapshot, String> snapshotFileColumn;
+
 	private Cpu currentCpu;
 	private MemoryTable currentMemoryTable;
 	private TimerTask updateMemoryTableTask;
@@ -128,6 +139,10 @@ public class CpuDetailViewController {
 		errorLogModuleColumn.setCellValueFactory(data -> data.getValue().getModule());
 		errorLogMessageColumn.setCellValueFactory(data -> data.getValue().getMessage());
 
+		snapshotDefaultColumn.setCellValueFactory(cellData -> cellData.getValue().isDefault());
+		snapshotDefaultColumn.setCellFactory(CheckBoxTableCell.forTableColumn(snapshotDefaultColumn));
+		snapshotFileColumn.setCellValueFactory(cellData -> cellData.getValue().getFileName());
+
 		timer = new Timer();
 
 		update(null);
@@ -136,6 +151,7 @@ public class CpuDetailViewController {
 		memoryTableTable.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
 		programTable.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
 		memoryTableVariableTable.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
+		snapshotTable.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
 
 		memoryTableTable.getSelectionModel().selectedItemProperty()
 				.addListener((observable, oldValue, newValue) -> showMemoryTable(newValue));
@@ -155,11 +171,13 @@ public class CpuDetailViewController {
 			programTable.setItems(null);
 			memoryTableTable.setItems(null);
 			errorLogTable.setItems(null);
+			snapshotTable.setItems(null);
 		} else {
 			memoryTable.setItems(newValue.getMemory().getMemoryAreas());
 			programTable.setItems(newValue.getProgram().getScriptFiles());
 			memoryTableTable.setItems(newValue.getMemory().getMemoryTables());
 			errorLogTable.setItems(newValue.getErrorLog().getEntries());
+			snapshotTable.setItems(newValue.getSnapshots());
 		}
 
 	}
@@ -289,23 +307,9 @@ public class CpuDetailViewController {
 	}
 
 	@FXML
-	void handleSaveSnapshot() {
-		// TODO implement save snapshot
-	}
-
-	@FXML
-	void handleLoadSnapshot() {
-		// TODO implement load snapshot
-	}
-
-	@FXML
 	void handleAddSourceFile() {
-		FileChooser fileChooser = new FileChooser();
-
-		// Set extension filter
-		FileChooser.ExtensionFilter extFilter = new FileChooser.ExtensionFilter("JavaScript files (*.js)", "*.js");
-		fileChooser.getExtensionFilters().add(extFilter);
-		fileManager.setLastFolder(fileChooser);
+		FileChooser fileChooser = createFileChooser(new FileChooser.ExtensionFilter("JavaScript files (*.js)", "*.js"),
+				null);
 
 		// Show open file dialog
 		List<File> files = fileChooser.showOpenMultipleDialog(primaryStage);
@@ -364,35 +368,25 @@ public class CpuDetailViewController {
 	@FXML
 	void handleToAbsolutePath() {
 		programTable.getSelectionModel().getSelectedItems().forEach(scriptFile -> {
-			File f = new File(scriptFile.getFileName().get());
-			if (!f.isAbsolute()) {
-				try {
-					Path pathBase = Paths.get(currentCpu.getPlc().getPath().getParentFile().getCanonicalPath());
-					Path pathRelative = Paths.get(f.getPath());
-					Path pathAbsolute = pathBase.resolve(pathRelative);
-					scriptFile.getFileName().set(pathAbsolute.toString());
-				} catch (Exception e) {
-					ErrorDialog.show("Failed converting to absolute", e);
-				}
+			String absolute = FileUtil.toAbsolute(scriptFile.getFileName().get(), getBaseFile());
+			if (absolute != null) {
+				scriptFile.getFileName().set(absolute);
 			}
 		});
+	}
+
+	private File getBaseFile() {
+		return (currentCpu.getPlc().getPath() == null) ? null : currentCpu.getPlc().getPath().getParentFile();
 	}
 
 	@FXML
 	void handleToRelativePath() {
 		programTable.getSelectionModel().getSelectedItems().forEach(scriptFile -> {
-			File f = new File(scriptFile.getFileName().get());
-			if (f.isAbsolute() && (currentCpu.getPlc().getPath() != null)) {
-				try {
-					Path pathAbsolute = Paths.get(f.getCanonicalPath());
-					Path pathBase = Paths.get(currentCpu.getPlc().getPath().getParentFile().getCanonicalPath());
-					Path pathRelative = pathBase.relativize(pathAbsolute);
-
-					scriptFile.getFileName().set(pathRelative.toString());
-				} catch (Exception e) {
-					ErrorDialog.show("Failed converting to relative", e);
-				}
+			if (currentCpu.getPlc().getPath() == null) {
+				return;
 			}
+			String relative = FileUtil.toRelative(scriptFile.getFileName().get(), getBaseFile());
+			scriptFile.getFileName().set(relative);
 		});
 	}
 
@@ -451,13 +445,8 @@ public class CpuDetailViewController {
 
 	@FXML
 	void handleCreateMain() {
-		FileChooser fileChooser = new FileChooser();
-
-		// Set extension filter
-		FileChooser.ExtensionFilter extFilter = new FileChooser.ExtensionFilter("JavaScript files (*.js)", "*.js");
-		fileChooser.getExtensionFilters().add(extFilter);
-		fileManager.setLastFolder(fileChooser);
-		fileChooser.setInitialFileName("main.js");
+		FileChooser fileChooser = createFileChooser(new FileChooser.ExtensionFilter("JavaScript files (*.js)", "*.js"),
+				"main.js");
 
 		// Show open file dialog
 		File file = fileChooser.showSaveDialog(primaryStage);
@@ -476,6 +465,18 @@ public class CpuDetailViewController {
 		} catch (IOException e) {
 			ErrorDialog.show("Failed creating main file", e);
 		}
+	}
+
+	private FileChooser createFileChooser(FileChooser.ExtensionFilter extFilter, String initialFileName) {
+		FileChooser fileChooser = new FileChooser();
+
+		// Set extension filter
+		fileChooser.getExtensionFilters().add(extFilter);
+		fileManager.setLastFolder(fileChooser);
+		if (initialFileName != null) {
+			fileChooser.setInitialFileName(initialFileName);
+		}
+		return fileChooser;
 	}
 
 	private void deployResource(String resourceName, File file) throws IOException {
@@ -514,4 +515,67 @@ public class CpuDetailViewController {
 	void handleWrite0() {
 		writeVariables(memoryTableVariableTable.getSelectionModel().getSelectedItems(), "0");
 	}
+
+	@FXML
+	void handleNewSnapshot() {
+		FileChooser fileChooser = createFileChooser(
+				new FileChooser.ExtensionFilter("Memory snapshot files (*.snapshot)", "*.snapshot"),
+				currentCpu.getName().get() + "_"
+						+ LocalDateTime.now().format(DateTimeFormatter.ofPattern("uuuuMMddHHmmss")) + ".snapshot");
+
+		File file = fileChooser.showSaveDialog(primaryStage);
+		if (file == null) {
+			return;
+		}
+
+		try {
+			MemorySnapshot snapshot = new MemorySnapshot(false, file.getCanonicalPath());
+			snapshot.save(currentCpu.getMemory());
+			currentCpu.getSnapshots().add(snapshot);
+
+		} catch (Exception e) {
+			ErrorDialog.show("Failed creating snapshot file", e);
+		}
+	}
+
+	@FXML
+	void handleOverwriteSnapshot() {
+
+	}
+
+	@FXML
+	void handleImportSnapshot() {
+
+	}
+
+	@FXML
+	void handleDeleteSnapshot() {
+
+	}
+
+	@FXML
+	void handleSnapshotToAbsolute() {
+		snapshotTable.getSelectionModel().getSelectedItems().forEach(snapshot -> {
+			String absolute = FileUtil.toAbsolute(snapshot.getFileName().get(), getBaseFile());
+			if (absolute != null) {
+				snapshot.getFileName().set(absolute);
+			}
+		});
+	}
+
+	@FXML
+	void handleSnapshotToRelative() {
+		snapshotTable.getSelectionModel().getSelectedItems().forEach(snapshot -> {
+			String relative = FileUtil.toRelative(snapshot.getFileName().get(), getBaseFile());
+			if (relative != null) {
+				snapshot.getFileName().set(relative);
+			}
+		});
+	}
+
+	@FXML
+	void handleLoadSnapshot() {
+		// TODO implement load snapshot
+	}
+
 }
