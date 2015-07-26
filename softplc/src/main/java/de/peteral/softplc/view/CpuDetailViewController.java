@@ -540,17 +540,40 @@ public class CpuDetailViewController {
 
 	@FXML
 	void handleOverwriteSnapshot() {
+		MemorySnapshot snapshot = snapshotTable.getSelectionModel().getSelectedItem();
+		if (snapshot == null) {
+			return;
+		}
 
+		snapshot.save(currentCpu.getMemory());
 	}
 
 	@FXML
 	void handleImportSnapshot() {
+		FileChooser fileChooser = createFileChooser(
+				new FileChooser.ExtensionFilter("Memory snapshot files (*.snapshot)", "*.snapshot"),
+				currentCpu.getName().get() + "_"
+						+ LocalDateTime.now().format(DateTimeFormatter.ofPattern("uuuuMMddHHmmss")) + ".snapshot");
 
+		List<File> files = fileChooser.showOpenMultipleDialog(primaryStage);
+		if (files == null) {
+			return;
+		}
+
+		files.forEach(file -> {
+			try {
+				MemorySnapshot snapshot = new MemorySnapshot(false, file.getCanonicalPath());
+				currentCpu.getSnapshots().add(snapshot);
+
+			} catch (Exception e) {
+				ErrorDialog.show("Failed importing snapshot file", e);
+			}
+		});
 	}
 
 	@FXML
 	void handleDeleteSnapshot() {
-
+		currentCpu.getSnapshots().removeAll(snapshotTable.getSelectionModel().getSelectedItems());
 	}
 
 	@FXML
@@ -575,7 +598,12 @@ public class CpuDetailViewController {
 
 	@FXML
 	void handleLoadSnapshot() {
-		// TODO implement load snapshot
+		MemorySnapshot snapshot = snapshotTable.getSelectionModel().getSelectedItem();
+		if (snapshot == null) {
+			return;
+		}
+
+		snapshot.load(currentCpu.getMemory());
 	}
 
 }
