@@ -608,4 +608,8 @@ public class CpuDetailViewController {
 		MemorySerializer.load(snapshot.getFile(getBaseFile()), currentCpu.getMemory());
 	}
 
+	@FXML
+	void handleResetMemory() {
+		currentCpu.getMemory().reset();
+	}
 }

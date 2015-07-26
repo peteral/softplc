@@ -144,6 +144,8 @@
                                     <SeparatorMenuItem mnemonicParsing="false" />
                                     <MenuItem mnemonicParsing="false" onAction="#handleSnapshotToAbsolute" text="To absolute path" />
                                     <MenuItem mnemonicParsing="false" onAction="#handleSnapshotToRelative" text="To relative path" />
+                                    <SeparatorMenuItem mnemonicParsing="false" />
+                                    <MenuItem mnemonicParsing="false" onAction="#handleResetMemory" text="Reset memory" />
                                 </items>
                               </ContextMenu>
                            </contextMenu>

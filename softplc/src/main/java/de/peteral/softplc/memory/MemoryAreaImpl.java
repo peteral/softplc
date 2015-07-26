@@ -100,4 +100,9 @@ public class MemoryAreaImpl implements MemoryArea {
 	public boolean isDefaultArea() {
 		return defaultArea;
 	}
+
+	@Override
+	public void reset() {
+		Arrays.fill(buffer, (byte) 0);
+	}
 }

@@ -190,4 +190,9 @@ public class MemoryImpl implements Memory {
 
 		memoryAreas.sort((m1, m2) -> m1.getAreaCode().get().compareTo(m2.getAreaCode().get()));
 	}
+
+	@Override
+	public void reset() {
+		memoryAreas.forEach(memoryArea -> memoryArea.reset());
+	}
 }

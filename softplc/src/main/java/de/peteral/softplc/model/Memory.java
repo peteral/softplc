@@ -1,7 +1,7 @@
 package de.peteral.softplc.model;
 
-import javafx.collections.ObservableList;
 import de.peteral.softplc.address.ParsedAddress;
+import javafx.collections.ObservableList;
 
 /**
  * This interface provides access to the memory of a {@link Cpu}.
@@ -126,8 +126,13 @@ public interface Memory {
 
 	/**
 	 * adds memory area
-	 * 
+	 *
 	 * @param createMemoryArea
 	 */
 	void addMemoryArea(MemoryArea createMemoryArea);
+
+	/**
+	 * Resets the memory to initial status (all zero)
+	 */
+	void reset();
 }

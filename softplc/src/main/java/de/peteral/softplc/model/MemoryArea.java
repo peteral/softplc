@@ -82,4 +82,9 @@ public interface MemoryArea {
 	 * @return default memory area is added automatically even if not configured
 	 */
 	boolean isDefaultArea();
+
+	/**
+	 * Resets memory area contents to zeros.
+	 */
+	void reset();
 }
