@@ -13,6 +13,7 @@ import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Optional;
 import java.util.Timer;
 import java.util.TimerTask;
 
@@ -35,6 +36,10 @@ import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
+import javafx.scene.control.Alert;
+import javafx.scene.control.Alert.AlertType;
+import javafx.scene.control.ButtonBar.ButtonData;
+import javafx.scene.control.ButtonType;
 import javafx.scene.control.CheckMenuItem;
 import javafx.scene.control.SelectionMode;
 import javafx.scene.control.TableColumn;
@@ -579,6 +584,34 @@ public class CpuDetailViewController {
 
 	@FXML
 	void handleDeleteSnapshot() {
+		Alert alert = new Alert(AlertType.CONFIRMATION);
+		alert.setTitle("Delete from snapshot");
+		alert.setHeaderText("Remove snapshot(s) from project only or delete on disk?");
+		alert.setContentText(
+				"Choose your option:\n - Remove = only remove from project\n - Delete = delete from disk as well");
+
+		ButtonType buttonTypeRemove = new ButtonType("Remove");
+		ButtonType buttonTypeDelete = new ButtonType("Delete");
+		ButtonType buttonTypeCancel = new ButtonType("Cancel", ButtonData.CANCEL_CLOSE);
+
+		alert.getButtonTypes().setAll(buttonTypeRemove, buttonTypeDelete, buttonTypeCancel);
+
+		Optional<ButtonType> result = alert.showAndWait();
+		if (result.get() == buttonTypeCancel) {
+			return;
+		}
+
+		if (result.get() == buttonTypeDelete) {
+			snapshotTable.getSelectionModel().getSelectedItems().forEach(snapshot -> {
+				File file = snapshot.getFile(getBaseFile());
+				try {
+					file.delete();
+				} catch (Exception e) {
+					ErrorDialog.show("Failed deleting file [" + file + "]", e);
+				}
+			});
+		}
+
 		currentCpu.getSnapshots().removeAll(snapshotTable.getSelectionModel().getSelectedItems());
 	}
 
