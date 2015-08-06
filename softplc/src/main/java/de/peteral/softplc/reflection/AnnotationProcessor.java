@@ -1,5 +1,6 @@
 package de.peteral.softplc.reflection;
 
+import java.io.File;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.InvocationTargetException;
 import java.net.URL;
@@ -15,6 +16,7 @@ import java.util.logging.Logger;
 import org.reflections.Reflections;
 import org.reflections.util.ConfigurationBuilder;
 
+import de.peteral.softplc.classloader.FolderClassLoader;
 import de.peteral.softplc.comm.tasks.TaskFactory;
 import de.peteral.softplc.model.ResponseFactory;
 
@@ -43,8 +45,7 @@ public class AnnotationProcessor<T> {
 	 *            annotation to be looked for
 	 * @param url
 	 */
-	public AnnotationProcessor(Class<? extends Annotation> annotation,
-			URL... url) {
+	public AnnotationProcessor(Class<? extends Annotation> annotation, URL... url) {
 		this.annotation = annotation;
 		this.url = url;
 	}
@@ -60,8 +61,10 @@ public class AnnotationProcessor<T> {
 	@SuppressWarnings("unchecked")
 	public void loadAnnotations(List<T> result) {
 		ConfigurationBuilder cb = new ConfigurationBuilder();
-		cb.addUrls(((URLClassLoader) ClassLoader.getSystemClassLoader())
-				.getURLs());
+		cb.addUrls(((URLClassLoader) ClassLoader.getSystemClassLoader()).getURLs());
+		FolderClassLoader folderClassLoader = new FolderClassLoader(new File("protocols"));
+		Thread.currentThread().setContextClassLoader(folderClassLoader);
+		cb.addUrls(folderClassLoader.getURLs());
 		cb.addUrls(url);
 
 		Reflections reflections = new Reflections(cb);
@@ -75,14 +78,11 @@ public class AnnotationProcessor<T> {
 				LOGGER.config("Loaded factory: " + clazz.getName());
 
 			} catch (InstantiationException | IllegalAccessException e) {
-				LOGGER.log(Level.SEVERE,
-						"Failed creating factory [" + clazz.getName() + "]: ",
-						e);
+				LOGGER.log(Level.SEVERE, "Failed creating factory [" + clazz.getName() + "]: ", e);
 			}
 		}
 
-		LOGGER.info("Found " + result.size() + " @"
-				+ annotation.getSimpleName());
+		LOGGER.info("Found " + result.size() + " @" + annotation.getSimpleName());
 	}
 
 	private List<Class<?>> sort(Set<Class<?>> classes) {
@@ -97,15 +97,12 @@ public class AnnotationProcessor<T> {
 					Annotation annotation1 = o1.getAnnotation(annotation);
 					Annotation annotation2 = o2.getAnnotation(annotation);
 
-					int priority1 = (int) annotation1.annotationType()
-							.getMethod("priority").invoke(annotation1);
-					int priority2 = (int) annotation2.annotationType()
-							.getMethod("priority").invoke(annotation2);
+					int priority1 = (int) annotation1.annotationType().getMethod("priority").invoke(annotation1);
+					int priority2 = (int) annotation2.annotationType().getMethod("priority").invoke(annotation2);
 
 					return Integer.compare(priority2, priority1);
-				} catch (IllegalAccessException | IllegalArgumentException
-						| InvocationTargetException | NoSuchMethodException
-						| SecurityException e) {
+				} catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException
+						| NoSuchMethodException | SecurityException e) {
 
 					return 0;
 				}
