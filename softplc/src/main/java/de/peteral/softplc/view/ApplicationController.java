@@ -22,7 +22,7 @@ public class ApplicationController {
 	private FileManager fileManager;
 	private Stage stage;
 	@FXML
-	private CheckMenuItem alwaysOnTopMenuItem;
+	CheckMenuItem alwaysOnTopMenuItem;
 
 	/**
 	 * Initializes the controller with file manager reference.
