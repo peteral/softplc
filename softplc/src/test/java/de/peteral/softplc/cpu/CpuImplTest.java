@@ -12,8 +12,6 @@ import java.util.concurrent.ScheduledThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
 import java.util.logging.Level;
 
-import javafx.beans.property.SimpleLongProperty;
-
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mock;
@@ -25,6 +23,7 @@ import de.peteral.softplc.model.CpuStatus;
 import de.peteral.softplc.model.ErrorLog;
 import de.peteral.softplc.model.Memory;
 import de.peteral.softplc.model.Program;
+import javafx.beans.property.SimpleLongProperty;
 
 @SuppressWarnings("javadoc")
 public class CpuImplTest {
@@ -54,11 +53,9 @@ public class CpuImplTest {
 
 		when(executorFactory.createExecutor()).thenReturn(executor);
 
-		when(program.getTargetCycleTime()).thenReturn(
-				new SimpleLongProperty(TARGET_CYCLE_TIME));
+		when(program.getTargetCycleTime()).thenReturn(new SimpleLongProperty(TARGET_CYCLE_TIME));
 
-		cpu = new CpuImpl("", 0, errorlog, executorFactory, memory,
-				MAX_BLOCK_SIZE, MAX_CONNECTIONS, CpuStatus.STOP);
+		cpu = new CpuImpl("", 0, errorlog, executorFactory, memory, MAX_BLOCK_SIZE, MAX_CONNECTIONS, CpuStatus.STOP);
 	}
 
 	@Test
@@ -98,8 +95,7 @@ public class CpuImplTest {
 
 		assertEquals(CpuStatus.RUN, cpu.getStatus());
 
-		verify(executor).scheduleAtFixedRate(program, 0, TARGET_CYCLE_TIME,
-				TimeUnit.MILLISECONDS);
+		verify(executor).scheduleAtFixedRate(program, 0, TARGET_CYCLE_TIME, TimeUnit.MILLISECONDS);
 	}
 
 	@Test
@@ -119,11 +115,14 @@ public class CpuImplTest {
 
 		cpu.start();
 
+		cpu.getCurrentConnections().set(1);
+
 		cpu.stop();
 
 		assertEquals(CpuStatus.STOP, cpu.getStatus());
 		verify(executor).shutdown();
 		verify(program).removeObserver(cpu);
+		assertEquals(0, cpu.getCurrentConnections().get());
 	}
 
 	@Test

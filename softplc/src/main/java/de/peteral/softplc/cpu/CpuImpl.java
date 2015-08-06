@@ -120,6 +120,8 @@ public class CpuImpl implements Cpu, ProgramCycleObserver {
 		executor.shutdown();
 
 		program.removeObserver(this);
+
+		currentConnections.set(0);
 	}
 
 	@Override
