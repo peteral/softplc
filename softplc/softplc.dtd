@@ -33,6 +33,7 @@
 <!ATTLIST variable
 	variable	CDATA 	#REQUIRED
 	newValue	CDATA	""
+	comment		CDATA	""
 >
 
 <!ELEMENT memory (area)*>

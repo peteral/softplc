@@ -13,6 +13,7 @@ public class MemoryTableVariable {
 	private final StringProperty variable = new SimpleStringProperty();
 	private final StringProperty currentValue = new SimpleStringProperty();
 	private final StringProperty newValue = new SimpleStringProperty();
+	private final StringProperty comment = new SimpleStringProperty();
 
 	/**
 	 * This constructor is used during configuration parsing.
@@ -22,9 +23,10 @@ public class MemoryTableVariable {
 	 * @param newValue
 	 *            new value
 	 */
-	public MemoryTableVariable(String name, String newValue) {
+	public MemoryTableVariable(String name, String newValue, String comment) {
 		variable.set(name);
 		this.newValue.set(newValue);
+		this.comment.set(comment);
 	}
 
 	/**
@@ -32,6 +34,16 @@ public class MemoryTableVariable {
 	 */
 	public MemoryTableVariable() {
 
+	}
+
+	/**
+	 * This constructor is used by memory table update tasks.
+	 *
+	 * @param name
+	 * @param newValue
+	 */
+	public MemoryTableVariable(String name, String newValue) {
+		this(name, newValue, "");
 	}
 
 	/**
@@ -53,5 +65,12 @@ public class MemoryTableVariable {
 	 */
 	public StringProperty getNewValue() {
 		return newValue;
+	}
+
+	/**
+	 * @return the comment
+	 */
+	public StringProperty getComment() {
+		return comment;
 	}
 }

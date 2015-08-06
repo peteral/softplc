@@ -5,18 +5,18 @@ import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
-import javafx.collections.FXCollections;
 
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.MockitoAnnotations;
 
-import de.peteral.softplc.factory.PlcFactory;
 import de.peteral.softplc.model.Cpu;
 import de.peteral.softplc.model.Memory;
 import de.peteral.softplc.model.MemoryArea;
 import de.peteral.softplc.model.MemoryTable;
+import de.peteral.softplc.model.MemoryTableVariable;
 import de.peteral.softplc.model.Plc;
+import javafx.collections.FXCollections;
 
 @SuppressWarnings("javadoc")
 public class PlcFactoryTest {
@@ -50,6 +50,10 @@ public class PlcFactoryTest {
 		MemoryTable table = cpu.getMemory().getMemoryTables().get(0);
 		assertNotNull(table);
 		assertEquals("table1", table.getName().get());
+		MemoryTableVariable variable = table.getVariables().get(1);
+		assertEquals("This is a comment", variable.getComment().get());
+		assertEquals("DB100,W2", variable.getVariable().get());
+		assertEquals("10", variable.getNewValue().get());
 	}
 
 	@Test
@@ -93,7 +97,6 @@ public class PlcFactoryTest {
 
 		assertEquals(plc, cpu.getPlc());
 		assertEquals(PlcFactory.NEW_CPU_NAME, cpu.getName().get());
-		assertEquals(PlcFactory.DEFAULT_MEMORY_AREAS.size(), cpu.getMemory()
-				.getMemoryAreas().size());
+		assertEquals(PlcFactory.DEFAULT_MEMORY_AREAS.size(), cpu.getMemory().getMemoryAreas().size());
 	}
 }

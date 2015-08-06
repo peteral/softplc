@@ -94,6 +94,8 @@ public class PlcTransformer {
 			variableElement.setAttribute("variable", variable.getVariable().get());
 			String newValue = variable.getNewValue().get();
 			variableElement.setAttribute("newValue", (newValue == null) ? "" : newValue);
+			String comment = variable.getComment().get();
+			variableElement.setAttribute("comment", (comment == null) ? "" : comment);
 			tableElement.appendChild(variableElement);
 		});
 	}

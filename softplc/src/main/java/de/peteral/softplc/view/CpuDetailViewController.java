@@ -82,6 +82,8 @@ public class CpuDetailViewController {
 	@FXML
 	private TableColumn<MemoryTableVariable, String> memoryTableVariableNewColumn;
 	@FXML
+	private TableColumn<MemoryTableVariable, String> memoryTableVariableCommentColumn;
+	@FXML
 	private CheckMenuItem observeMemoryTableItem;
 	@FXML
 	private CheckMenuItem forceMemoryTableItem;
@@ -132,6 +134,8 @@ public class CpuDetailViewController {
 		memoryTableVariableCurrentColumn.setCellValueFactory(cellData -> cellData.getValue().getCurrentValue());
 		memoryTableVariableNewColumn.setCellValueFactory(cellData -> cellData.getValue().getNewValue());
 		memoryTableVariableNewColumn.setCellFactory(TextFieldTableCell.forTableColumn());
+		memoryTableVariableCommentColumn.setCellValueFactory(cellData -> cellData.getValue().getComment());
+		memoryTableVariableCommentColumn.setCellFactory(TextFieldTableCell.forTableColumn());
 
 		programNameColumn.setCellValueFactory(data -> data.getValue().getFileName());
 

@@ -238,8 +238,12 @@ public class PlcFactory {
 		cpu.getMemory().getMemoryTables().add(table);
 
 		List<Element> variableElements = getChildrenByName(tableElement, "variable");
-		variableElements.forEach(variableElement -> table.getVariables().add(new MemoryTableVariable(
-				variableElement.getAttribute("variable"), variableElement.getAttribute("newValue"))));
+		variableElements
+				.forEach(
+						variableElement -> table.getVariables()
+								.add(new MemoryTableVariable(variableElement.getAttribute("variable"),
+										variableElement.getAttribute("newValue"),
+										variableElement.getAttribute("comment"))));
 	}
 
 	private Program createProgram(Element cpuElement, Cpu cpu, String path)

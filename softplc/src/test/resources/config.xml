@@ -22,7 +22,7 @@
 		<tables>
 			<table name="table1">
 				<variable variable="DB100,X0.0"/>
-				<variable variable="DB100,W2" newValue="10"/>
+				<variable variable="DB100,W2" newValue="10" comment="This is a comment"/>
 			</table>
 		</tables>
 		<snapshots>

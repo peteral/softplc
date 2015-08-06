@@ -43,6 +43,7 @@
                                           <TableColumn fx:id="memoryTableVariableNameColumn" prefWidth="75.0" text="Variable" />
                                           <TableColumn fx:id="memoryTableVariableCurrentColumn" editable="false" prefWidth="75.0" text="Current" />
                                           <TableColumn fx:id="memoryTableVariableNewColumn" prefWidth="75.0" text="New" />
+                                          <TableColumn fx:id="memoryTableVariableCommentColumn" prefWidth="75.0" text="Comment" />
                                        </columns>
                                        <columnResizePolicy>
                                           <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
