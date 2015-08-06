@@ -7,6 +7,7 @@ import de.peteral.softplc.file.FileManager;
 import javafx.fxml.FXML;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
+import javafx.scene.control.CheckMenuItem;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 
@@ -20,6 +21,8 @@ public class ApplicationController {
 
 	private FileManager fileManager;
 	private Stage stage;
+	@FXML
+	private CheckMenuItem alwaysOnTopMenuItem;
 
 	/**
 	 * Initializes the controller with file manager reference.
@@ -115,5 +118,10 @@ public class ApplicationController {
 	@FXML
 	void handleExit() {
 		System.exit(0);
+	}
+
+	@FXML
+	void handleAlwaysOnTop() {
+		stage.setAlwaysOnTop(alwaysOnTopMenuItem.isSelected());
 	}
 }
