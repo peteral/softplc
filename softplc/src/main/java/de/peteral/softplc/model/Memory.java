@@ -135,4 +135,10 @@ public interface Memory {
 	 * Resets the memory to initial status (all zero)
 	 */
 	void reset();
+
+	/**
+	 *
+	 * @return symbol table of current cpu
+	 */
+	SymbolTable getSymbolTable();
 }

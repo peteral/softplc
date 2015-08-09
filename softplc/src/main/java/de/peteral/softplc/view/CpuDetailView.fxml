@@ -188,6 +188,31 @@
                   </AnchorPane>
                </content>
             </Tab>
+            <Tab text="Symbol table">
+              <content>
+                <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
+                     <children>
+                        <TableView fx:id="symbolTable" editable="true" layoutX="154.0" layoutY="94.0" prefHeight="571.0" prefWidth="1024.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                          <columns>
+                            <TableColumn fx:id="symbolNameColumn" prefWidth="75.0" text="Name" />
+                            <TableColumn fx:id="symbolAddressColumn" prefWidth="75.0" text="Address" />
+                          </columns>
+                           <columnResizePolicy>
+                              <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
+                           </columnResizePolicy>
+                           <contextMenu>
+                              <ContextMenu>
+                                <items>
+                                  <MenuItem mnemonicParsing="false" onAction="#handleAddSymbol" text="Add" />
+                                    <MenuItem mnemonicParsing="false" onAction="#handleRemoveSymbols" text="Remove" />
+                                </items>
+                              </ContextMenu>
+                           </contextMenu>
+                        </TableView>
+                     </children>
+                  </AnchorPane>
+              </content>
+            </Tab>
             <Tab text="Log">
                <content>
                   <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">

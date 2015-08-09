@@ -13,6 +13,7 @@ import de.peteral.softplc.model.MemorySnapshot;
 import de.peteral.softplc.model.MemoryTable;
 import de.peteral.softplc.model.Plc;
 import de.peteral.softplc.model.ScriptFile;
+import de.peteral.softplc.model.Symbol;
 
 /**
  * Transforms current model to DOM document.
@@ -73,6 +74,20 @@ public class PlcTransformer {
 
 			cpu.getSnapshots().forEach(snapshot -> addSnapshot(snapshotsElement, snapshot, doc));
 		}
+
+		if (!cpu.getMemory().getSymbolTable().getAllSymbols().isEmpty()) {
+			Element symbolsElement = doc.createElement("symbols");
+			cpuElement.appendChild(symbolsElement);
+
+			cpu.getMemory().getSymbolTable().getAllSymbols().forEach(symbol -> addSymbol(symbolsElement, symbol, doc));
+		}
+	}
+
+	private void addSymbol(Element symbolsElement, Symbol symbol, Document doc) {
+		Element symbolElement = doc.createElement("symbol");
+		symbolElement.setAttribute("name", symbol.getName().get());
+		symbolElement.setAttribute("address", symbol.getAddress().get());
+		symbolsElement.appendChild(symbolElement);
 	}
 
 	private void addSnapshot(Element snapshotsElement, MemorySnapshot snapshot, Document doc) {

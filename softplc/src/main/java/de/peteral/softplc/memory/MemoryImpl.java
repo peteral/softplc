@@ -10,6 +10,8 @@ import de.peteral.softplc.model.Memory;
 import de.peteral.softplc.model.MemoryAccessViolationException;
 import de.peteral.softplc.model.MemoryArea;
 import de.peteral.softplc.model.MemoryTable;
+import de.peteral.softplc.model.SymbolTable;
+import de.peteral.softplc.symbol.SymbolTableImpl;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 
@@ -27,6 +29,7 @@ public class MemoryImpl implements Memory {
 	private final transient ObservableList<MemoryTable> memoryTables = FXCollections.observableArrayList();
 	private final transient AddressParserFactory addressParserFactory;
 	private final transient DataTypeFactory dataTypeFactory;
+	private final transient SymbolTable symbolTable = new SymbolTableImpl();
 
 	/**
 	 * Creates a new instance.
@@ -194,5 +197,10 @@ public class MemoryImpl implements Memory {
 	@Override
 	public void reset() {
 		memoryAreas.forEach(memoryArea -> memoryArea.reset());
+	}
+
+	@Override
+	public SymbolTable getSymbolTable() {
+		return symbolTable;
 	}
 }

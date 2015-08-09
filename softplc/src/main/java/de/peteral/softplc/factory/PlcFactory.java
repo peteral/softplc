@@ -44,6 +44,7 @@ import de.peteral.softplc.model.MemoryTableVariable;
 import de.peteral.softplc.model.Plc;
 import de.peteral.softplc.model.Program;
 import de.peteral.softplc.model.ScriptFile;
+import de.peteral.softplc.model.Symbol;
 import de.peteral.softplc.plc.PlcImpl;
 import de.peteral.softplc.program.Precompiler;
 import de.peteral.softplc.program.ProgramImpl;
@@ -182,6 +183,7 @@ public class PlcFactory {
 
 		createTables(cpu, cpuElement);
 		createSnapshots(cpu, cpuElement);
+		createSymbols(cpu, cpuElement);
 
 		loadDefaultSnapshot(cpu, path);
 
@@ -190,6 +192,22 @@ public class PlcFactory {
 		cpu.loadProgram(program);
 
 		return cpu;
+	}
+
+	private void createSymbols(Cpu cpu, Element cpuElement) {
+		List<Element> symbolsElements = getChildrenByName(cpuElement, "symbols");
+		if (symbolsElements.isEmpty()) {
+			return;
+		}
+
+		symbolsElements.forEach(symbolsElement -> {
+			List<Element> symbolElements = getChildrenByName(symbolsElement, "symbol");
+			symbolElements.forEach(symbolElement -> {
+				Symbol symbol = new Symbol(symbolElement.getAttribute("name"), symbolElement.getAttribute("address"));
+
+				cpu.getMemory().getSymbolTable().getAllSymbols().add(symbol);
+			});
+		});
 	}
 
 	private void loadDefaultSnapshot(Cpu cpu, String path) {

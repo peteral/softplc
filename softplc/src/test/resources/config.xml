@@ -29,5 +29,9 @@
 			<snapshot default="true" file="file1.snapshot"/>
 			<snapshot file="file2.snapshot"/>
 		</snapshots>
+		<symbols>
+			<symbol address="MW0" name="a"/>
+			<symbol address="MW2" name="b"/>
+		</symbols>
 	</cpu>
 </softplc>

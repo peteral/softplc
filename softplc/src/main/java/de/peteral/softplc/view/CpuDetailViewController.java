@@ -30,6 +30,7 @@ import de.peteral.softplc.model.MemorySnapshot;
 import de.peteral.softplc.model.MemoryTable;
 import de.peteral.softplc.model.MemoryTableVariable;
 import de.peteral.softplc.model.ScriptFile;
+import de.peteral.softplc.model.Symbol;
 import de.peteral.softplc.serializer.MemorySerializer;
 import de.peteral.softplc.view.error.ErrorDialog;
 import javafx.collections.ObservableList;
@@ -111,6 +112,13 @@ public class CpuDetailViewController {
 	@FXML
 	private TableColumn<MemorySnapshot, String> snapshotFileColumn;
 
+	@FXML
+	private TableView<Symbol> symbolTable;
+	@FXML
+	private TableColumn<Symbol, String> symbolNameColumn;
+	@FXML
+	private TableColumn<Symbol, String> symbolAddressColumn;
+
 	private Cpu currentCpu;
 	private MemoryTable currentMemoryTable;
 	private TimerTask updateMemoryTableTask;
@@ -153,11 +161,17 @@ public class CpuDetailViewController {
 		snapshotDefaultColumn.setCellFactory(CheckBoxTableCell.forTableColumn(snapshotDefaultColumn));
 		snapshotFileColumn.setCellValueFactory(cellData -> cellData.getValue().getFileName());
 
+		symbolNameColumn.setCellValueFactory(cellData -> cellData.getValue().getName());
+		symbolNameColumn.setCellFactory(TextFieldTableCell.forTableColumn());
+		symbolAddressColumn.setCellValueFactory(cellData -> cellData.getValue().getAddress());
+		symbolAddressColumn.setCellFactory(TextFieldTableCell.forTableColumn());
+
 		timer = new Timer();
 
 		update(null);
 
 		memoryTable.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
+		symbolTable.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
 		memoryTableTable.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
 		programTable.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
 		memoryTableVariableTable.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
@@ -182,12 +196,14 @@ public class CpuDetailViewController {
 			memoryTableTable.setItems(null);
 			errorLogTable.setItems(null);
 			snapshotTable.setItems(null);
+			symbolTable.setItems(null);
 		} else {
 			memoryTable.setItems(newValue.getMemory().getMemoryAreas());
 			programTable.setItems(newValue.getProgram().getScriptFiles());
 			memoryTableTable.setItems(newValue.getMemory().getMemoryTables());
 			errorLogTable.setItems(newValue.getErrorLog().getEntries());
 			snapshotTable.setItems(newValue.getSnapshots());
+			symbolTable.setItems(newValue.getMemory().getSymbolTable().getAllSymbols());
 		}
 
 	}
@@ -648,5 +664,16 @@ public class CpuDetailViewController {
 	@FXML
 	void handleResetMemory() {
 		currentCpu.getMemory().reset();
+	}
+
+	@FXML
+	void handleAddSymbol() {
+		currentCpu.getMemory().getSymbolTable().getAllSymbols().add(new Symbol("", ""));
+	}
+
+	@FXML
+	void handleRemoveSymbols() {
+		currentCpu.getMemory().getSymbolTable().getAllSymbols()
+				.removeAll(symbolTable.getSelectionModel().getSelectedItems());
 	}
 }
