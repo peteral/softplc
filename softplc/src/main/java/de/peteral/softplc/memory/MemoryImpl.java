@@ -72,7 +72,12 @@ public class MemoryImpl implements Memory {
 	}
 
 	@Override
-	public Object read(String address) {
+	public Object read(String addr) {
+		String address = getSymbolTable().getAddress(addr);
+		if (address == null) {
+			address = addr;
+		}
+
 		ParsedAddress parsedAddress = addressParserFactory.parse(address);
 
 		if (BOOL_PREFIX.equals(parsedAddress.getTypeName())) {
@@ -93,7 +98,12 @@ public class MemoryImpl implements Memory {
 	}
 
 	@Override
-	public void write(String address, Object value) {
+	public void write(String addr, Object value) {
+		String address = getSymbolTable().getAddress(addr);
+		if (address == null) {
+			address = addr;
+		}
+
 		ParsedAddress parser = addressParserFactory.parse(address);
 
 		if (BOOL_PREFIX.equals(parser.getTypeName())) {
@@ -165,7 +175,12 @@ public class MemoryImpl implements Memory {
 	}
 
 	@Override
-	public void parse(String address, String value) {
+	public void parse(String addr, String value) {
+		String address = getSymbolTable().getAddress(addr);
+		if (address == null) {
+			address = addr;
+		}
+
 		ParsedAddress parser = addressParserFactory.parse(address);
 
 		if (BOOL_PREFIX.equals(parser.getTypeName())) {

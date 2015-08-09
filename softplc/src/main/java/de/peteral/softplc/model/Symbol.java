@@ -39,4 +39,9 @@ public class Symbol {
 	public StringProperty getName() {
 		return name;
 	}
+
+	@Override
+	public String toString() {
+		return getName().get() + " = " + getAddress().get();
+	}
 }

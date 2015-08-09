@@ -6,19 +6,21 @@ import static org.junit.Assert.assertTrue;
 import static org.mockito.Matchers.anyString;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
-import javafx.beans.property.SimpleStringProperty;
 
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 
+import de.peteral.softplc.address.AddressParserException;
 import de.peteral.softplc.address.AddressParserFactory;
 import de.peteral.softplc.address.ParsedAddress;
 import de.peteral.softplc.datatype.DataTypeFactory;
 import de.peteral.softplc.model.Memory;
 import de.peteral.softplc.model.MemoryAccessViolationException;
 import de.peteral.softplc.model.MemoryArea;
+import de.peteral.softplc.model.Symbol;
+import javafx.beans.property.SimpleStringProperty;
 
 @SuppressWarnings("javadoc")
 public class MemoryImplTest {
@@ -43,12 +45,10 @@ public class MemoryImplTest {
 		MockitoAnnotations.initMocks(this);
 
 		when(areaM.getAreaCode()).thenReturn(new SimpleStringProperty("M"));
-		when(areaDb100.getAreaCode()).thenReturn(
-				new SimpleStringProperty(DB100));
+		when(areaDb100.getAreaCode()).thenReturn(new SimpleStringProperty(DB100));
 		when(addressParserFactory.parse(anyString())).thenReturn(addressParser);
 
-		memory = new MemoryImpl(addressParserFactory, dataTypeFactory, areaM,
-				areaDb100);
+		memory = new MemoryImpl(addressParserFactory, dataTypeFactory, areaM, areaDb100);
 	}
 
 	@Test
@@ -65,8 +65,7 @@ public class MemoryImplTest {
 	public void readBytes_ExistingMemoryArea_DelegatesToMemoryArea() {
 		when(areaDb100.readBytes(OFFSET, ANY_DATA.length)).thenReturn(ANY_DATA);
 
-		assertArrayEquals(ANY_DATA,
-				memory.readBytes(DB100, OFFSET, ANY_DATA.length));
+		assertArrayEquals(ANY_DATA, memory.readBytes(DB100, OFFSET, ANY_DATA.length));
 	}
 
 	@Test
@@ -116,8 +115,7 @@ public class MemoryImplTest {
 
 	@Test
 	public void getBit_TestData_ReturnsCorrectValue() {
-		memory = new MemoryImpl(new AddressParserFactory(),
-				new DataTypeFactory(), new MemoryAreaImpl("M", 100, false));
+		memory = new MemoryImpl(new AddressParserFactory(), new DataTypeFactory(), new MemoryAreaImpl("M", 100, false));
 
 		memory.writeBytes("M", 1, new byte[] { (byte) 128 });
 
@@ -126,11 +124,61 @@ public class MemoryImplTest {
 
 	@Test
 	public void setBit_TestData_WritesCorrectValue() {
-		memory = new MemoryImpl(new AddressParserFactory(),
-				new DataTypeFactory(), new MemoryAreaImpl("M", 100, false));
+		memory = new MemoryImpl(new AddressParserFactory(), new DataTypeFactory(), new MemoryAreaImpl("M", 100, false));
 
 		memory.setBit("M,X1.7", true);
 
 		assertEquals(128, memory.read("M,B1"));
+	}
+
+	@Test
+	public void read_KnownSymbol_ReadsCorrectValue() {
+		memory = new MemoryImpl(new AddressParserFactory(), new DataTypeFactory(), new MemoryAreaImpl("M", 100, false));
+
+		memory.write("M,W10", 20);
+		memory.getSymbolTable().getAllSymbols().add(new Symbol("a", "M,W10"));
+
+		assertEquals(20, memory.read("a"));
+	}
+
+	@Test(expected = AddressParserException.class)
+	public void read_UnknownSymbol_ThrowsException() {
+		memory = new MemoryImpl(new AddressParserFactory(), new DataTypeFactory(), new MemoryAreaImpl("M", 100, false));
+
+		memory.read("a");
+	}
+
+	@Test(expected = AddressParserException.class)
+	public void write_UnknownSymbol_ThrowsException() {
+		memory = new MemoryImpl(new AddressParserFactory(), new DataTypeFactory(), new MemoryAreaImpl("M", 100, false));
+
+		memory.write("a", 20);
+	}
+
+	@Test
+	public void write_KnownSymbol_ReadsCorrectValue() {
+		memory = new MemoryImpl(new AddressParserFactory(), new DataTypeFactory(), new MemoryAreaImpl("M", 100, false));
+
+		memory.getSymbolTable().getAllSymbols().add(new Symbol("a", "M,W10"));
+		memory.write("a", 20);
+
+		assertEquals(20, memory.read("M,W10"));
+	}
+
+	@Test(expected = AddressParserException.class)
+	public void parse_UnknownSymbol_ThrowsException() {
+		memory = new MemoryImpl(new AddressParserFactory(), new DataTypeFactory(), new MemoryAreaImpl("M", 100, false));
+
+		memory.parse("a", "20");
+	}
+
+	@Test
+	public void parse_KnownSymbol_ReadsCorrectValue() {
+		memory = new MemoryImpl(new AddressParserFactory(), new DataTypeFactory(), new MemoryAreaImpl("M", 100, false));
+
+		memory.getSymbolTable().getAllSymbols().add(new Symbol("a", "M,W10"));
+		memory.parse("a", "20");
+
+		assertEquals(20, memory.read("M,W10"));
 	}
 }
