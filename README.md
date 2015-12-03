@@ -1,9 +1,9 @@
 softplc
 =======
 
-Simulation of a PLC for integration testing of SCADA systems. Originally planned to make a simulation of Siemens Simatic PLC. However over time decided to make a generic PLC. Network protocols are pluggable via classpath and @SoftplcTaskFactory + @SoftplcResponseFactory annotations.
+Simulation of a PLC for integration testing of SCADA systems. Originally planned to make a simulation of Siemens Simatic PLC. However over time decided to make a generic PLC. Network protocols are pluggable via @Protocol annotation.
 
-S7 protocol was implemented by my company bus is closed source. I plan to implement some simple protocol like MODBUS TCP when I have some time to get complete open source reference. However concentrating on other features first.
+My company runs an internal fork with S7 protocol implementation. Planning to implement at least modbus as reference protocol implementation.
 
 Current functionality:
 - multiple configurable CPUs per PLC
