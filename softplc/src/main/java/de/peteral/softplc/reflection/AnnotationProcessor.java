@@ -17,8 +17,8 @@ import org.reflections.Reflections;
 import org.reflections.util.ConfigurationBuilder;
 
 import de.peteral.softplc.classloader.FolderClassLoader;
-import de.peteral.softplc.comm.tasks.TaskFactory;
-import de.peteral.softplc.model.ResponseFactory;
+import de.peteral.softplc.protocol.ResponseFactory;
+import de.peteral.softplc.protocol.TaskFactory;
 
 /**
  * Scans for annotated classes in class path and instantiates them using default

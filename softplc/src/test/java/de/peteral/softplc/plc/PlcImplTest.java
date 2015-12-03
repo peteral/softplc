@@ -19,7 +19,7 @@ import org.mockito.MockitoAnnotations;
 import de.peteral.softplc.model.Cpu;
 import de.peteral.softplc.model.CpuStatus;
 import de.peteral.softplc.model.Plc;
-import de.peteral.softplc.model.PutGetServer;
+import de.peteral.softplc.model.NetworkInterface;
 
 @SuppressWarnings("javadoc")
 public class PlcImplTest {
@@ -31,7 +31,7 @@ public class PlcImplTest {
 	@Mock
 	private Cpu cpu2;
 	@Mock
-	private PutGetServer server;
+	private NetworkInterface server;
 
 	@Before
 	public void setup() {

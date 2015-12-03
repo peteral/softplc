@@ -10,13 +10,13 @@ import org.junit.Test;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 
-import de.peteral.softplc.model.PutGetServer;
+import de.peteral.softplc.model.NetworkInterface;
 
 @SuppressWarnings("javadoc")
 public class ServerDataEventTest {
 	private static final byte[] DATA = new byte[] { 0x01, 0x02 };
 	@Mock
-	private PutGetServer server;
+	private NetworkInterface server;
 	@Mock
 	private SocketChannel socket;
 	private ServerDataEvent event;
@@ -30,7 +30,7 @@ public class ServerDataEventTest {
 
 	@Test
 	public void getServer_None_ReturnsServer() {
-		assertEquals(server, event.getServer());
+		assertEquals(server, event.getNetworkInterface());
 	}
 
 	@Test

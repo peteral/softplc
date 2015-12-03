@@ -8,7 +8,7 @@ import javafx.collections.ObservableList;
 import de.peteral.softplc.model.Cpu;
 import de.peteral.softplc.model.CpuStatus;
 import de.peteral.softplc.model.Plc;
-import de.peteral.softplc.model.PutGetServer;
+import de.peteral.softplc.model.NetworkInterface;
 import de.peteral.softplc.view.error.ErrorDialog;
 
 /**
@@ -19,7 +19,7 @@ import de.peteral.softplc.view.error.ErrorDialog;
 public class PlcImpl implements Plc {
 
 	private final ObservableList<Cpu> cpus;
-	private final PutGetServer server;
+	private final NetworkInterface server;
 	private File path;
 
 	/**
@@ -29,11 +29,11 @@ public class PlcImpl implements Plc {
 	 *            configuration file path
 	 *
 	 * @param server
-	 *            {@link PutGetServer} implementation instance
+	 *            {@link NetworkInterface} implementation instance
 	 * @param cpus
 	 *            list of {@link Cpu} units managed by this PLC.
 	 */
-	public PlcImpl(String path, PutGetServer server, Cpu... cpus) {
+	public PlcImpl(String path, NetworkInterface server, Cpu... cpus) {
 		this.setPath((path == null) ? null : new File(path));
 		this.server = server;
 		this.cpus = FXCollections.observableArrayList(cpus);

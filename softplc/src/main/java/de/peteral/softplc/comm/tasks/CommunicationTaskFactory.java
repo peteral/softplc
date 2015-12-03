@@ -1,36 +1,54 @@
 package de.peteral.softplc.comm.tasks;
 
+import java.io.IOException;
+import java.net.InetSocketAddress;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import de.peteral.softplc.comm.common.ServerDataEvent;
-import de.peteral.softplc.model.CommunicationTask;
-import de.peteral.softplc.model.ResponseFactory;
-import de.peteral.softplc.model.SoftplcResponseFactory;
-import de.peteral.softplc.model.SoftplcTaskFactory;
+import de.peteral.softplc.protocol.CommunicationTask;
+import de.peteral.softplc.protocol.Protocol;
+import de.peteral.softplc.protocol.ProtocolDefinition;
+import de.peteral.softplc.protocol.ResponseFactory;
+import de.peteral.softplc.protocol.TaskFactory;
 import de.peteral.softplc.reflection.AnnotationProcessor;
 
 /**
- * Translates RF1006 byte arrays from / to communication tasks.
- * <p>
- * Protocol structure (<a href=
- * 'http://tools.ietf.org/html/rfc1006'>http://tools.ietf.org/html/rfc1006</a>):
- * <table>
- * </table>
+ * Translates byte arrays from / to communication tasks.
  *
  * @author peteral
  *
  */
 public class CommunicationTaskFactory {
-	private static final List<TaskFactory> TASK_FACTORIES = new ArrayList<>();
-	private static final List<ResponseFactory> RESPONSE_FACTORIES = new ArrayList<>();
+	private static final List<ProtocolDefinition> PROTOCOLS = new ArrayList<>();
+	private static final Map<Integer, ProtocolDefinition> PROTOCOLS_BY_PORT = new ConcurrentHashMap<>();
+	private static final Logger LOGGER = Logger.getLogger("communication");
+	private static CommunicationTaskFactory instance = null;
 
 	static {
-		new AnnotationProcessor<TaskFactory>(SoftplcTaskFactory.class)
-				.loadAnnotations(TASK_FACTORIES);
+		new AnnotationProcessor<ProtocolDefinition>(Protocol.class).loadAnnotations(PROTOCOLS);
 
-		new AnnotationProcessor<ResponseFactory>(SoftplcResponseFactory.class)
-				.loadAnnotations(RESPONSE_FACTORIES);
+		PROTOCOLS.forEach(protocol -> {
+			protocol.getPorts().forEach(port -> {
+				PROTOCOLS_BY_PORT.put(port, protocol);
+			});
+		});
+	}
+
+	private CommunicationTaskFactory() {
+
+	}
+
+	public static CommunicationTaskFactory getFactory() {
+		if (instance == null) {
+			instance = new CommunicationTaskFactory();
+		}
+
+		return instance;
 	}
 
 	/**
@@ -41,10 +59,18 @@ public class CommunicationTaskFactory {
 	 * @return communication task instance
 	 */
 	public CommunicationTask createTask(ServerDataEvent dataEvent) {
-		for (TaskFactory factory : TASK_FACTORIES) {
-			if (factory.canHandle(dataEvent)) {
-				return factory.createTask(dataEvent, this);
+		InetSocketAddress addr;
+		try {
+			addr = (InetSocketAddress) dataEvent.getSocket().getLocalAddress();
+			ProtocolDefinition protocol = PROTOCOLS_BY_PORT.get(addr.getPort());
+
+			for (TaskFactory factory : protocol.getTaskFactories()) {
+				if (factory.canHandle(dataEvent)) {
+					return factory.createTask(dataEvent, this);
+				}
 			}
+		} catch (IOException e) {
+			LOGGER.log(Level.WARNING, "Error retrieving port number", e);
 		}
 		return null;
 	}
@@ -57,12 +83,24 @@ public class CommunicationTaskFactory {
 	 * @return response as byte array.
 	 */
 	public byte[] createResponse(CommunicationTask task) {
-		for (ResponseFactory factory : RESPONSE_FACTORIES) {
-			if (factory.canHandle(task)) {
-				return factory.createResponse(task);
+		// FIXME iterating through all protocols here - this can be optimized
+
+		for (ProtocolDefinition protocol : PROTOCOLS) {
+			for (ResponseFactory factory : protocol.getResponseFactories()) {
+				if (factory.canHandle(task)) {
+					return factory.createResponse(task);
+				}
 			}
 		}
 		return null;
+	}
+
+	/**
+	 *
+	 * @return array containing all ports to listen to.
+	 */
+	public Integer[] getAllPorts() {
+		return PROTOCOLS_BY_PORT.keySet().toArray(new Integer[PROTOCOLS_BY_PORT.size()]);
 	}
 
 	/**
@@ -71,18 +109,11 @@ public class CommunicationTaskFactory {
 	 * @param builder
 	 */
 	public void logContents(StringBuilder builder) {
-		builder.append("Task factories:\n");
-		TASK_FACTORIES.forEach(f -> {
-			builder.append("  ");
-			builder.append(f.getClass().getName());
-			builder.append("\n");
+		PROTOCOLS_BY_PORT.entrySet().forEach(entry -> {
+			builder.append(entry.getValue().getName());
+			builder.append(" (");
+			builder.append(entry.getKey());
+			builder.append(")\n");
 		});
-		builder.append("Response factories:\n");
-		RESPONSE_FACTORIES.forEach(f -> {
-			builder.append("  ");
-			builder.append(f.getClass().getName());
-			builder.append("\n");
-		});
-
 	}
 }

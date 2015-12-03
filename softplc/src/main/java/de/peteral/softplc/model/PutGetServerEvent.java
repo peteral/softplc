@@ -1,7 +1,7 @@
 package de.peteral.softplc.model;
 
 /**
- * Contains information about one interaction between {@link PutGetServer} and a
+ * Contains information about one interaction between {@link NetworkInterface} and a
  * client.
  * <p>
  * Implement {@link PutGetServerObserver} in order to receive this information.

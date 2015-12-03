@@ -53,7 +53,7 @@ public class ApplicationController {
 		alert.setTitle("Softplc");
 		alert.setHeaderText("About");
 		StringBuilder builder = new StringBuilder("Author: Ladislav Petera, 2014-2015\n");
-		new CommunicationTaskFactory().logContents(builder);
+		CommunicationTaskFactory.getFactory().logContents(builder);
 		alert.setContentText(builder.toString());
 
 		alert.showAndWait();

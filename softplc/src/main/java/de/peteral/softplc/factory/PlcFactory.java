@@ -27,7 +27,7 @@ import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
 
 import de.peteral.softplc.address.AddressParserFactory;
-import de.peteral.softplc.comm.PutGetServerImpl;
+import de.peteral.softplc.comm.NetworkInterfaceImpl;
 import de.peteral.softplc.cpu.CpuImpl;
 import de.peteral.softplc.cpu.ErrorLogImpl;
 import de.peteral.softplc.datatype.DataTypeFactory;
@@ -63,7 +63,6 @@ public class PlcFactory {
 
 	private static final Logger LOGGER = Logger.getLogger("PlcFactory");
 
-	private static final int PORT = 102;
 	private static final int DEFAULT_MAX_CONNECTIONS = 16;
 	private static final int DEFAULT_MAX_BLOCK_SIZE = 222;
 	static final Map<String, Integer> DEFAULT_MEMORY_AREAS = new HashMap<>();
@@ -161,7 +160,7 @@ public class PlcFactory {
 			cpus.add(createCpu(cpuElement, path));
 		}
 
-		PlcImpl result = new PlcImpl(path, new PutGetServerImpl(PORT), cpus.toArray(new Cpu[cpus.size()]));
+		PlcImpl result = new PlcImpl(path, new NetworkInterfaceImpl(), cpus.toArray(new Cpu[cpus.size()]));
 		result.getCpus().forEach(cpu -> ((CpuImpl) cpu).setPlc(result));
 		return result;
 	}
@@ -354,7 +353,7 @@ public class PlcFactory {
 	 * @return new empty PLC instance
 	 */
 	public Plc createNew() {
-		return new PlcImpl(null, new PutGetServerImpl(PORT));
+		return new PlcImpl(null, new NetworkInterfaceImpl());
 	}
 
 	/**

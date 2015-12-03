@@ -18,11 +18,11 @@ import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 
 import de.peteral.softplc.executor.ScheduledThreadPoolExecutorFactory;
-import de.peteral.softplc.model.CommunicationTask;
 import de.peteral.softplc.model.CpuStatus;
 import de.peteral.softplc.model.ErrorLog;
 import de.peteral.softplc.model.Memory;
 import de.peteral.softplc.model.Program;
+import de.peteral.softplc.protocol.CommunicationTask;
 import javafx.beans.property.SimpleLongProperty;
 
 @SuppressWarnings("javadoc")

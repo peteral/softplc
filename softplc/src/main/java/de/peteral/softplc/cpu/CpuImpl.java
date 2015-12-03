@@ -9,7 +9,6 @@ import java.util.logging.Logger;
 
 import de.peteral.softplc.comm.common.ClientChannelCache;
 import de.peteral.softplc.executor.ScheduledThreadPoolExecutorFactory;
-import de.peteral.softplc.model.CommunicationTask;
 import de.peteral.softplc.model.Cpu;
 import de.peteral.softplc.model.CpuStatus;
 import de.peteral.softplc.model.ErrorLog;
@@ -18,6 +17,7 @@ import de.peteral.softplc.model.MemorySnapshot;
 import de.peteral.softplc.model.Plc;
 import de.peteral.softplc.model.Program;
 import de.peteral.softplc.model.ProgramCycleObserver;
+import de.peteral.softplc.protocol.CommunicationTask;
 import javafx.beans.property.IntegerProperty;
 import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.property.SimpleStringProperty;

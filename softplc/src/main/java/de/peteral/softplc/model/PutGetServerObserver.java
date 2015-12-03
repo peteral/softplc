@@ -2,7 +2,7 @@ package de.peteral.softplc.model;
 
 /**
  * Classes implementing this interface can register with the
- * {@link PutGetServer} and receive information about data exchange with
+ * {@link NetworkInterface} and receive information about data exchange with
  * clients.
  *
  * @author peteral

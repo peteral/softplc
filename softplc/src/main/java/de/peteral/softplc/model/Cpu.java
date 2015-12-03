@@ -2,6 +2,7 @@ package de.peteral.softplc.model;
 
 import java.util.logging.Logger;
 
+import de.peteral.softplc.protocol.CommunicationTask;
 import javafx.beans.property.IntegerProperty;
 import javafx.beans.property.StringProperty;
 import javafx.collections.ObservableList;
@@ -73,7 +74,7 @@ public interface Cpu {
 	ErrorLog getErrorLog();
 
 	/**
-	 * Invoked by {@link PutGetServer} server. Schedules a
+	 * Invoked by {@link NetworkInterface} server. Schedules a
 	 * {@link CommunicationTask} to be executed after the actual {@link Program}
 	 * cycle ends.
 	 *

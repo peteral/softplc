@@ -2,9 +2,9 @@ package de.peteral.softplc.comm.tasks;
 
 import java.nio.channels.SocketChannel;
 
-import de.peteral.softplc.model.CommunicationTask;
 import de.peteral.softplc.model.Cpu;
-import de.peteral.softplc.model.PutGetServer;
+import de.peteral.softplc.model.NetworkInterface;
+import de.peteral.softplc.protocol.CommunicationTask;
 
 /**
  * Implements functionality common for all tasks.
@@ -14,7 +14,7 @@ import de.peteral.softplc.model.PutGetServer;
  */
 public abstract class AbstractCommunicationTask implements CommunicationTask {
 
-	private final PutGetServer server;
+	private final NetworkInterface server;
 	private final SocketChannel socket;
 	private final CommunicationTaskFactory factory;
 
@@ -27,7 +27,7 @@ public abstract class AbstractCommunicationTask implements CommunicationTask {
 	 *            socket to use for response
 	 * @param factory
 	 */
-	public AbstractCommunicationTask(PutGetServer server, SocketChannel socket,
+	public AbstractCommunicationTask(NetworkInterface server, SocketChannel socket,
 			CommunicationTaskFactory factory) {
 		this.server = server;
 		this.socket = socket;

@@ -2,7 +2,7 @@ package de.peteral.softplc.comm.common;
 
 import java.nio.channels.SocketChannel;
 
-import de.peteral.softplc.model.PutGetServer;
+import de.peteral.softplc.model.NetworkInterface;
 
 /**
  * Encapsulates a request from a client.
@@ -11,7 +11,7 @@ import de.peteral.softplc.model.PutGetServer;
  *
  */
 public class ServerDataEvent {
-	private final PutGetServer server;
+	private final NetworkInterface server;
 	private final SocketChannel socket;
 	private final byte[] data;
 
@@ -25,7 +25,7 @@ public class ServerDataEvent {
 	 * @param data
 	 *            request data
 	 */
-	public ServerDataEvent(PutGetServer server, SocketChannel socket,
+	public ServerDataEvent(NetworkInterface server, SocketChannel socket,
 			byte[] data) {
 		this.server = server;
 		this.socket = socket;
@@ -35,7 +35,7 @@ public class ServerDataEvent {
 	/**
 	 * @return the server
 	 */
-	public PutGetServer getServer() {
+	public NetworkInterface getNetworkInterface() {
 		return server;
 	}
 

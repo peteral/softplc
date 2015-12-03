@@ -2,9 +2,9 @@ package de.peteral.softplc.memorytables;
 
 import java.util.Arrays;
 
-import de.peteral.softplc.model.CommunicationTask;
 import de.peteral.softplc.model.Cpu;
 import de.peteral.softplc.model.MemoryTableVariable;
+import de.peteral.softplc.protocol.CommunicationTask;
 
 /**
  * Writes memory table variables to memory.

@@ -1,7 +1,6 @@
 package de.peteral.softplc.comm;
 
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 
 import java.nio.channels.SocketChannel;
 
@@ -14,10 +13,10 @@ import org.mockito.MockitoAnnotations;
 import de.peteral.softplc.comm.common.ClientChannelCache;
 import de.peteral.softplc.comm.common.ServerDataEvent;
 import de.peteral.softplc.comm.tasks.CommunicationTaskFactory;
-import de.peteral.softplc.model.CommunicationTask;
 import de.peteral.softplc.model.Cpu;
+import de.peteral.softplc.model.NetworkInterface;
 import de.peteral.softplc.model.Plc;
-import de.peteral.softplc.model.PutGetServer;
+import de.peteral.softplc.protocol.CommunicationTask;
 
 @SuppressWarnings("javadoc")
 public class RequestWorkerTest {
@@ -29,7 +28,7 @@ public class RequestWorkerTest {
 	private CommunicationTaskFactory communicationTaskFactory;
 	private RequestWorker worker;
 	@Mock
-	private PutGetServer server;
+	private NetworkInterface server;
 	@Mock
 	private SocketChannel socket;
 	@Mock
@@ -51,7 +50,7 @@ public class RequestWorkerTest {
 		when(event.getSocket()).thenReturn(socket);
 		when(plc.getCpu(CPU_SLOT)).thenReturn(cpu);
 		when(communicationTaskFactory.createTask(event)).thenReturn(task);
-		when(event.getServer()).thenReturn(server);
+		when(event.getNetworkInterface()).thenReturn(server);
 		when(plc.hasCpu(CPU_SLOT)).thenReturn(true);
 
 		worker = new RequestWorker(plc, communicationTaskFactory);

@@ -9,9 +9,9 @@ import java.util.logging.Logger;
 import de.peteral.softplc.comm.common.ClientChannelCache;
 import de.peteral.softplc.comm.common.ServerDataEvent;
 import de.peteral.softplc.comm.tasks.CommunicationTaskFactory;
-import de.peteral.softplc.model.CommunicationTask;
 import de.peteral.softplc.model.Plc;
 import de.peteral.softplc.model.PutGetServerEvent;
+import de.peteral.softplc.protocol.CommunicationTask;
 
 /**
  * Asynchronously processes data incoming on the server socket.
@@ -22,9 +22,9 @@ import de.peteral.softplc.model.PutGetServerEvent;
 public class RequestWorker implements Runnable {
 	private final List<ServerDataEvent> queue = new LinkedList<>();
 	private boolean running;
-	private final CommunicationTaskFactory communicationTaskFactory;
 	private final Plc plc;
 	private static final Logger LOGGER = Logger.getLogger("communication");
+	private CommunicationTaskFactory communicationTaskFactory;
 
 	/**
 	 * Creates a new instance.
@@ -34,11 +34,13 @@ public class RequestWorker implements Runnable {
 	 * @param communicationTaskFactory
 	 *            communication task factory instance
 	 */
-	public RequestWorker(Plc plc,
-			CommunicationTaskFactory communicationTaskFactory) {
+	public RequestWorker(Plc plc) {
+		this(plc, CommunicationTaskFactory.getFactory());
+	}
+
+	RequestWorker(Plc plc, CommunicationTaskFactory communicationTaskFactory) {
 		this.plc = plc;
 		this.communicationTaskFactory = communicationTaskFactory;
-
 	}
 
 	/**
@@ -73,11 +75,9 @@ public class RequestWorker implements Runnable {
 				dataEvent = queue.remove(0);
 			}
 
-			CommunicationTask task = communicationTaskFactory
-					.createTask(dataEvent);
+			CommunicationTask task = communicationTaskFactory.createTask(dataEvent);
 
-			Integer slot = ClientChannelCache.getInstance().getSlot(
-					dataEvent.getSocket());
+			Integer slot = ClientChannelCache.getInstance().getSlot(dataEvent.getSocket());
 
 			if ((task != null) && (slot != null)) {
 				if (plc.hasCpu(slot)) {
@@ -85,24 +85,20 @@ public class RequestWorker implements Runnable {
 				} else {
 					// handling for invalid CPU / rack during ISO connect
 					task.onInvalidCpu(slot);
-					LOGGER.warning("Communication task for invalid cpu slot ["
-							+ slot + "]: [" + task + "]");
+					LOGGER.warning("Communication task for invalid cpu slot [" + slot + "]: [" + task + "]");
 				}
 
 			} else {
 				try {
-					LOGGER.warning("Invalid telegram received slot ["
-							+ slot
-							+ "] "
-							+ dataEvent.getSocket().getRemoteAddress()
-									.toString() + " , data "
+					LOGGER.warning("Invalid telegram received slot [" + slot + "] "
+							+ dataEvent.getSocket().getRemoteAddress().toString() + " , data "
 							+ Arrays.toString(dataEvent.getData()));
 				} catch (IOException e) {
 					// no handling necessary, logging only
 				}
 			}
 
-			dataEvent.getServer().notifyObservers(new PutGetServerEvent());
+			dataEvent.getNetworkInterface().notifyObservers(new PutGetServerEvent());
 		}
 	}
 
