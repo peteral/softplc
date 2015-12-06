@@ -55,12 +55,16 @@ public class SelectorThread extends Thread {
 		super.start();
 	}
 
-	public void stopThread() throws IOException {
-		selector.close();
-		serverChannel.close();
+	public void stopThread() {
+		try {
+			running = false;
+			worker.cancel();
+			selector.close();
+			serverChannel.close();
 
-		running = false;
-		worker.cancel();
+		} catch (IOException e) {
+
+		}
 	}
 
 	private Selector initSelector(int port) throws IOException {

@@ -54,7 +54,11 @@ public class NetworkInterfaceImpl implements NetworkInterface {
 
 	@Override
 	public void stop() throws IOException {
-		// stop all selector threads
+		selectorThreads.values().forEach(thread -> {
+			thread.stopThread();
+		});
+
+		selectorThreads.clear();
 	}
 
 	@Override
