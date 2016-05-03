@@ -5,3 +5,5 @@
 /.settings/
 /dependency-reduced-pom.xml
 /softplc.log.*
+/.idea
+/softplc.iml
